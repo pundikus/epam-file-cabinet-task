@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Text;
 
 namespace FileCabinetApp
 {
@@ -10,18 +12,26 @@ namespace FileCabinetApp
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
 
+        private static FileCabinetService fileCabinetService = new FileCabinetService();
+
         private static bool isRunning = true;
 
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
         {
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("exit", Exit),
+            new Tuple<string, Action<string>>("stat", Stat),
+            new Tuple<string, Action<string>>("create", Create),
+            new Tuple<string, Action<string>>("list", List),
         };
 
         private static string[][] helpMessages = new string[][]
         {
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
+            new string[] { "stat", "gets the number of records", "The 'stat' command returns the number of records." },
+            new string[] { "create", "creates a new record", "The 'create' command creates a new record" },
+            new string[] { "list", "returns a list of records", "The 'list' command returns a list of records" },
         };
 
         public static void Main(string[] args)
@@ -89,6 +99,78 @@ namespace FileCabinetApp
             }
 
             Console.WriteLine();
+        }
+
+        private static void Stat(string parameters)
+        {
+            var recordsCount = Program.fileCabinetService.GetStat();
+            Console.WriteLine($"{recordsCount} record(s).");
+        }
+
+        private static void Create(string parameters)
+        {
+            Console.Write("First name: ");
+            string firstName = Console.ReadLine();
+
+            Console.Write("Last name: ");
+            string lastName = Console.ReadLine();
+
+            Console.Write("Date of birth: ");
+            string dateofBirthString = Console.ReadLine();
+            var dateofBirth = DateTime.Parse(dateofBirthString, new CultureInfo("en-US", false));
+
+            Console.Write("Cabinet number: ");
+            string cabinetNumberString = Console.ReadLine();
+            var parsedCabinetNumber = short.TryParse(cabinetNumberString, out short cabinetNumber);
+
+            if (!parsedCabinetNumber)
+            {
+                Console.WriteLine("Invalid Cabinet number.");
+                return;
+            }
+
+            Console.Write("Salary: ");
+            string salaryString = Console.ReadLine();
+            var parsedSalary = decimal.TryParse(salaryString, out decimal salary);
+
+            if (!parsedSalary)
+            {
+                Console.WriteLine("Invalid Salary.");
+                return;
+            }
+
+            Console.Write("Category: ");
+            string categoryString = Console.ReadLine();
+            var parsedCategory = char.TryParse(categoryString, out char category);
+
+            if (!parsedCategory)
+            {
+                Console.WriteLine("Invalid Category.");
+                return;
+            }
+
+            var record = Program.fileCabinetService.CreateRecord(firstName, lastName, dateofBirth, cabinetNumber, salary, category);
+
+            Console.WriteLine("Record #" + record + " is created.");
+        }
+
+        private static void List(string parameters)
+        {
+            var listRecords = Program.fileCabinetService.GetRecords();
+            var recordString = new StringBuilder();
+
+            foreach (var item in listRecords)
+            {
+                recordString.Append($"#{item.Id}, ");
+                recordString.Append($"{item.FirstName}, ");
+                recordString.Append($"{item.LastName}, ");
+                recordString.Append($"{item.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}, ");
+                recordString.Append($"{item.CabinetNumber}, ");
+                recordString.Append($"{item.Salary}y.e, ");
+                recordString.Append($"{item.Category}");
+
+                Console.WriteLine(recordString);
+            }
         }
 
         private static void Exit(string parameters)
