@@ -119,7 +119,37 @@ namespace FileCabinetApp
             string dateofBirthString = Console.ReadLine();
             var dateofBirth = DateTime.Parse(dateofBirthString, new CultureInfo("en-US", false));
 
-            var record = Program.fileCabinetService.CreateRecord(firstName, lastName, dateofBirth);
+            Console.Write("Cabinet number: ");
+            string cabinetNumberString = Console.ReadLine();
+            var parsedCabinetNumber = short.TryParse(cabinetNumberString, out short cabinetNumber);
+
+            if (!parsedCabinetNumber)
+            {
+                Console.WriteLine("Invalid Cabinet number.");
+                return;
+            }
+
+            Console.Write("Salary: ");
+            string salaryString = Console.ReadLine();
+            var parsedSalary = decimal.TryParse(salaryString, out decimal salary);
+
+            if (!parsedSalary)
+            {
+                Console.WriteLine("Invalid Salary.");
+                return;
+            }
+
+            Console.Write("Category: ");
+            string categoryString = Console.ReadLine();
+            var parsedCategory = char.TryParse(categoryString, out char category);
+
+            if (!parsedCategory)
+            {
+                Console.WriteLine("Invalid Category.");
+                return;
+            }
+
+            var record = Program.fileCabinetService.CreateRecord(firstName, lastName, dateofBirth, cabinetNumber, salary, category);
 
             Console.WriteLine("Record #" + record + " is created.");
         }
@@ -134,7 +164,10 @@ namespace FileCabinetApp
                 recordString.Append($"#{item.Id}, ");
                 recordString.Append($"{item.FirstName}, ");
                 recordString.Append($"{item.LastName}, ");
-                recordString.Append($"{item.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)} ");
+                recordString.Append($"{item.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}, ");
+                recordString.Append($"{item.CabinetNumber}, ");
+                recordString.Append($"{item.Salary}y.e, ");
+                recordString.Append($"{item.Category}");
 
                 Console.WriteLine(recordString);
             }
