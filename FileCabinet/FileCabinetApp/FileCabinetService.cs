@@ -48,6 +48,11 @@ namespace FileCabinetApp
                 throw new ArgumentException($"{nameof(salary)} not correct.");
             }
 
+            if (category != 'A' || category != 'B' || category != 'C' ||)
+            {
+                throw new ArgumentException($"{nameof(category)} not correct.");
+            }
+
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,

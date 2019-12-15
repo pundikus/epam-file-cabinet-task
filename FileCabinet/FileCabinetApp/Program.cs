@@ -109,49 +109,65 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            Console.Write("First name: ");
-            string firstName = Console.ReadLine();
-
-            Console.Write("Last name: ");
-            string lastName = Console.ReadLine();
-
-            Console.Write("Date of birth: ");
-            string dateofBirthString = Console.ReadLine();
-            var dateofBirth = DateTime.Parse(dateofBirthString, new CultureInfo("en-US", false));
-
-            Console.Write("Cabinet number: ");
-            string cabinetNumberString = Console.ReadLine();
-            var parsedCabinetNumber = short.TryParse(cabinetNumberString, out short cabinetNumber);
-
-            if (!parsedCabinetNumber)
+            do
             {
-                Console.WriteLine("Invalid Cabinet number.");
-                return;
+                try
+                {
+                    Console.Write("First name: ");
+                    string firstName = Console.ReadLine();
+
+                    Console.Write("Last name: ");
+                    string lastName = Console.ReadLine();
+
+                    Console.Write("Date of birth: ");
+                    string dateofBirthString = Console.ReadLine();
+                    var dateofBirth = DateTime.Parse(dateofBirthString, new CultureInfo("en-US", false));
+
+                    Console.Write("Cabinet number: ");
+                    string cabinetNumberString = Console.ReadLine();
+                    var parsedCabinetNumber = short.TryParse(cabinetNumberString, out short cabinetNumber);
+
+                    if (!parsedCabinetNumber)
+                    {
+                        Console.WriteLine("Invalid Cabinet number.");
+                        Console.Clear();
+                        break;
+                    }
+
+                    Console.Write("Salary: ");
+                    string salaryString = Console.ReadLine();
+                    var parsedSalary = decimal.TryParse(salaryString, out decimal salary);
+
+                    if (!parsedSalary)
+                    {
+                        Console.WriteLine("Invalid Salary.");
+                        Console.Clear();
+                        break;
+                    }
+
+                    Console.Write("Category(A, B, C): ");
+                    string categoryString = Console.ReadLine();
+                    var parsedCategory = char.TryParse(categoryString, out char category);
+
+                    if (!parsedCategory)
+                    {
+                        Console.WriteLine("Invalid Category.");
+                        Console.Clear();
+                        break;
+                    }
+
+                    var record = Program.fileCabinetService.CreateRecord(firstName, lastName, dateofBirth, cabinetNumber, salary, category);
+
+                    Console.WriteLine("Record #" + record + " is created.");
+                    break;
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.Clear();
+                    Console.WriteLine(ex.Message);
+                }
             }
-
-            Console.Write("Salary: ");
-            string salaryString = Console.ReadLine();
-            var parsedSalary = decimal.TryParse(salaryString, out decimal salary);
-
-            if (!parsedSalary)
-            {
-                Console.WriteLine("Invalid Salary.");
-                return;
-            }
-
-            Console.Write("Category: ");
-            string categoryString = Console.ReadLine();
-            var parsedCategory = char.TryParse(categoryString, out char category);
-
-            if (!parsedCategory)
-            {
-                Console.WriteLine("Invalid Category.");
-                return;
-            }
-
-            var record = Program.fileCabinetService.CreateRecord(firstName, lastName, dateofBirth, cabinetNumber, salary, category);
-
-            Console.WriteLine("Record #" + record + " is created.");
+            while (true);
         }
 
         private static void List(string parameters)
