@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 namespace FileCabinetApp
@@ -23,6 +24,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("list", List),
+            new Tuple<string, Action<string>>("edit", Edit),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -32,6 +34,7 @@ namespace FileCabinetApp
             new string[] { "stat", "gets the number of records", "The 'stat' command returns the number of records." },
             new string[] { "create", "creates a new record", "The 'create' command creates a new record" },
             new string[] { "list", "returns a list of records", "The 'list' command returns a list of records" },
+            new string[] { "edit", "changes record", "The 'edit' changes record" },
         };
 
         public static void Main(string[] args)
@@ -163,7 +166,6 @@ namespace FileCabinetApp
                 }
                 catch (ArgumentException ex)
                 {
-                    Console.Clear();
                     Console.WriteLine(ex.Message);
                 }
             }
@@ -173,10 +175,11 @@ namespace FileCabinetApp
         private static void List(string parameters)
         {
             var listRecords = Program.fileCabinetService.GetRecords();
-            var recordString = new StringBuilder();
 
             foreach (var item in listRecords)
             {
+                var recordString = new StringBuilder();
+
                 recordString.Append($"#{item.Id}, ");
                 recordString.Append($"{item.FirstName}, ");
                 recordString.Append($"{item.LastName}, ");
@@ -187,6 +190,69 @@ namespace FileCabinetApp
 
                 Console.WriteLine(recordString);
             }
+        }
+
+        private static void Edit(string parameters)
+        {
+            if (Program.fileCabinetService.GetRecords() == null)
+            {
+                Console.WriteLine("List records is Empty!");
+                return;
+            }
+
+            var parsedId = int.TryParse(parameters, out int id);
+
+            if (!parsedId)
+            {
+                Console.WriteLine("Invalid Id");
+            }
+
+            var listRecords = Program.fileCabinetService.GetRecords();
+            if (!listRecords.Any(x => x.Id == id))
+            {
+                Console.WriteLine($"#{id} record is not found.");
+                return;
+            }
+
+            Console.Write("First name: ");
+            string firstName = Console.ReadLine();
+
+            Console.Write("Last name: ");
+            string lastName = Console.ReadLine();
+
+            Console.Write("Date of birth: ");
+            string dateofBirthString = Console.ReadLine();
+            var dateofBirth = DateTime.Parse(dateofBirthString, new CultureInfo("en-US", false));
+
+            Console.Write("Cabinet number: ");
+            string cabinetNumberString = Console.ReadLine();
+            var parsedCabinetNumber = short.TryParse(cabinetNumberString, out short cabinetNumber);
+
+            if (!parsedCabinetNumber)
+            {
+                Console.WriteLine("Invalid Cabinet number.");
+            }
+
+            Console.Write("Salary: ");
+            string salaryString = Console.ReadLine();
+            var parsedSalary = decimal.TryParse(salaryString, out decimal salary);
+
+            if (!parsedSalary)
+            {
+                Console.WriteLine("Invalid Salary.");
+            }
+
+            Console.Write("Category(A, B, C): ");
+            string categoryString = Console.ReadLine();
+            var parsedCategory = char.TryParse(categoryString, out char category);
+
+            if (!parsedCategory)
+            {
+                Console.WriteLine("Invalid Category.");
+            }
+
+            Program.fileCabinetService.EditRecord(id, firstName, lastName, dateofBirth, cabinetNumber, salary, category);
+            Console.WriteLine($"Record #{id} is updated.");
         }
 
         private static void Exit(string parameters)
