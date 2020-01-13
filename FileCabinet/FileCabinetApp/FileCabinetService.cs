@@ -8,6 +8,7 @@ namespace FileCabinetApp
     public class FileCabinetService
     {
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+        private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
 
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, short cabinetNumber, decimal salary, char category)
         {
@@ -25,6 +26,19 @@ namespace FileCabinetApp
             };
 
             this.list.Add(record);
+
+            string firstNameUpper = firstName.ToUpperInvariant();
+
+            if (this.firstNameDictionary.ContainsKey(firstNameUpper))
+            {
+                this.firstNameDictionary[firstNameUpper].Add(record);
+            }
+            else
+            {
+                var newList = new List<FileCabinetRecord>();
+                newList.Add(record);
+                this.firstNameDictionary.Add(firstNameUpper, newList);
+            }
 
             return record.Id;
         }
@@ -56,6 +70,11 @@ namespace FileCabinetApp
 
             this.list.RemoveAt(id - 1);
             this.list.Insert(id - 1, record);
+
+            string firstNameUpper = firstName.ToUpperInvariant();
+
+            this.firstNameDictionary[firstNameUpper].RemoveAt(id - 1);
+            this.firstNameDictionary[firstNameUpper].Insert(id - 1, record);
         }
 
         public FileCabinetRecord[] FindByFirstName(string firstName)
@@ -70,7 +89,7 @@ namespace FileCabinetApp
                 throw new ArgumentException($"{nameof(firstName)} not correct.");
             }
 
-            return this.list.FindAll(str => str.FirstName.Equals(firstName, StringComparison.InvariantCultureIgnoreCase)).ToArray();
+            return this.firstNameDictionary[firstName].ToArray();
         }
 
         public FileCabinetRecord[] FindByLastName(string lastName)
