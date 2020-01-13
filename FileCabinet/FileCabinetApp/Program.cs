@@ -280,6 +280,13 @@ namespace FileCabinetApp
                 result = fileCabinetService.FindByFirstName(firstName);
             }
 
+            if (criterion.Equals("lastName", StringComparison.InvariantCultureIgnoreCase))
+            {
+                string lastName = inputValue.Trim('"').ToUpperInvariant();
+                result = fileCabinetService.FindByLastName(lastName);
+            }
+
+
             foreach (var item in result)
             {
                 var recordString = new StringBuilder();

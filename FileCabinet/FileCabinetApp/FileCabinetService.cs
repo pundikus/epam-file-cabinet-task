@@ -73,6 +73,21 @@ namespace FileCabinetApp
             return this.list.FindAll(str => str.FirstName.Equals(firstName, StringComparison.InvariantCultureIgnoreCase)).ToArray();
         }
 
+        public FileCabinetRecord[] FindByLastName(string lastName)
+        {
+            if (lastName == null)
+            {
+                throw new ArgumentNullException(nameof(lastName));
+            }
+
+            if (lastName.Length < 2 || lastName.Length > 60)
+            {
+                throw new ArgumentException($"{nameof(lastName)} not correct.");
+            }
+
+            return this.list.FindAll(str => str.FirstName.Equals(lastName, StringComparison.InvariantCultureIgnoreCase)).ToArray();
+        }
+
         private static void Validate(string firstName, string lastName, DateTime dateOfBirth, short cabinetNumber, decimal salary, char category)
         {
             if (firstName == null || string.IsNullOrEmpty(firstName.Trim()))
