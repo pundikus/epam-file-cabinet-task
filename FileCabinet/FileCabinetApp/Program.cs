@@ -12,6 +12,8 @@ namespace FileCabinetApp
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
+        private const int CriterionIndex = 0;
+        private const int InputValueIndex = 1;
 
         private static FileCabinetService fileCabinetService = new FileCabinetService();
 
@@ -25,6 +27,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("edit", Edit),
+            new Tuple<string, Action<string>>("find", Find),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -34,7 +37,8 @@ namespace FileCabinetApp
             new string[] { "stat", "gets the number of records", "The 'stat' command returns the number of records." },
             new string[] { "create", "creates a new record", "The 'create' command creates a new record" },
             new string[] { "list", "returns a list of records", "The 'list' command returns a list of records" },
-            new string[] { "edit", "changes record", "The 'edit' changes record" },
+            new string[] { "edit", "changes record", "The 'edit' command changes record" },
+            new string[] { "find", "find records", "The 'find' command search records by input value" },
         };
 
         public static void Main(string[] args)
@@ -124,12 +128,15 @@ namespace FileCabinetApp
 
                     Console.Write("Date of birth: ");
                     string dateofBirthString = Console.ReadLine();
-                    var dateofBirth = DateTime.Parse(dateofBirthString, new CultureInfo("en-US", false));
+                    var parseddateofBirth = DateTime.TryParseExact(dateofBirthString, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateofBirth);
+                    if (!parseddateofBirth)
+                    {
+                        Console.WriteLine("Invalid Date.");
+                    }
 
                     Console.Write("Cabinet number: ");
                     string cabinetNumberString = Console.ReadLine();
                     var parsedCabinetNumber = short.TryParse(cabinetNumberString, out short cabinetNumber);
-
                     if (!parsedCabinetNumber)
                     {
                         Console.WriteLine("Invalid Cabinet number.");
@@ -140,7 +147,6 @@ namespace FileCabinetApp
                     Console.Write("Salary: ");
                     string salaryString = Console.ReadLine();
                     var parsedSalary = decimal.TryParse(salaryString, out decimal salary);
-
                     if (!parsedSalary)
                     {
                         Console.WriteLine("Invalid Salary.");
@@ -151,7 +157,6 @@ namespace FileCabinetApp
                     Console.Write("Category(A, B, C): ");
                     string categoryString = Console.ReadLine();
                     var parsedCategory = char.TryParse(categoryString, out char category);
-
                     if (!parsedCategory)
                     {
                         Console.WriteLine("Invalid Category.");
@@ -194,12 +199,6 @@ namespace FileCabinetApp
 
         private static void Edit(string parameters)
         {
-            if (Program.fileCabinetService.GetRecords() == null)
-            {
-                Console.WriteLine("List records is Empty!");
-                return;
-            }
-
             var parsedId = int.TryParse(parameters, out int id);
 
             if (!parsedId)
@@ -222,12 +221,15 @@ namespace FileCabinetApp
 
             Console.Write("Date of birth: ");
             string dateofBirthString = Console.ReadLine();
-            var dateofBirth = DateTime.Parse(dateofBirthString, new CultureInfo("en-US", false));
+            var parseddateofBirth = DateTime.TryParseExact(dateofBirthString, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateofBirth);
+            if (!parseddateofBirth)
+            {
+                Console.WriteLine("Invalid Date.");
+            }
 
             Console.Write("Cabinet number: ");
             string cabinetNumberString = Console.ReadLine();
             var parsedCabinetNumber = short.TryParse(cabinetNumberString, out short cabinetNumber);
-
             if (!parsedCabinetNumber)
             {
                 Console.WriteLine("Invalid Cabinet number.");
@@ -236,7 +238,6 @@ namespace FileCabinetApp
             Console.Write("Salary: ");
             string salaryString = Console.ReadLine();
             var parsedSalary = decimal.TryParse(salaryString, out decimal salary);
-
             if (!parsedSalary)
             {
                 Console.WriteLine("Invalid Salary.");
@@ -245,7 +246,6 @@ namespace FileCabinetApp
             Console.Write("Category(A, B, C): ");
             string categoryString = Console.ReadLine();
             var parsedCategory = char.TryParse(categoryString, out char category);
-
             if (!parsedCategory)
             {
                 Console.WriteLine("Invalid Category.");
@@ -253,6 +253,63 @@ namespace FileCabinetApp
 
             Program.fileCabinetService.EditRecord(id, firstName, lastName, dateofBirth, cabinetNumber, salary, category);
             Console.WriteLine($"Record #{id} is updated.");
+        }
+
+        private static void Find(string parametrs)
+        {
+            FileCabinetRecord[] result = Array.Empty<FileCabinetRecord>();
+
+            var paramArray = parametrs.Split(' ', 2);
+            if (paramArray.Length != 2)
+            {
+                Console.WriteLine("Input is not correct.");
+                return;
+            }
+
+            string criterion = paramArray[CriterionIndex];
+            string inputValue = paramArray[InputValueIndex];
+            if (inputValue.First() != '"' && inputValue.Last() != '"')
+            {
+                Console.WriteLine("second params must be \"\"");
+                return;
+            }
+
+            if (criterion.Equals("firstName", StringComparison.InvariantCultureIgnoreCase))
+            {
+                string firstName = inputValue.Trim('"').ToUpperInvariant();
+                result = fileCabinetService.FindByFirstName(firstName);
+            }
+
+            if (criterion.Equals("lastName", StringComparison.InvariantCultureIgnoreCase))
+            {
+                string lastName = inputValue.Trim('"').ToUpperInvariant();
+                result = fileCabinetService.FindByLastName(lastName);
+            }
+
+            if (criterion.Equals("dateofBirth", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var parseddateofBirth = DateTime.TryParseExact(inputValue.Trim('"').ToUpperInvariant(), "yyyy-MMM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateofBirth);
+                if (!parseddateofBirth)
+                {
+                    Console.WriteLine("Invalid Date of birth.");
+                }
+
+                string dateOfBirthString = dateofBirth.ToString(CultureInfo.InvariantCulture);
+
+                result = fileCabinetService.FindByDateOfBirth(dateOfBirthString);
+            }
+
+            foreach (var item in result)
+            {
+                var recordString = new StringBuilder();
+
+                recordString.Append($"#{item.Id}, ");
+                recordString.Append($"{item.FirstName}, ");
+                recordString.Append($"{item.LastName}, ");
+                recordString.Append($"{item.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}, ");
+
+                Console.WriteLine(recordString);
+            }
         }
 
         private static void Exit(string parameters)
