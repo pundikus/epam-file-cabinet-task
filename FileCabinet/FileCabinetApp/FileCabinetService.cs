@@ -85,16 +85,7 @@ namespace FileCabinetApp
                 throw new ArgumentException($"{nameof(lastName)} not correct.");
             }
 
-            return this.list.FindAll(str => str.LastName.Equals(lastName, StringComparison.InvariantCultureIgnoreCase)).ToArray();
-        }
-
-        public FileCabinetRecord[] FindByDateOfBirth(string dateOfBirth)
-        {
-            DateTime minDate = new DateTime(1950, 1, 1);
-            DateTime maxDate = DateTime.Now;
-            string dateOfBirthString = dateOfBirth.ToString();
-
-            return this.list.FindAll(str => str.DateOfBirth.Equals(dateOfBirth)).ToArray();
+            return this.list.FindAll(str => str.FirstName.Equals(lastName, StringComparison.InvariantCultureIgnoreCase)).ToArray();
         }
 
         private static void Validate(string firstName, string lastName, DateTime dateOfBirth, short cabinetNumber, decimal salary, char category)
