@@ -9,6 +9,7 @@ namespace FileCabinetApp
     {
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
 
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, short cabinetNumber, decimal salary, char category)
         {
@@ -28,6 +29,7 @@ namespace FileCabinetApp
             this.list.Add(record);
 
             string firstNameUpper = firstName.ToUpperInvariant();
+            string lastNameUpper = lastName.ToUpperInvariant();
 
             if (this.firstNameDictionary.ContainsKey(firstNameUpper))
             {
@@ -38,6 +40,17 @@ namespace FileCabinetApp
                 var newList = new List<FileCabinetRecord>();
                 newList.Add(record);
                 this.firstNameDictionary.Add(firstNameUpper, newList);
+            }
+
+            if (this.lastNameDictionary.ContainsKey(lastNameUpper))
+            {
+                this.lastNameDictionary[lastNameUpper].Add(record);
+            }
+            else
+            {
+                var newList = new List<FileCabinetRecord>();
+                newList.Add(record);
+                this.lastNameDictionary.Add(lastNameUpper, newList);
             }
 
             return record.Id;
@@ -72,9 +85,14 @@ namespace FileCabinetApp
             this.list.Insert(id - 1, record);
 
             string firstNameUpper = firstName.ToUpperInvariant();
+            string lastNameUpper = lastName.ToUpperInvariant();
 
             this.firstNameDictionary[firstNameUpper].RemoveAt(id - 1);
             this.firstNameDictionary[firstNameUpper].Insert(id - 1, record);
+
+            this.lastNameDictionary[lastNameUpper].RemoveAt(id - 1);
+            this.lastNameDictionary[lastNameUpper].Insert(id - 1, record);
+
         }
 
         public FileCabinetRecord[] FindByFirstName(string firstName)
@@ -104,7 +122,7 @@ namespace FileCabinetApp
                 throw new ArgumentException($"{nameof(lastName)} not correct.");
             }
 
-            return this.list.FindAll(str => str.FirstName.Equals(lastName, StringComparison.InvariantCultureIgnoreCase)).ToArray();
+            return this.lastNameDictionary[lastName].ToArray();
         }
 
         private static void Validate(string firstName, string lastName, DateTime dateOfBirth, short cabinetNumber, decimal salary, char category)
