@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -10,6 +11,7 @@ namespace FileCabinetApp
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
 
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, short cabinetNumber, decimal salary, char category)
         {
@@ -30,6 +32,7 @@ namespace FileCabinetApp
 
             string firstNameUpper = firstName.ToUpperInvariant();
             string lastNameUpper = lastName.ToUpperInvariant();
+            string dateOfBirthUpper = dateOfBirth.ToString(CultureInfo.InvariantCulture).ToUpperInvariant();
 
             if (this.firstNameDictionary.ContainsKey(firstNameUpper))
             {
@@ -51,6 +54,17 @@ namespace FileCabinetApp
                 var newList = new List<FileCabinetRecord>();
                 newList.Add(record);
                 this.lastNameDictionary.Add(lastNameUpper, newList);
+            }
+
+            if (this.dateOfBirthDictionary.ContainsKey(dateOfBirthUpper))
+            {
+                this.dateOfBirthDictionary[dateOfBirthUpper].Add(record);
+            }
+            else
+            {
+                var newList = new List<FileCabinetRecord>();
+                newList.Add(record);
+                this.dateOfBirthDictionary.Add(dateOfBirthUpper, newList);
             }
 
             return record.Id;
@@ -86,6 +100,7 @@ namespace FileCabinetApp
 
             string firstNameUpper = firstName.ToUpperInvariant();
             string lastNameUpper = lastName.ToUpperInvariant();
+            string dateOfBirthUpper = dateOfBirth.ToString(CultureInfo.InvariantCulture).ToUpperInvariant();
 
             this.firstNameDictionary[firstNameUpper].RemoveAt(id - 1);
             this.firstNameDictionary[firstNameUpper].Insert(id - 1, record);
@@ -93,6 +108,8 @@ namespace FileCabinetApp
             this.lastNameDictionary[lastNameUpper].RemoveAt(id - 1);
             this.lastNameDictionary[lastNameUpper].Insert(id - 1, record);
 
+            this.dateOfBirthDictionary[dateOfBirthUpper].RemoveAt(id - 1);
+            this.dateOfBirthDictionary[dateOfBirthUpper].Insert(id - 1, record);
         }
 
         public FileCabinetRecord[] FindByFirstName(string firstName)
@@ -123,6 +140,18 @@ namespace FileCabinetApp
             }
 
             return this.lastNameDictionary[lastName].ToArray();
+        }
+
+        public FileCabinetRecord[] FindByDateOfBirth(string dateOfBirth)
+        {
+            if (dateOfBirth == null)
+            {
+                throw new ArgumentNullException(nameof(dateOfBirth));
+            }
+
+            string dateOfBirthString = dateOfBirth.ToString(CultureInfo.InvariantCulture);
+
+            return this.dateOfBirthDictionary[dateOfBirthString].ToArray();
         }
 
         private static void Validate(string firstName, string lastName, DateTime dateOfBirth, short cabinetNumber, decimal salary, char category)

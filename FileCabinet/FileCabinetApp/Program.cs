@@ -286,6 +286,18 @@ namespace FileCabinetApp
                 result = fileCabinetService.FindByLastName(lastName);
             }
 
+            if (criterion.Equals("dateofBirth", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var parseddateofBirth = DateTime.TryParseExact(inputValue.Trim('"').ToUpperInvariant(), "yyyy-MMM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateofBirth);
+                if (!parseddateofBirth)
+                {
+                    Console.WriteLine("Invalid Date of birth.");
+                }
+
+                string dateOfBirthString = dateofBirth.ToString(CultureInfo.InvariantCulture);
+
+                result = fileCabinetService.FindByDateOfBirth(dateOfBirthString);
+            }
 
             foreach (var item in result)
             {
