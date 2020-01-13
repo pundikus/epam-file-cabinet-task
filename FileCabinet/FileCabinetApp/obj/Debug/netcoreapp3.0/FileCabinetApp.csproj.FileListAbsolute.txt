@@ -1,0 +1,12 @@
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\bin\Debug\netcoreapp3.0\FileCabinetApp.exe
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\bin\Debug\netcoreapp3.0\FileCabinetApp.deps.json
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\bin\Debug\netcoreapp3.0\FileCabinetApp.runtimeconfig.json
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\bin\Debug\netcoreapp3.0\FileCabinetApp.runtimeconfig.dev.json
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\bin\Debug\netcoreapp3.0\FileCabinetApp.dll
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\bin\Debug\netcoreapp3.0\FileCabinetApp.pdb
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\obj\Debug\netcoreapp3.0\FileCabinetApp.csprojAssemblyReference.cache
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\obj\Debug\netcoreapp3.0\FileCabinetApp.AssemblyInfoInputs.cache
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\obj\Debug\netcoreapp3.0\FileCabinetApp.AssemblyInfo.cs
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\obj\Debug\netcoreapp3.0\FileCabinetApp.dll
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\obj\Debug\netcoreapp3.0\FileCabinetApp.pdb
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\bin\Debug\netcoreapp3.0\FileCabinetApp.xml
