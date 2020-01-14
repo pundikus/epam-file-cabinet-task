@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 
 namespace FileCabinetApp
 {
     public class FileCabinetService
     {
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
@@ -30,42 +30,7 @@ namespace FileCabinetApp
 
             this.list.Add(record);
 
-            string firstNameUpper = firstName.ToUpperInvariant();
-            string lastNameUpper = lastName.ToUpperInvariant();
-            string dateOfBirthUpper = dateOfBirth.ToString(CultureInfo.InvariantCulture).ToUpperInvariant();
-
-            if (this.firstNameDictionary.ContainsKey(firstNameUpper))
-            {
-                this.firstNameDictionary[firstNameUpper].Add(record);
-            }
-            else
-            {
-                var newList = new List<FileCabinetRecord>();
-                newList.Add(record);
-                this.firstNameDictionary.Add(firstNameUpper, newList);
-            }
-
-            if (this.lastNameDictionary.ContainsKey(lastNameUpper))
-            {
-                this.lastNameDictionary[lastNameUpper].Add(record);
-            }
-            else
-            {
-                var newList = new List<FileCabinetRecord>();
-                newList.Add(record);
-                this.lastNameDictionary.Add(lastNameUpper, newList);
-            }
-
-            if (this.dateOfBirthDictionary.ContainsKey(dateOfBirthUpper))
-            {
-                this.dateOfBirthDictionary[dateOfBirthUpper].Add(record);
-            }
-            else
-            {
-                var newList = new List<FileCabinetRecord>();
-                newList.Add(record);
-                this.dateOfBirthDictionary.Add(dateOfBirthUpper, newList);
-            }
+            this.AddRecordInAllDictionary(record);
 
             return record.Id;
         }
@@ -95,21 +60,15 @@ namespace FileCabinetApp
                  Category = category,
             };
 
-            this.list.RemoveAt(id - 1);
-            this.list.Insert(id - 1, record);
+            var recordById = this.list.Find(x => x.Id == id);
 
-            string firstNameUpper = firstName.ToUpperInvariant();
-            string lastNameUpper = lastName.ToUpperInvariant();
-            string dateOfBirthUpper = dateOfBirth.ToString(CultureInfo.InvariantCulture).ToUpperInvariant();
+            this.list.Remove(recordById);
+            this.list.Add(record);
 
-            this.firstNameDictionary[firstNameUpper].RemoveAt(id - 1);
-            this.firstNameDictionary[firstNameUpper].Insert(id - 1, record);
+            var newrecordById = this.list.Find(x => x.Id == id);
 
-            this.lastNameDictionary[lastNameUpper].RemoveAt(id - 1);
-            this.lastNameDictionary[lastNameUpper].Insert(id - 1, record);
-
-            this.dateOfBirthDictionary[dateOfBirthUpper].RemoveAt(id - 1);
-            this.dateOfBirthDictionary[dateOfBirthUpper].Insert(id - 1, record);
+            this.DeleteRecordFromAllDictionary(recordById);
+            this.AddRecordInAllDictionary(newrecordById);
         }
 
         public FileCabinetRecord[] FindByFirstName(string firstName)
@@ -163,7 +122,7 @@ namespace FileCabinetApp
 
             if (firstName.Length < 2 || firstName.Length > 60)
             {
-                throw new ArgumentException($"{nameof(firstName)} not correct.");
+                throw new ArgumentException($"{nameof(firstName)} is not correct.");
             }
 
             if (lastName == null || string.IsNullOrEmpty(lastName.Trim()))
@@ -173,7 +132,7 @@ namespace FileCabinetApp
 
             if (lastName.Length < 2 || lastName.Length > 60)
             {
-                throw new ArgumentException($"{nameof(lastName)} not correct.");
+                throw new ArgumentException($"{nameof(lastName)} is not correct.");
             }
 
             DateTime minDate = new DateTime(1950, 1, 1);
@@ -181,23 +140,102 @@ namespace FileCabinetApp
 
             if (dateOfBirth < minDate || dateOfBirth > maxDate)
             {
-                throw new ArgumentException($"{nameof(dateOfBirth)} not correct.");
+                throw new ArgumentException($"{nameof(dateOfBirth)} is not correct.");
             }
 
             if (cabinetNumber < 1 || cabinetNumber > 1500)
             {
-                throw new ArgumentException($"{nameof(cabinetNumber)} not correct.");
+                throw new ArgumentException($"{nameof(cabinetNumber)} is not correct.");
             }
 
             if (salary < 0 || salary > decimal.MaxValue)
             {
-                throw new ArgumentException($"{nameof(salary)} not correct.");
+                throw new ArgumentException($"{nameof(salary)} is not correct.");
             }
 
             if (category < 65 || category > 67)
             {
-                throw new ArgumentException($"{nameof(category)} not correct.");
+                throw new ArgumentException($"{nameof(category)} is not correct.");
             }
+        }
+
+        private static void AddRecord(Dictionary<string, List<FileCabinetRecord>> dictionary, string key, FileCabinetRecord record)
+        {
+            if (dictionary.ContainsKey(key))
+            {
+                dictionary[key].Add(record);
+            }
+            else
+            {
+                var newListRecords = new List<FileCabinetRecord>
+                {
+                    record,
+                };
+
+                dictionary.Add(key, newListRecords);
+            }
+        }
+
+        private static void DeleteRecord(Dictionary<string, List<FileCabinetRecord>> dictionary, string key, FileCabinetRecord record)
+        {
+            if (dictionary.ContainsKey(key))
+            {
+                dictionary[key].Remove(record);
+                if (dictionary[key].Count == 0)
+                {
+                    dictionary.Remove(key);
+                }
+            }
+        }
+
+        private static void AddRecordInFirstNameDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, FileCabinetRecord record)
+        {
+            var key = record.FirstName.ToUpperInvariant();
+            AddRecord(dictionary, key, record);
+        }
+
+        private static void AddRecordInLastNameDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, FileCabinetRecord record)
+        {
+            var key = record.LastName.ToUpperInvariant();
+            AddRecord(dictionary, key, record);
+        }
+
+        private static void AddRecordInDateofBirthDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, FileCabinetRecord record)
+        {
+            var key = record.DateOfBirth.ToString(CultureInfo.InvariantCulture).ToUpperInvariant();
+            AddRecord(dictionary, key, record);
+        }
+
+        private static void DeleteRecordFromFirstNameDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, FileCabinetRecord record)
+        {
+            var key = record.FirstName.ToUpperInvariant();
+            DeleteRecord(dictionary, key, record);
+        }
+
+        private static void DeleteRecordFromLastNameDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, FileCabinetRecord record)
+        {
+            var key = record.LastName.ToUpperInvariant();
+            DeleteRecord(dictionary, key, record);
+        }
+
+        private static void DeleteRecordFromDateofBirthDictionary(Dictionary<string, List<FileCabinetRecord>> dictionary, FileCabinetRecord record)
+        {
+            var key = record.DateOfBirth.ToString(CultureInfo.InvariantCulture).ToUpperInvariant();
+            DeleteRecord(dictionary, key, record);
+        }
+
+        private void DeleteRecordFromAllDictionary(FileCabinetRecord record)
+        {
+            DeleteRecordFromFirstNameDictionary(this.firstNameDictionary, record);
+            DeleteRecordFromLastNameDictionary(this.lastNameDictionary, record);
+            DeleteRecordFromDateofBirthDictionary(this.dateOfBirthDictionary, record);
+        }
+
+        private void AddRecordInAllDictionary(FileCabinetRecord record)
+        {
+            AddRecordInFirstNameDictionary(this.firstNameDictionary, record);
+            AddRecordInLastNameDictionary(this.lastNameDictionary, record);
+            AddRecordInDateofBirthDictionary(this.dateOfBirthDictionary, record);
         }
     }
 }

@@ -12,8 +12,6 @@ namespace FileCabinetApp
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
-        private const int CriterionIndex = 0;
-        private const int InputValueIndex = 1;
 
         private static FileCabinetService fileCabinetService = new FileCabinetService();
 
@@ -132,6 +130,7 @@ namespace FileCabinetApp
                     if (!parseddateofBirth)
                     {
                         Console.WriteLine("Invalid Date.");
+                        break;
                     }
 
                     Console.Write("Cabinet number: ");
@@ -140,7 +139,6 @@ namespace FileCabinetApp
                     if (!parsedCabinetNumber)
                     {
                         Console.WriteLine("Invalid Cabinet number.");
-                        Console.Clear();
                         break;
                     }
 
@@ -150,17 +148,15 @@ namespace FileCabinetApp
                     if (!parsedSalary)
                     {
                         Console.WriteLine("Invalid Salary.");
-                        Console.Clear();
                         break;
                     }
 
                     Console.Write("Category(A, B, C): ");
-                    string categoryString = Console.ReadLine();
+                    string categoryString = Console.ReadLine().ToUpperInvariant();
                     var parsedCategory = char.TryParse(categoryString, out char category);
                     if (!parsedCategory)
                     {
                         Console.WriteLine("Invalid Category.");
-                        Console.Clear();
                         break;
                     }
 
@@ -200,7 +196,6 @@ namespace FileCabinetApp
         private static void Edit(string parameters)
         {
             var parsedId = int.TryParse(parameters, out int id);
-
             if (!parsedId)
             {
                 Console.WriteLine("Invalid Id");
@@ -244,19 +239,35 @@ namespace FileCabinetApp
             }
 
             Console.Write("Category(A, B, C): ");
-            string categoryString = Console.ReadLine();
+            string categoryString = Console.ReadLine().ToUpperInvariant();
             var parsedCategory = char.TryParse(categoryString, out char category);
             if (!parsedCategory)
             {
                 Console.WriteLine("Invalid Category.");
             }
 
-            Program.fileCabinetService.EditRecord(id, firstName, lastName, dateofBirth, cabinetNumber, salary, category);
+            try
+            {
+                Program.fileCabinetService.EditRecord(id, firstName, lastName, dateofBirth, cabinetNumber, salary, category);
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return;
+            }
+
             Console.WriteLine($"Record #{id} is updated.");
         }
 
         private static void Find(string parametrs)
         {
+            const int CriterionIndex = 0;
+            const int InputValueIndex = 1;
+
+            const string CriterionFirstName = "firstName";
+            const string CriterionLastName = "lastName";
+            const string CriterionDateOfBirth = "dateofBirth";
+
             FileCabinetRecord[] result = Array.Empty<FileCabinetRecord>();
 
             var paramArray = parametrs.Split(' ', 2);
@@ -274,21 +285,22 @@ namespace FileCabinetApp
                 return;
             }
 
-            if (criterion.Equals("firstName", StringComparison.InvariantCultureIgnoreCase))
+            if (criterion.Equals(CriterionFirstName, StringComparison.InvariantCultureIgnoreCase))
             {
                 string firstName = inputValue.Trim('"').ToUpperInvariant();
                 result = fileCabinetService.FindByFirstName(firstName);
             }
 
-            if (criterion.Equals("lastName", StringComparison.InvariantCultureIgnoreCase))
+            if (criterion.Equals(CriterionLastName, StringComparison.InvariantCultureIgnoreCase))
             {
                 string lastName = inputValue.Trim('"').ToUpperInvariant();
                 result = fileCabinetService.FindByLastName(lastName);
             }
 
-            if (criterion.Equals("dateofBirth", StringComparison.InvariantCultureIgnoreCase))
+            if (criterion.Equals(CriterionDateOfBirth, StringComparison.InvariantCultureIgnoreCase))
             {
-                var parseddateofBirth = DateTime.TryParseExact(inputValue.Trim('"').ToUpperInvariant(), "yyyy-MMM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateofBirth);
+                string dateOfBirth = inputValue.Trim('"').ToUpperInvariant();
+                var parseddateofBirth = DateTime.TryParseExact(dateOfBirth, "yyyy-MMM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateofBirth);
                 if (!parseddateofBirth)
                 {
                     Console.WriteLine("Invalid Date of birth.");
