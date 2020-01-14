@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 namespace FileCabinetApp
 {
+    /// <summary>
+    /// This is intended for service. It has all the necessary methods for creating, modifying, deleting records.
+    /// </summary>
     public class FileCabinetService
     {
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
@@ -13,6 +15,16 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
 
+        /// <summary>
+        /// This method is for creating records.
+        /// </summary>
+        /// <param name="firstName">It is Firstname for user.</param>
+        /// <param name="lastName">It is Lastname for user.</param>
+        /// <param name="dateOfBirth">It is Date of Birth for user.</param>
+        /// <param name="cabinetNumber">It is cabinet number for user.</param>
+        /// <param name="salary">It is salary for user.</param>
+        /// <param name="category">It is category for user.</param>
+        /// <returns>unique identifier for user.</returns>
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, short cabinetNumber, decimal salary, char category)
         {
             Validate(firstName, lastName, dateOfBirth, cabinetNumber, salary, category);
@@ -35,16 +47,34 @@ namespace FileCabinetApp
             return record.Id;
         }
 
+        /// <summary>
+        /// This Method gets all records as an array.
+        /// </summary>
+        /// <returns>array all records.</returns>
         public FileCabinetRecord[] GetRecords()
         {
             return this.list.ToArray();
         }
 
+        /// <summary>
+        /// This Method returns count records.
+        /// </summary>
+        /// <returns>count records.</returns>
         public int GetStat()
         {
             return this.list.Count;
         }
 
+        /// <summary>
+        /// This method is for changes records.
+        /// </summary>
+        /// <param name="id">It is unique identifier for user.</param>
+        /// <param name="firstName">It is Firstname for user.</param>
+        /// <param name="lastName">It is Lastname for user.</param>
+        /// <param name="dateOfBirth">It is Date of Birth for user.</param>
+        /// <param name="cabinetNumber">It is cabinet number for user.</param>
+        /// <param name="salary">It is salary for user.</param>
+        /// <param name="category">It is category for user.</param>
         public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, short cabinetNumber, decimal salary, char category)
         {
             Validate(firstName, lastName, dateOfBirth, cabinetNumber, salary, category);
@@ -71,6 +101,11 @@ namespace FileCabinetApp
             this.AddRecordInAllDictionary(newrecordById);
         }
 
+        /// <summary>
+        /// This Method find records by Firstname users.
+        /// </summary>
+        /// <param name="firstName">Firstname users.</param>
+        /// <returns>an array with entries by Firstname.</returns>
         public FileCabinetRecord[] FindByFirstName(string firstName)
         {
             if (firstName == null)
@@ -86,6 +121,11 @@ namespace FileCabinetApp
             return this.firstNameDictionary[firstName].ToArray();
         }
 
+        /// <summary>
+        /// This Method find records by Lastname users.
+        /// </summary>
+        /// <param name="lastName">Lastname users.</param>
+        /// <returns>an array with entries by Lastname.</returns>
         public FileCabinetRecord[] FindByLastName(string lastName)
         {
             if (lastName == null)
@@ -101,6 +141,11 @@ namespace FileCabinetApp
             return this.lastNameDictionary[lastName].ToArray();
         }
 
+        /// <summary>
+        /// This Method find records by Date of Birth users.
+        /// </summary>
+        /// <param name="dateOfBirth">Date of Birth users.</param>
+        /// <returns>an array with entries by Date of Birth.</returns>
         public FileCabinetRecord[] FindByDateOfBirth(string dateOfBirth)
         {
             if (dateOfBirth == null)

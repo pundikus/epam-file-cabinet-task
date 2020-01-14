@@ -5,6 +5,9 @@ using System.Text;
 
 namespace FileCabinetApp
 {
+    /// <summary>
+    /// This class is needed for user interaction.
+    /// </summary>
     public static class Program
     {
         private const string DeveloperName = "Nikita Pundis";
@@ -39,7 +42,10 @@ namespace FileCabinetApp
             new string[] { "find", "find records", "The 'find' command search records by input value" },
         };
 
-        public static void Main(string[] args)
+        /// <summary>
+        /// This is the main method in which all kinds of user interaction is performed.
+        /// </summary>
+        public static void Main()
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
             Console.WriteLine(Program.HintMessage);
