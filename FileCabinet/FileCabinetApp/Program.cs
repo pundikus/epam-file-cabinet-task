@@ -59,7 +59,6 @@ namespace FileCabinetApp
             const string fullParametr = "--validation-rules";
             const string abbreviatedParametr = "-v";
             const string customParametrs = "custom";
-            const string defaultParametrs = "default";
             var inputsArrayParams = Array.Empty<string>();
 
             if (inputMode.Contains(fullParametr, StringComparison.InvariantCulture))
@@ -277,13 +276,23 @@ namespace FileCabinetApp
 
         private static void Edit(string parameters)
         {
+            FileCabinetRecord[] listRecords = null;
+
             var parsedId = int.TryParse(parameters, out int id);
             if (!parsedId)
             {
                 Console.WriteLine("Invalid Id");
             }
 
-            var listRecords = Program.fileCabinetCustomService.GetRecords();
+            if (isModeCustom)
+            {
+                listRecords = Program.fileCabinetCustomService.GetRecords();
+            }
+            else
+            {
+                listRecords = Program.fileCabinetDefaultService.GetRecords();
+            }
+
             if (!listRecords.Any(x => x.Id == id))
             {
                 Console.WriteLine($"#{id} record is not found.");
@@ -331,7 +340,7 @@ namespace FileCabinetApp
             try
             {
                 ValueRange parametrs = new ValueRange(id, firstName, lastName, dateofBirth, cabinetNumber, salary, category);
-                
+
                 if (isModeCustom)
                 {
                     Program.fileCabinetCustomService.EditRecord(parametrs);

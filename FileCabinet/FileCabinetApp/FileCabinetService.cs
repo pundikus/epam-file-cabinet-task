@@ -27,7 +27,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(parametrs));
             }
 
-            this.Validate(parametrs);
+            this.CreateValidator().Validate(parametrs);
 
             var record = new FileCabinetRecord
             {
@@ -81,17 +81,17 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(parametrs));
             }
 
-            this.Validate(parametrs);
+            this.CreateValidator().Validate(parametrs);
 
             var record = new FileCabinetRecord
             {
-                 Id = parametrs.Id,
-                 FirstName = parametrs.FirstName,
-                 LastName = parametrs.LastName,
-                 DateOfBirth = parametrs.DateOfBirth,
-                 CabinetNumber = parametrs.CabinetNumber,
-                 Salary = parametrs.Salary,
-                 Category = parametrs.Category,
+                Id = parametrs.Id,
+                FirstName = parametrs.FirstName,
+                LastName = parametrs.LastName,
+                DateOfBirth = parametrs.DateOfBirth,
+                CabinetNumber = parametrs.CabinetNumber,
+                Salary = parametrs.Salary,
+                Category = parametrs.Category,
             };
 
             var recordById = this.list.Find(x => x.Id == parametrs.Id);
@@ -215,6 +215,15 @@ namespace FileCabinetApp
             {
                 throw new ArgumentException($"{nameof(parametrs.Category)} is not correct.");
             }
+        }
+
+        /// <summary>
+        /// This Method create Validator.
+        /// </summary>
+        /// <returns>new Validator.</returns>
+        protected virtual IRecordValidator CreateValidator()
+        {
+            return new DefaultValidator();
         }
 
         private static void AddRecord(Dictionary<string, List<FileCabinetRecord>> dictionary, string key, FileCabinetRecord record)

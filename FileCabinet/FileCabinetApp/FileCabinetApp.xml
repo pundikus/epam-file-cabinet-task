@@ -4,27 +4,49 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.CustomValidator">
+            <summary>
+            This class implements the custom method for checking parameters.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.Validate(FileCabinetApp.ValueRange)">
+            <summary>
+            This Method check parametrs.
+            </summary>
+            <param name="parametrs">It is user input parametrs.</param>
+        </member>
+        <member name="T:FileCabinetApp.DefaultValidator">
+            <summary>
+            This class implements the default method for checking parameters.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.Validate(FileCabinetApp.ValueRange)">
+            <summary>
+            This Method check parametrs.
+            </summary>
+            <param name="parametrs">It is user input parametrs.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetCustomService">
             <summary>
             This class storaged custom validate parametrs.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.Validate(FileCabinetApp.ValueRange)">
+        <member name="M:FileCabinetApp.FileCabinetCustomService.CreateValidator">
             <summary>
-            This Method check parametrs.
+            This Method create custom Validator.
             </summary>
-            <param name="parametrs">It is user input parametrs.</param>
+            <returns>new custom validator.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetDefaultService">
             <summary>
             This class storaged default validate parametrs.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.Validate(FileCabinetApp.ValueRange)">
+        <member name="M:FileCabinetApp.FileCabinetDefaultService.CreateValidator">
             <summary>
-            This Method check parametrs.
+            This Method create default Validator.
             </summary>
-            <param name="parametrs">It is user input parametrs.</param>
+            <returns>new default validator.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -139,6 +161,23 @@
             <returns>an array with entries by Date of Birth.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.Validate(FileCabinetApp.ValueRange)">
+            <summary>
+            This Method check parametrs.
+            </summary>
+            <param name="parametrs">It is user input parametrs.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.CreateValidator">
+            <summary>
+            This Method create Validator.
+            </summary>
+            <returns>new Validator.</returns>
+        </member>
+        <member name="T:FileCabinetApp.IRecordValidator">
+            <summary>
+            This Interface sets a method for checking parameters.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.IRecordValidator.Validate(FileCabinetApp.ValueRange)">
             <summary>
             This Method check parametrs.
             </summary>
