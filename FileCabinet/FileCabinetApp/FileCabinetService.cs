@@ -15,6 +15,17 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
 
+        private readonly IRecordValidator validator;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileCabinetService"/> class.
+        /// </summary>
+        /// <param name="validator">validator for parameters.</param>
+        public FileCabinetService(IRecordValidator validator)
+        {
+            this.validator = validator;
+        }
+
         /// <summary>
         /// This method is for creating records.
         /// </summary>
@@ -27,7 +38,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(parametrs));
             }
 
-            this.CreateValidator().Validate(parametrs);
+            this.CreateValidator().ValidateParameters(parametrs);
 
             var record = new FileCabinetRecord
             {
@@ -81,7 +92,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(parametrs));
             }
 
-            this.CreateValidator().Validate(parametrs);
+            this.CreateValidator().ValidateParameters(parametrs);
 
             var record = new FileCabinetRecord
             {
@@ -163,67 +174,12 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// This Method check parametrs.
-        /// </summary>
-        /// <param name="parametrs">It is user input parametrs.</param>
-        protected virtual void Validate(ValueRange parametrs)
-        {
-            if (parametrs == null)
-            {
-                throw new ArgumentNullException(nameof(parametrs));
-            }
-
-            if (parametrs.FirstName == null || string.IsNullOrEmpty(parametrs.FirstName.Trim()))
-            {
-                throw new ArgumentNullException($"{nameof(parametrs.FirstName)} cannot be empty.");
-            }
-
-            if (parametrs.FirstName.Length < 2 || parametrs.FirstName.Length > 60)
-            {
-                throw new ArgumentException($"{nameof(parametrs.FirstName)} is not correct.");
-            }
-
-            if (parametrs.LastName == null || string.IsNullOrEmpty(parametrs.LastName.Trim()))
-            {
-                throw new ArgumentNullException($"{nameof(parametrs.LastName)} cannot be empty.");
-            }
-
-            if (parametrs.LastName.Length < 2 || parametrs.LastName.Length > 60)
-            {
-                throw new ArgumentException($"{nameof(parametrs.LastName)} is not correct.");
-            }
-
-            DateTime minDate = new DateTime(1950, 1, 1);
-            DateTime maxDate = DateTime.Now;
-
-            if (parametrs.DateOfBirth < minDate || parametrs.DateOfBirth > maxDate)
-            {
-                throw new ArgumentException($"{nameof(parametrs.DateOfBirth)} is not correct.");
-            }
-
-            if (parametrs.CabinetNumber < 1 || parametrs.CabinetNumber > 1500)
-            {
-                throw new ArgumentException($"{nameof(parametrs.CabinetNumber)} is not correct.");
-            }
-
-            if (parametrs.Salary < 0 || parametrs.Salary > decimal.MaxValue)
-            {
-                throw new ArgumentException($"{nameof(parametrs.Salary)} is not correct.");
-            }
-
-            if (parametrs.Category < 65 || parametrs.Category > 67)
-            {
-                throw new ArgumentException($"{nameof(parametrs.Category)} is not correct.");
-            }
-        }
-
-        /// <summary>
         /// This Method create Validator.
         /// </summary>
         /// <returns>new Validator.</returns>
         protected virtual IRecordValidator CreateValidator()
         {
-            return new DefaultValidator();
+            return this.validator;
         }
 
         private static void AddRecord(Dictionary<string, List<FileCabinetRecord>> dictionary, string key, FileCabinetRecord record)

@@ -61,27 +61,34 @@ namespace FileCabinetApp
             const string customParametrs = "custom";
             var inputsArrayParams = Array.Empty<string>();
 
-            if (inputMode.Contains(fullParametr, StringComparison.InvariantCulture))
+            try
             {
-                int modeIndex = 1;
-
-                inputsArrayParams = inputMode.Split('=', 2);
-                if (inputsArrayParams[modeIndex].Equals(customParametrs, StringComparison.InvariantCultureIgnoreCase))
+                if (inputMode.Contains(fullParametr, StringComparison.InvariantCulture))
                 {
-                    isModeCustom = true;
+                    int modeIndex = 1;
+
+                    inputsArrayParams = inputMode.Split('=', 2);
+                    if (inputsArrayParams[modeIndex].Equals(customParametrs, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        isModeCustom = true;
+                    }
+                }
+                else if (inputMode.Contains(abbreviatedParametr, StringComparison.InvariantCulture))
+                {
+                    int modeIndex = 1;
+
+                    inputsArrayParams = inputMode.Split(' ', 2);
+                    if (inputsArrayParams[modeIndex].Equals(customParametrs, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        isModeCustom = true;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect input.");
                 }
             }
-            else if (inputMode.Contains(abbreviatedParametr, StringComparison.InvariantCulture))
-            {
-                int modeIndex = 1;
-
-                inputsArrayParams = inputMode.Split(' ', 2);
-                if (inputsArrayParams[modeIndex].Equals(customParametrs, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    isModeCustom = true;
-                }
-            }
-            else
+            catch (IndexOutOfRangeException)
             {
                 Console.WriteLine("Incorrect input.");
             }
