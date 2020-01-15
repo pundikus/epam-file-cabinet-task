@@ -70,16 +70,11 @@
             This is intended for service. It has all the necessary methods for creating, modifying, deleting records.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(System.String,System.String,System.DateTime,System.Int16,System.Decimal,System.Char)">
+        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(FileCabinetApp.ValueRange)">
             <summary>
             This method is for creating records.
             </summary>
-            <param name="firstName">It is Firstname for user.</param>
-            <param name="lastName">It is Lastname for user.</param>
-            <param name="dateOfBirth">It is Date of Birth for user.</param>
-            <param name="cabinetNumber">It is cabinet number for user.</param>
-            <param name="salary">It is salary for user.</param>
-            <param name="category">It is category for user.</param>
+            <param name="parametrs">It is object parametrs.</param>
             <returns>unique identifier for user.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.GetRecords">
@@ -94,17 +89,11 @@
             </summary>
             <returns>count records.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,System.String,System.String,System.DateTime,System.Int16,System.Decimal,System.Char)">
+        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(FileCabinetApp.ValueRange)">
             <summary>
             This method is for changes records.
             </summary>
-            <param name="id">It is unique identifier for user.</param>
-            <param name="firstName">It is Firstname for user.</param>
-            <param name="lastName">It is Lastname for user.</param>
-            <param name="dateOfBirth">It is Date of Birth for user.</param>
-            <param name="cabinetNumber">It is cabinet number for user.</param>
-            <param name="salary">It is salary for user.</param>
-            <param name="category">It is category for user.</param>
+            <param name="parametrs">It is object parametrs.</param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.FindByFirstName(System.String)">
             <summary>
@@ -136,6 +125,90 @@
             <summary>
             This is the main method in which all kinds of user interaction is performed.
             </summary>
+        </member>
+        <member name="T:FileCabinetApp.ValueRange">
+            <summary>
+            This class storage parametrs.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.ValueRange.Id">
+            <summary>
+            Gets is a unique identifier for each user.
+            </summary>
+            <value>
+            Is a unique identifier for each user.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.ValueRange.FirstName">
+            <summary>
+            Gets is a Firstname for each user.
+            </summary>
+            <value>
+            Is a Firstname for each user.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.ValueRange.LastName">
+            <summary>
+            Gets is a Lastname for each user.
+            </summary>
+            <value>
+            Is a Lastname for each user.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.ValueRange.DateOfBirth">
+            <summary>
+            Gets is a Date of Birth for each user.
+            </summary>
+            <value>
+            Is a Date of Birth for each user.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.ValueRange.CabinetNumber">
+            <summary>
+            Gets is a cabinet number for each user.
+            </summary>
+            <value>
+            Is a cabinet number for each user.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.ValueRange.Salary">
+            <summary>
+            Gets is a Salary for each user.
+            </summary>
+            <value>
+            Is a Salary for each user.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.ValueRange.Category">
+            <summary>
+            Gets is a Category for each user.
+            </summary>
+            <value>
+            Is a Category for each user.
+            </value>
+        </member>
+        <member name="M:FileCabinetApp.ValueRange.#ctor(System.String,System.String,System.DateTime,System.Int16,System.Decimal,System.Char)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.ValueRange"/> class.
+            </summary>
+            <param name="firstName">It is Firstname user.</param>
+            <param name="lastName">It is Lastname user.</param>
+            <param name="dateOfBirth">It is Date of Birth user.</param>
+            <param name="cabinetNumber">It is Cabinet Number user.</param>
+            <param name="salary">It is Salary user.</param>
+            <param name="category">It is Category user.</param>
+        </member>
+        <member name="M:FileCabinetApp.ValueRange.#ctor(System.Int32,System.String,System.String,System.DateTime,System.Int16,System.Decimal,System.Char)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.ValueRange"/> class.
+            </summary>
+            <param name="id">It is unique identificator user.</param>
+            <param name="firstName">It is Firstname user.</param>
+            <param name="lastName">It is Lastname user.</param>
+            <param name="dateOfBirth">It is Date of Birth user.</param>
+            <param name="cabinetNumber">It is Cabinet Number user.</param>
+            <param name="salary">It is Salary user.</param>
+            <param name="category">It is Category user.</param>
         </member>
     </members>
 </doc>

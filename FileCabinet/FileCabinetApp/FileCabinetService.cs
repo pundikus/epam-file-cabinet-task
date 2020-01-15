@@ -18,26 +18,26 @@ namespace FileCabinetApp
         /// <summary>
         /// This method is for creating records.
         /// </summary>
-        /// <param name="firstName">It is Firstname for user.</param>
-        /// <param name="lastName">It is Lastname for user.</param>
-        /// <param name="dateOfBirth">It is Date of Birth for user.</param>
-        /// <param name="cabinetNumber">It is cabinet number for user.</param>
-        /// <param name="salary">It is salary for user.</param>
-        /// <param name="category">It is category for user.</param>
+        /// <param name="parametrs">It is object parametrs.</param>
         /// <returns>unique identifier for user.</returns>
-        public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, short cabinetNumber, decimal salary, char category)
+        public int CreateRecord(ValueRange parametrs)
         {
-            Validate(firstName, lastName, dateOfBirth, cabinetNumber, salary, category);
+            if (parametrs == null)
+            {
+                throw new ArgumentNullException(nameof(parametrs));
+            }
+
+            this.Validate(parametrs);
 
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,
-                FirstName = firstName,
-                LastName = lastName,
-                DateOfBirth = dateOfBirth,
-                CabinetNumber = cabinetNumber,
-                Salary = salary,
-                Category = category,
+                FirstName = parametrs.FirstName,
+                LastName = parametrs.LastName,
+                DateOfBirth = parametrs.DateOfBirth,
+                CabinetNumber = parametrs.CabinetNumber,
+                Salary = parametrs.Salary,
+                Category = parametrs.Category,
             };
 
             this.list.Add(record);
@@ -68,34 +68,33 @@ namespace FileCabinetApp
         /// <summary>
         /// This method is for changes records.
         /// </summary>
-        /// <param name="id">It is unique identifier for user.</param>
-        /// <param name="firstName">It is Firstname for user.</param>
-        /// <param name="lastName">It is Lastname for user.</param>
-        /// <param name="dateOfBirth">It is Date of Birth for user.</param>
-        /// <param name="cabinetNumber">It is cabinet number for user.</param>
-        /// <param name="salary">It is salary for user.</param>
-        /// <param name="category">It is category for user.</param>
-        public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, short cabinetNumber, decimal salary, char category)
+        /// <param name="parametrs">It is object parametrs.</param>
+        public void EditRecord(ValueRange parametrs)
         {
-            Validate(firstName, lastName, dateOfBirth, cabinetNumber, salary, category);
+            if (parametrs == null)
+            {
+                throw new ArgumentNullException(nameof(parametrs));
+            }
+
+            this.Validate(parametrs);
 
             var record = new FileCabinetRecord
             {
-                 Id = id,
-                 FirstName = firstName,
-                 LastName = lastName,
-                 DateOfBirth = dateOfBirth,
-                 CabinetNumber = cabinetNumber,
-                 Salary = salary,
-                 Category = category,
+                 Id = parametrs.Id,
+                 FirstName = parametrs.FirstName,
+                 LastName = parametrs.LastName,
+                 DateOfBirth = parametrs.DateOfBirth,
+                 CabinetNumber = parametrs.CabinetNumber,
+                 Salary = parametrs.Salary,
+                 Category = parametrs.Category,
             };
 
-            var recordById = this.list.Find(x => x.Id == id);
+            var recordById = this.list.Find(x => x.Id == parametrs.Id);
 
             this.list.Remove(recordById);
             this.list.Add(record);
 
-            var newrecordById = this.list.Find(x => x.Id == id);
+            var newrecordById = this.list.Find(x => x.Id == parametrs.Id);
 
             this.DeleteRecordFromAllDictionary(recordById);
             this.AddRecordInAllDictionary(newrecordById);
@@ -156,52 +155,6 @@ namespace FileCabinetApp
             string dateOfBirthString = dateOfBirth.ToString(CultureInfo.InvariantCulture);
 
             return this.dateOfBirthDictionary[dateOfBirthString].ToArray();
-        }
-
-        private static void Validate(string firstName, string lastName, DateTime dateOfBirth, short cabinetNumber, decimal salary, char category)
-        {
-            if (firstName == null || string.IsNullOrEmpty(firstName.Trim()))
-            {
-                throw new ArgumentNullException($"{nameof(firstName)} cannot be empty.");
-            }
-
-            if (firstName.Length < 2 || firstName.Length > 60)
-            {
-                throw new ArgumentException($"{nameof(firstName)} is not correct.");
-            }
-
-            if (lastName == null || string.IsNullOrEmpty(lastName.Trim()))
-            {
-                throw new ArgumentNullException($"{nameof(lastName)} cannot be empty.");
-            }
-
-            if (lastName.Length < 2 || lastName.Length > 60)
-            {
-                throw new ArgumentException($"{nameof(lastName)} is not correct.");
-            }
-
-            DateTime minDate = new DateTime(1950, 1, 1);
-            DateTime maxDate = DateTime.Now;
-
-            if (dateOfBirth < minDate || dateOfBirth > maxDate)
-            {
-                throw new ArgumentException($"{nameof(dateOfBirth)} is not correct.");
-            }
-
-            if (cabinetNumber < 1 || cabinetNumber > 1500)
-            {
-                throw new ArgumentException($"{nameof(cabinetNumber)} is not correct.");
-            }
-
-            if (salary < 0 || salary > decimal.MaxValue)
-            {
-                throw new ArgumentException($"{nameof(salary)} is not correct.");
-            }
-
-            if (category < 65 || category > 67)
-            {
-                throw new ArgumentException($"{nameof(category)} is not correct.");
-            }
         }
 
         private static void AddRecord(Dictionary<string, List<FileCabinetRecord>> dictionary, string key, FileCabinetRecord record)
@@ -281,6 +234,52 @@ namespace FileCabinetApp
             AddRecordInFirstNameDictionary(this.firstNameDictionary, record);
             AddRecordInLastNameDictionary(this.lastNameDictionary, record);
             AddRecordInDateofBirthDictionary(this.dateOfBirthDictionary, record);
+        }
+
+        private void Validate(ValueRange parametrs)
+        {
+            if (parametrs.FirstName == null || string.IsNullOrEmpty(parametrs.FirstName.Trim()))
+            {
+                throw new ArgumentNullException($"{nameof(parametrs.FirstName)} cannot be empty.");
+            }
+
+            if (parametrs.FirstName.Length < 2 || parametrs.FirstName.Length > 60)
+            {
+                throw new ArgumentException($"{nameof(parametrs.FirstName)} is not correct.");
+            }
+
+            if (parametrs.LastName == null || string.IsNullOrEmpty(parametrs.LastName.Trim()))
+            {
+                throw new ArgumentNullException($"{nameof(parametrs.LastName)} cannot be empty.");
+            }
+
+            if (parametrs.LastName.Length < 2 || parametrs.LastName.Length > 60)
+            {
+                throw new ArgumentException($"{nameof(parametrs.LastName)} is not correct.");
+            }
+
+            DateTime minDate = new DateTime(1950, 1, 1);
+            DateTime maxDate = DateTime.Now;
+
+            if (parametrs.DateOfBirth < minDate || parametrs.DateOfBirth > maxDate)
+            {
+                throw new ArgumentException($"{nameof(parametrs.DateOfBirth)} is not correct.");
+            }
+
+            if (parametrs.CabinetNumber < 1 || parametrs.CabinetNumber > 1500)
+            {
+                throw new ArgumentException($"{nameof(parametrs.CabinetNumber)} is not correct.");
+            }
+
+            if (parametrs.Salary < 0 || parametrs.Salary > decimal.MaxValue)
+            {
+                throw new ArgumentException($"{nameof(parametrs.Salary)} is not correct.");
+            }
+
+            if (parametrs.Category < 65 || parametrs.Category > 67)
+            {
+                throw new ArgumentException($"{nameof(parametrs.Category)} is not correct.");
+            }
         }
     }
 }

@@ -166,7 +166,8 @@ namespace FileCabinetApp
                         break;
                     }
 
-                    var record = Program.fileCabinetService.CreateRecord(firstName, lastName, dateofBirth, cabinetNumber, salary, category);
+                    ValueRange parametrs = new ValueRange(firstName, lastName, dateofBirth, cabinetNumber, salary, category);
+                    var record = Program.fileCabinetService.CreateRecord(parametrs);
 
                     Console.WriteLine("Record #" + record + " is created.");
                     break;
@@ -254,7 +255,8 @@ namespace FileCabinetApp
 
             try
             {
-                Program.fileCabinetService.EditRecord(id, firstName, lastName, dateofBirth, cabinetNumber, salary, category);
+                ValueRange parametrs = new ValueRange(id, firstName, lastName, dateofBirth, cabinetNumber, salary, category);
+                Program.fileCabinetService.EditRecord(parametrs);
             }
             catch (ArgumentException ex)
             {
