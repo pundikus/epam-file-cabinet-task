@@ -10,62 +10,6 @@ namespace FileCabinetApp
     public class ValueRange
     {
         /// <summary>
-        /// Gets is a unique identifier for each user.
-        /// </summary>
-        /// <value>
-        /// Is a unique identifier for each user.
-        /// </value>
-        public int Id { get;  }
-
-        /// <summary>
-        /// Gets is a Firstname for each user.
-        /// </summary>
-        /// <value>
-        /// Is a Firstname for each user.
-        /// </value>
-        public string FirstName { get;  }
-
-        /// <summary>
-        /// Gets is a Lastname for each user.
-        /// </summary>
-        /// <value>
-        /// Is a Lastname for each user.
-        /// </value>
-        public string LastName { get; }
-
-        /// <summary>
-        /// Gets is a Date of Birth for each user.
-        /// </summary>
-        /// <value>
-        /// Is a Date of Birth for each user.
-        /// </value>
-        public DateTime DateOfBirth { get;  }
-
-        /// <summary>
-        /// Gets is a cabinet number for each user.
-        /// </summary>
-        /// <value>
-        /// Is a cabinet number for each user.
-        /// </value>
-        public short CabinetNumber { get; }
-
-        /// <summary>
-        /// Gets is a Salary for each user.
-        /// </summary>
-        /// <value>
-        /// Is a Salary for each user.
-        /// </value>
-        public decimal Salary { get; }
-
-        /// <summary>
-        /// Gets is a Category for each user.
-        /// </summary>
-        /// <value>
-        /// Is a Category for each user.
-        /// </value>
-        public char Category { get;  }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ValueRange"/> class.
         /// </summary>
         /// <param name="firstName">It is Firstname user.</param>
@@ -104,5 +48,61 @@ namespace FileCabinetApp
             this.Salary = salary;
             this.Category = category;
         }
+
+        /// <summary>
+        /// Gets is a unique identifier for each user.
+        /// </summary>
+        /// <value>
+        /// Is a unique identifier for each user.
+        /// </value>
+        public int Id { get; private set; }
+
+        /// <summary>
+        /// Gets is a Firstname for each user.
+        /// </summary>
+        /// <value>
+        /// Is a Firstname for each user.
+        /// </value>
+        public string FirstName { get; private set; }
+
+        /// <summary>
+        /// Gets is a Lastname for each user.
+        /// </summary>
+        /// <value>
+        /// Is a Lastname for each user.
+        /// </value>
+        public string LastName { get; private set; }
+
+        /// <summary>
+        /// Gets is a Date of Birth for each user.
+        /// </summary>
+        /// <value>
+        /// Is a Date of Birth for each user.
+        /// </value>
+        public DateTime DateOfBirth { get; private set; }
+
+        /// <summary>
+        /// Gets is a cabinet number for each user.
+        /// </summary>
+        /// <value>
+        /// Is a cabinet number for each user.
+        /// </value>
+        public short CabinetNumber { get; private set; }
+
+        /// <summary>
+        /// Gets is a Salary for each user.
+        /// </summary>
+        /// <value>
+        /// Is a Salary for each user.
+        /// </value>
+        public decimal Salary { get; private set; }
+
+        /// <summary>
+        /// Gets is a Category for each user.
+        /// </summary>
+        /// <value>
+        /// Is a Category for each user.
+        /// </value>
+        public char Category { get; private set; }
     }
 }

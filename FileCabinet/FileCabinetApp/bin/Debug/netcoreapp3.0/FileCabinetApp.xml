@@ -4,6 +4,28 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.FileCabinetCustomService">
+            <summary>
+            This class storaged custom validate parametrs.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetCustomService.Validate(FileCabinetApp.ValueRange)">
+            <summary>
+            This Method check parametrs.
+            </summary>
+            <param name="parametrs">It is user input parametrs.</param>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetDefaultService">
+            <summary>
+            This class storaged default validate parametrs.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetDefaultService.Validate(FileCabinetApp.ValueRange)">
+            <summary>
+            This Method check parametrs.
+            </summary>
+            <param name="parametrs">It is user input parametrs.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
             This is the class that stores all the record properties.
@@ -116,6 +138,12 @@
             <param name="dateOfBirth">Date of Birth users.</param>
             <returns>an array with entries by Date of Birth.</returns>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetService.Validate(FileCabinetApp.ValueRange)">
+            <summary>
+            This Method check parametrs.
+            </summary>
+            <param name="parametrs">It is user input parametrs.</param>
+        </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
             This class is needed for user interaction.
@@ -130,6 +158,29 @@
             <summary>
             This class storage parametrs.
             </summary>
+        </member>
+        <member name="M:FileCabinetApp.ValueRange.#ctor(System.String,System.String,System.DateTime,System.Int16,System.Decimal,System.Char)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.ValueRange"/> class.
+            </summary>
+            <param name="firstName">It is Firstname user.</param>
+            <param name="lastName">It is Lastname user.</param>
+            <param name="dateOfBirth">It is Date of Birth user.</param>
+            <param name="cabinetNumber">It is Cabinet Number user.</param>
+            <param name="salary">It is Salary user.</param>
+            <param name="category">It is Category user.</param>
+        </member>
+        <member name="M:FileCabinetApp.ValueRange.#ctor(System.Int32,System.String,System.String,System.DateTime,System.Int16,System.Decimal,System.Char)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.ValueRange"/> class.
+            </summary>
+            <param name="id">It is unique identificator user.</param>
+            <param name="firstName">It is Firstname user.</param>
+            <param name="lastName">It is Lastname user.</param>
+            <param name="dateOfBirth">It is Date of Birth user.</param>
+            <param name="cabinetNumber">It is Cabinet Number user.</param>
+            <param name="salary">It is Salary user.</param>
+            <param name="category">It is Category user.</param>
         </member>
         <member name="P:FileCabinetApp.ValueRange.Id">
             <summary>
@@ -186,29 +237,6 @@
             <value>
             Is a Category for each user.
             </value>
-        </member>
-        <member name="M:FileCabinetApp.ValueRange.#ctor(System.String,System.String,System.DateTime,System.Int16,System.Decimal,System.Char)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.ValueRange"/> class.
-            </summary>
-            <param name="firstName">It is Firstname user.</param>
-            <param name="lastName">It is Lastname user.</param>
-            <param name="dateOfBirth">It is Date of Birth user.</param>
-            <param name="cabinetNumber">It is Cabinet Number user.</param>
-            <param name="salary">It is Salary user.</param>
-            <param name="category">It is Category user.</param>
-        </member>
-        <member name="M:FileCabinetApp.ValueRange.#ctor(System.Int32,System.String,System.String,System.DateTime,System.Int16,System.Decimal,System.Char)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.ValueRange"/> class.
-            </summary>
-            <param name="id">It is unique identificator user.</param>
-            <param name="firstName">It is Firstname user.</param>
-            <param name="lastName">It is Lastname user.</param>
-            <param name="dateOfBirth">It is Date of Birth user.</param>
-            <param name="cabinetNumber">It is Cabinet Number user.</param>
-            <param name="salary">It is Salary user.</param>
-            <param name="category">It is Category user.</param>
         </member>
     </members>
 </doc>

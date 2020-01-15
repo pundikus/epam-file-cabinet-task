@@ -17,6 +17,7 @@ namespace FileCabinetApp
         private const int ExplanationHelpIndex = 2;
 
         private static FileCabinetService fileCabinetService = new FileCabinetService();
+        private static FileCabinetCustomService fileCabinetCustomService = new FileCabinetCustomService();
 
         private static bool isRunning = true;
 
@@ -114,7 +115,7 @@ namespace FileCabinetApp
 
         private static void Stat(string parameters)
         {
-            var recordsCount = Program.fileCabinetService.GetStat();
+            var recordsCount = Program.fileCabinetCustomService.GetStat();
             Console.WriteLine($"{recordsCount} record(s).");
         }
 
@@ -167,7 +168,7 @@ namespace FileCabinetApp
                     }
 
                     ValueRange parametrs = new ValueRange(firstName, lastName, dateofBirth, cabinetNumber, salary, category);
-                    var record = Program.fileCabinetService.CreateRecord(parametrs);
+                    var record = Program.fileCabinetCustomService.CreateRecord(parametrs);
 
                     Console.WriteLine("Record #" + record + " is created.");
                     break;
@@ -182,7 +183,7 @@ namespace FileCabinetApp
 
         private static void List(string parameters)
         {
-            var listRecords = Program.fileCabinetService.GetRecords();
+            var listRecords = Program.fileCabinetCustomService.GetRecords();
 
             foreach (var item in listRecords)
             {
@@ -208,7 +209,7 @@ namespace FileCabinetApp
                 Console.WriteLine("Invalid Id");
             }
 
-            var listRecords = Program.fileCabinetService.GetRecords();
+            var listRecords = Program.fileCabinetCustomService.GetRecords();
             if (!listRecords.Any(x => x.Id == id))
             {
                 Console.WriteLine($"#{id} record is not found.");
@@ -256,7 +257,8 @@ namespace FileCabinetApp
             try
             {
                 ValueRange parametrs = new ValueRange(id, firstName, lastName, dateofBirth, cabinetNumber, salary, category);
-                Program.fileCabinetService.EditRecord(parametrs);
+
+                Program.fileCabinetCustomService.EditRecord(parametrs);
             }
             catch (ArgumentException ex)
             {
@@ -296,13 +298,13 @@ namespace FileCabinetApp
             if (criterion.Equals(CriterionFirstName, StringComparison.InvariantCultureIgnoreCase))
             {
                 string firstName = inputValue.Trim('"').ToUpperInvariant();
-                result = fileCabinetService.FindByFirstName(firstName);
+                result = fileCabinetCustomService.FindByFirstName(firstName);
             }
 
             if (criterion.Equals(CriterionLastName, StringComparison.InvariantCultureIgnoreCase))
             {
                 string lastName = inputValue.Trim('"').ToUpperInvariant();
-                result = fileCabinetService.FindByLastName(lastName);
+                result = fileCabinetCustomService.FindByLastName(lastName);
             }
 
             if (criterion.Equals(CriterionDateOfBirth, StringComparison.InvariantCultureIgnoreCase))
@@ -316,7 +318,7 @@ namespace FileCabinetApp
 
                 string dateOfBirthString = dateofBirth.ToString(CultureInfo.InvariantCulture);
 
-                result = fileCabinetService.FindByDateOfBirth(dateOfBirthString);
+                result = fileCabinetCustomService.FindByDateOfBirth(dateOfBirthString);
             }
 
             foreach (var item in result)
