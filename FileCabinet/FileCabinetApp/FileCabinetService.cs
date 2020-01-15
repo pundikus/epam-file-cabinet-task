@@ -15,7 +15,7 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
 
-        private readonly IRecordValidator validator;
+        private IRecordValidator validator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetService"/> class.
@@ -38,7 +38,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(parametrs));
             }
 
-            this.CreateValidator().ValidateParameters(parametrs);
+            this.validator.ValidateParameters(parametrs);
 
             var record = new FileCabinetRecord
             {
@@ -92,7 +92,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(parametrs));
             }
 
-            this.CreateValidator().ValidateParameters(parametrs);
+            this.validator.ValidateParameters(parametrs);
 
             var record = new FileCabinetRecord
             {
@@ -171,15 +171,6 @@ namespace FileCabinetApp
             string dateOfBirthString = dateOfBirth.ToString(CultureInfo.InvariantCulture);
 
             return this.dateOfBirthDictionary[dateOfBirthString].ToArray();
-        }
-
-        /// <summary>
-        /// This Method create Validator.
-        /// </summary>
-        /// <returns>new Validator.</returns>
-        protected virtual IRecordValidator CreateValidator()
-        {
-            return this.validator;
         }
 
         private static void AddRecord(Dictionary<string, List<FileCabinetRecord>> dictionary, string key, FileCabinetRecord record)

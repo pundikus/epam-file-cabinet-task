@@ -74,6 +74,11 @@ namespace FileCabinetApp
             {
                 throw new ArgumentException($"{nameof(parametrs.CabinetNumber)} does not match this category.");
             }
+
+            if (parametrs.Category < 65 || parametrs.Category > 67)
+            {
+                throw new ArgumentException($"{nameof(parametrs.Category)} is not correct.");
+            }
         }
     }
 }

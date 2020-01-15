@@ -26,26 +26,6 @@
             </summary>
             <param name="parametrs">It is user input parametrs.</param>
         </member>
-        <member name="T:FileCabinetApp.FileCabinetCustomService">
-            <summary>
-            This class storaged custom validate parametrs.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetCustomService"/> class.
-            </summary>
-        </member>
-        <member name="T:FileCabinetApp.FileCabinetDefaultService">
-            <summary>
-            This class storaged default validate parametrs.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetDefaultService"/> class.
-            </summary>
-        </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
             This is the class that stores all the record properties.
@@ -163,12 +143,6 @@
             </summary>
             <param name="dateOfBirth">Date of Birth users.</param>
             <returns>an array with entries by Date of Birth.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.CreateValidator">
-            <summary>
-            This Method create Validator.
-            </summary>
-            <returns>new Validator.</returns>
         </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>
