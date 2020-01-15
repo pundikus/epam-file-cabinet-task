@@ -22,7 +22,7 @@ namespace FileCabinetApp
 
         private static IRecordValidator validator = new DefaultValidator();
 
-        private static FileCabinetService fileCabinetService;
+        private static IFileCabinetService fileCabinetService;
 
         private static bool isRunning = true;
         private static bool isModeCustom = false;

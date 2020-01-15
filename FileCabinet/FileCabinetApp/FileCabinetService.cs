@@ -8,7 +8,7 @@ namespace FileCabinetApp
     /// <summary>
     /// This is intended for service. It has all the necessary methods for creating, modifying, deleting records.
     /// </summary>
-    public class FileCabinetService
+    public class FileCabinetService : IFileCabinetService
     {
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
 
