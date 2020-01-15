@@ -12,14 +12,19 @@ namespace FileCabinetApp
     {
         private const string DeveloperName = "Nikita Pundis";
         private const string HintMessage = "Enter your command, or enter 'help' to get help.";
+        private const string FirstMessage = "Specify usage mode (default or custom)";
+        private const string DefaultMessage = "Using default validation rules.";
+        private const string CustomMessage = "Using custom validation rules.";
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
 
-        private static FileCabinetService fileCabinetService = new FileCabinetService();
+       // private static FileCabinetService fileCabinetService = new FileCabinetService();
         private static FileCabinetCustomService fileCabinetCustomService = new FileCabinetCustomService();
+        private static FileCabinetDefaultService fileCabinetDefaultService = new FileCabinetDefaultService();
 
         private static bool isRunning = true;
+        private static bool isModeCustom = false;
 
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
         {
@@ -48,7 +53,51 @@ namespace FileCabinetApp
         /// </summary>
         public static void Main()
         {
+            Console.Write(FirstMessage);
+            var inputMode = Console.ReadLine();
+
+            const string fullParametr = "--validation-rules";
+            const string abbreviatedParametr = "-v";
+            const string customParametrs = "custom";
+            const string defaultParametrs = "default";
+            var inputsArrayParams = Array.Empty<string>();
+
+            if (inputMode.Contains(fullParametr, StringComparison.InvariantCulture))
+            {
+                int modeIndex = 1;
+
+                inputsArrayParams = inputMode.Split('=', 2);
+                if (inputsArrayParams[modeIndex].Equals(customParametrs, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    isModeCustom = true;
+                }
+            }
+            else if (inputMode.Contains(abbreviatedParametr, StringComparison.InvariantCulture))
+            {
+                int modeIndex = 1;
+
+                inputsArrayParams = inputMode.Split(' ', 2);
+                if (inputsArrayParams[modeIndex].Equals(customParametrs, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    isModeCustom = true;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Incorrect input.");
+            }
+
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
+
+            if (isModeCustom)
+            {
+                Console.WriteLine(CustomMessage);
+            }
+            else
+            {
+                Console.WriteLine(DefaultMessage);
+            }
+
             Console.WriteLine(Program.HintMessage);
             Console.WriteLine();
 
@@ -115,7 +164,16 @@ namespace FileCabinetApp
 
         private static void Stat(string parameters)
         {
-            var recordsCount = Program.fileCabinetCustomService.GetStat();
+            int recordsCount;
+            if (isModeCustom)
+            {
+                recordsCount = Program.fileCabinetCustomService.GetStat();
+            }
+            else
+            {
+                recordsCount = Program.fileCabinetDefaultService.GetStat();
+            }
+
             Console.WriteLine($"{recordsCount} record(s).");
         }
 
@@ -168,7 +226,15 @@ namespace FileCabinetApp
                     }
 
                     ValueRange parametrs = new ValueRange(firstName, lastName, dateofBirth, cabinetNumber, salary, category);
-                    var record = Program.fileCabinetCustomService.CreateRecord(parametrs);
+                    int record;
+                    if (isModeCustom)
+                    {
+                        record = Program.fileCabinetCustomService.CreateRecord(parametrs);
+                    }
+                    else
+                    {
+                        record = Program.fileCabinetDefaultService.CreateRecord(parametrs);
+                    }
 
                     Console.WriteLine("Record #" + record + " is created.");
                     break;
@@ -183,7 +249,15 @@ namespace FileCabinetApp
 
         private static void List(string parameters)
         {
-            var listRecords = Program.fileCabinetCustomService.GetRecords();
+            FileCabinetRecord[] listRecords;
+            if (isModeCustom)
+            {
+                listRecords = Program.fileCabinetCustomService.GetRecords();
+            }
+            else
+            {
+                listRecords = Program.fileCabinetDefaultService.GetRecords();
+            }
 
             foreach (var item in listRecords)
             {
@@ -257,8 +331,15 @@ namespace FileCabinetApp
             try
             {
                 ValueRange parametrs = new ValueRange(id, firstName, lastName, dateofBirth, cabinetNumber, salary, category);
-
-                Program.fileCabinetCustomService.EditRecord(parametrs);
+                
+                if (isModeCustom)
+                {
+                    Program.fileCabinetCustomService.EditRecord(parametrs);
+                }
+                else
+                {
+                    Program.fileCabinetDefaultService.EditRecord(parametrs);
+                }
             }
             catch (ArgumentException ex)
             {
@@ -298,13 +379,27 @@ namespace FileCabinetApp
             if (criterion.Equals(CriterionFirstName, StringComparison.InvariantCultureIgnoreCase))
             {
                 string firstName = inputValue.Trim('"').ToUpperInvariant();
-                result = fileCabinetCustomService.FindByFirstName(firstName);
+                if (isModeCustom)
+                {
+                    result = fileCabinetCustomService.FindByFirstName(firstName);
+                }
+                else
+                {
+                    result = fileCabinetDefaultService.FindByFirstName(firstName);
+                }
             }
 
             if (criterion.Equals(CriterionLastName, StringComparison.InvariantCultureIgnoreCase))
             {
                 string lastName = inputValue.Trim('"').ToUpperInvariant();
-                result = fileCabinetCustomService.FindByLastName(lastName);
+                if (isModeCustom)
+                {
+                    result = fileCabinetCustomService.FindByLastName(lastName);
+                }
+                else
+                {
+                    result = fileCabinetDefaultService.FindByLastName(lastName);
+                }
             }
 
             if (criterion.Equals(CriterionDateOfBirth, StringComparison.InvariantCultureIgnoreCase))
@@ -317,8 +412,14 @@ namespace FileCabinetApp
                 }
 
                 string dateOfBirthString = dateofBirth.ToString(CultureInfo.InvariantCulture);
-
-                result = fileCabinetCustomService.FindByDateOfBirth(dateOfBirthString);
+                if (isModeCustom)
+                {
+                    result = fileCabinetCustomService.FindByDateOfBirth(dateOfBirthString);
+                }
+                else
+                {
+                    result = fileCabinetDefaultService.FindByDateOfBirth(dateOfBirthString);
+                }
             }
 
             foreach (var item in result)

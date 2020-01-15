@@ -42,37 +42,37 @@ namespace FileCabinetApp
             decimal maxSalaryCategoryA = 1000;
             if (parametrs.Category == 65 && parametrs.Salary > maxSalaryCategoryA)
             {
-                throw new ArgumentException($"{nameof(parametrs.Category)} category does not match wages without bonus.");
+                throw new ArgumentException($"{nameof(parametrs.Category)}does not match wages without bonus.");
             }
 
             decimal maxSalaryCategpryB = 5000;
             if (parametrs.Category == 66 && parametrs.Salary > maxSalaryCategpryB)
             {
-                throw new ArgumentException($"{nameof(parametrs.Category)} category does not match wages without bonus.");
+                throw new ArgumentException($"{nameof(parametrs.Category)}does not match wages without bonus.");
             }
 
             decimal maxSalaryCategoryC = 10000;
             if (parametrs.Category == 67 && parametrs.Salary > maxSalaryCategoryC)
             {
-                throw new ArgumentException($"{nameof(parametrs.Category)} category does not match wages without bonus.");
+                throw new ArgumentException($"{nameof(parametrs.Category)}does not match wages without bonus.");
             }
 
             short maxCabinetNumberCategoryA = 500;
             if (parametrs.Category == 65 && parametrs.CabinetNumber > maxCabinetNumberCategoryA)
             {
-                throw new ArgumentException($"{nameof(parametrs.CabinetNumber)} cabinet number does not match this category.");
+                throw new ArgumentException($"{nameof(parametrs.CabinetNumber)}does not match this category.");
             }
 
             short maxCabinetNumberCategoryB = 1000;
             if (parametrs.Category == 66 && parametrs.CabinetNumber > maxCabinetNumberCategoryB)
             {
-                throw new ArgumentException($"{nameof(parametrs.CabinetNumber)} cabinet number does not match this category.");
+                throw new ArgumentException($"{nameof(parametrs.CabinetNumber)}does not match this category.");
             }
 
             short maxCabinetNumberCategoryC = 1500;
             if (parametrs.Category == 67 && parametrs.CabinetNumber > maxCabinetNumberCategoryC)
             {
-                throw new ArgumentException($"{nameof(parametrs.CabinetNumber)} cabinet number does not match this category.");
+                throw new ArgumentException($"{nameof(parametrs.CabinetNumber)}does not match this category.");
             }
         }
     }
