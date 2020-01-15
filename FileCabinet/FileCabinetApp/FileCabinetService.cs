@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 
 namespace FileCabinetApp
@@ -62,14 +63,16 @@ namespace FileCabinetApp
         /// This Method gets all records as an array.
         /// </summary>
         /// <returns>array all records.</returns>
-        public FileCabinetRecord[] GetRecords()
+        public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
             if (this.list == null)
             {
                 Console.WriteLine("List records is Empty.");
             }
 
-            return this.list.ToArray();
+            ReadOnlyCollection<FileCabinetRecord> readOnlyList = new ReadOnlyCollection<FileCabinetRecord>(this.list);
+
+            return readOnlyList;
         }
 
         /// <summary>
@@ -121,7 +124,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="firstName">Firstname users.</param>
         /// <returns>an array with entries by Firstname.</returns>
-        public FileCabinetRecord[] FindByFirstName(string firstName)
+        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
         {
             if (firstName == null)
             {
@@ -133,7 +136,9 @@ namespace FileCabinetApp
                 throw new ArgumentException($"{nameof(firstName)} not correct.");
             }
 
-            return this.firstNameDictionary[firstName].ToArray();
+            ReadOnlyCollection<FileCabinetRecord> readOnlyList = new ReadOnlyCollection<FileCabinetRecord>(this.firstNameDictionary[firstName]);
+
+            return readOnlyList;
         }
 
         /// <summary>
@@ -141,7 +146,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="lastName">Lastname users.</param>
         /// <returns>an array with entries by Lastname.</returns>
-        public FileCabinetRecord[] FindByLastName(string lastName)
+        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
         {
             if (lastName == null)
             {
@@ -153,7 +158,9 @@ namespace FileCabinetApp
                 throw new ArgumentException($"{nameof(lastName)} not correct.");
             }
 
-            return this.lastNameDictionary[lastName].ToArray();
+            ReadOnlyCollection<FileCabinetRecord> readOnlyList = new ReadOnlyCollection<FileCabinetRecord>(this.lastNameDictionary[lastName]);
+
+            return readOnlyList;
         }
 
         /// <summary>
@@ -161,7 +168,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="dateOfBirth">Date of Birth users.</param>
         /// <returns>an array with entries by Date of Birth.</returns>
-        public FileCabinetRecord[] FindByDateOfBirth(string dateOfBirth)
+        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {
             if (dateOfBirth == null)
             {
@@ -170,7 +177,9 @@ namespace FileCabinetApp
 
             string dateOfBirthString = dateOfBirth.ToString(CultureInfo.InvariantCulture);
 
-            return this.dateOfBirthDictionary[dateOfBirthString].ToArray();
+            ReadOnlyCollection<FileCabinetRecord> readOnlyList = new ReadOnlyCollection<FileCabinetRecord>(this.dateOfBirthDictionary[dateOfBirth]);
+
+            return readOnlyList;
         }
 
         private static void AddRecord(Dictionary<string, List<FileCabinetRecord>> dictionary, string key, FileCabinetRecord record)

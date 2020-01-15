@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -342,7 +343,7 @@ namespace FileCabinetApp
             const string CriterionLastName = "lastName";
             const string CriterionDateOfBirth = "dateofBirth";
 
-            FileCabinetRecord[] result = Array.Empty<FileCabinetRecord>();
+            ReadOnlyCollection<FileCabinetRecord> result = null;
 
             var paramArray = parametrs.Split(' ', 2);
             if (paramArray.Length != 2)
