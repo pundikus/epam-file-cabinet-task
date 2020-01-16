@@ -148,6 +148,35 @@ namespace FileCabinetApp
             Console.WriteLine();
         }
 
+        private static T ReadInput<T>(Func<string, Tuple<bool, string, T>> converter, Func<T, Tuple<bool, string>> validator)
+        {
+            do
+            {
+                T value;
+
+                var input = Console.ReadLine();
+                var conversionResult = converter(input);
+
+                if (!conversionResult.Item1)
+                {
+                    Console.WriteLine($"Conversion failed: {conversionResult.Item2}. Please, correct your input.");
+                    continue;
+                }
+
+                value = conversionResult.Item3;
+
+                var validationResult = validator(value);
+                if (!validationResult.Item1)
+                {
+                    Console.WriteLine($"Validation failed: {validationResult.Item2}. Please, correct your input.");
+                    continue;
+                }
+
+                return value;
+            }
+            while (true);
+        }
+
         private static void PrintHelp(string parameters)
         {
             if (!string.IsNullOrEmpty(parameters))
@@ -189,46 +218,22 @@ namespace FileCabinetApp
                 try
                 {
                     Console.Write("First name: ");
-                    string firstName = Console.ReadLine();
+                    string firstName = ReadInput(StringConverter, FirstNameValidator);
 
                     Console.Write("Last name: ");
-                    string lastName = Console.ReadLine();
+                    string lastName = ReadInput(StringConverter, LastNameValidator);
 
                     Console.Write("Date of birth: ");
-                    string dateofBirthString = Console.ReadLine();
-                    var parseddateofBirth = DateTime.TryParseExact(dateofBirthString, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateofBirth);
-                    if (!parseddateofBirth)
-                    {
-                        Console.WriteLine("Invalid Date.");
-                        break;
-                    }
+                    var dateofBirth = ReadInput(DateTimeConverter, DateOfBirthValidator);
 
                     Console.Write("Cabinet number: ");
-                    string cabinetNumberString = Console.ReadLine();
-                    var parsedCabinetNumber = short.TryParse(cabinetNumberString, out short cabinetNumber);
-                    if (!parsedCabinetNumber)
-                    {
-                        Console.WriteLine("Invalid Cabinet number.");
-                        break;
-                    }
+                    var cabinetNumber = ReadInput(ShortConverter, CabinetNumberValidator);
 
                     Console.Write("Salary: ");
-                    string salaryString = Console.ReadLine();
-                    var parsedSalary = decimal.TryParse(salaryString, out decimal salary);
-                    if (!parsedSalary)
-                    {
-                        Console.WriteLine("Invalid Salary.");
-                        break;
-                    }
+                    var salary = ReadInput(DecimalConverter, SalaryValidator);
 
                     Console.Write("Category(A, B, C): ");
-                    string categoryString = Console.ReadLine().ToUpperInvariant();
-                    var parsedCategory = char.TryParse(categoryString, out char category);
-                    if (!parsedCategory)
-                    {
-                        Console.WriteLine("Invalid Category.");
-                        break;
-                    }
+                    var category = ReadInput(CharConverter, CategoryValidator);
 
                     ValueRange parametrs = new ValueRange(firstName, lastName, dateofBirth, cabinetNumber, salary, category);
 
@@ -243,6 +248,204 @@ namespace FileCabinetApp
                 }
             }
             while (true);
+        }
+
+        private static Tuple<bool, string, string> StringConverter(string arg)
+        {
+            return new Tuple<bool, string, string>(typeof(string).Equals(arg.GetType()), arg, arg.ToString(CultureInfo.InvariantCulture));
+        }
+
+        private static Tuple<bool, string, DateTime> DateTimeConverter(string arg)
+        {
+            bool parsedDateTime = DateTime.TryParseExact(arg, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
+
+            return new Tuple<bool, string, DateTime>(parsedDateTime, arg, dateTime);
+        }
+
+        private static Tuple<bool, string, short> ShortConverter(string arg)
+        {
+            var parsedCabinetNumber = short.TryParse(arg, out short cabinetNumber);
+
+            return new Tuple<bool, string, short>(parsedCabinetNumber, arg, cabinetNumber);
+        }
+
+        private static Tuple<bool, string, decimal> DecimalConverter(string arg)
+        {
+            var parsedSalary = decimal.TryParse(arg, out decimal salary);
+
+            return new Tuple<bool, string, decimal>(parsedSalary, arg, salary);
+        }
+
+        private static Tuple<bool, string, char> CharConverter(string arg)
+        {
+            var parsedCategory = char.TryParse(arg, out char category);
+
+            return new Tuple<bool, string, char>(parsedCategory, arg, category);
+        }
+
+        private static Tuple<bool, string> FirstNameValidator(string arg)
+        {
+            bool isValid = true;
+            if (isModeCustom)
+            {
+                foreach (var item in new string("!@#$%^&*():;{}=+1234567890/|\"'<>.,").ToCharArray())
+                {
+                    if (arg.Contains(item, StringComparison.InvariantCulture))
+                    {
+                        isValid = false;
+                    }
+
+                    if (arg.Contains(item, StringComparison.InvariantCulture))
+                    {
+                        isValid = false;
+                    }
+                }
+            }
+            else
+            {
+                if (arg == null || string.IsNullOrEmpty(arg.Trim()))
+                {
+                    isValid = false;
+                }
+
+                if (arg.Length < 2 || arg.Length > 60)
+                {
+                    isValid = false;
+                }
+            }
+
+            return new Tuple<bool, string>(isValid, arg);
+        }
+
+        private static Tuple<bool, string> LastNameValidator(string arg)
+        {
+            bool isVaild = true;
+
+            if (isModeCustom)
+            {
+                foreach (var item in new string("!@#$%^&*():;{}=+1234567890/|\"'<>.,").ToCharArray())
+                {
+                    if (arg.Contains(item, StringComparison.InvariantCulture))
+                    {
+                        isVaild = false;
+                    }
+
+                    if (arg.Contains(item, StringComparison.InvariantCulture))
+                    {
+                        isVaild = false;
+                    }
+                }
+            }
+            else
+            {
+                if (arg == null || string.IsNullOrEmpty(arg.Trim()))
+                {
+                    isVaild = false;
+                }
+
+                if (arg.Length < 2 || arg.Length > 60)
+                {
+                    isVaild = false;
+                }
+            }
+
+            return new Tuple<bool, string>(isVaild, arg);
+        }
+
+        private static Tuple<bool, string> DateOfBirthValidator(DateTime arg)
+        {
+            bool isValid = true;
+
+            if (isModeCustom)
+            {
+                DateTime validDate = new DateTime(2002, 1, 1);
+                if (arg > validDate)
+                {
+                    isValid = false;
+                }
+            }
+            else
+            {
+                DateTime minDate = new DateTime(1950, 1, 1);
+                DateTime maxDate = DateTime.Now;
+
+                if (arg < minDate || arg > maxDate)
+                {
+                    isValid = false;
+                }
+            }
+
+            return new Tuple<bool, string>(isValid, arg.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture));
+        }
+
+        private static Tuple<bool, string> CabinetNumberValidator(short arg)
+        {
+            bool flag = true;
+            if (isModeCustom)
+            {
+                short maxCabinetNumberCustom = 200;
+                if (arg > maxCabinetNumberCustom)
+                {
+                    flag = false;
+                }
+            }
+            else
+            {
+                if (arg < 1 || arg > 1500)
+                {
+                    flag = false;
+                }
+            }
+
+            return new Tuple<bool, string>(flag, arg.ToString(CultureInfo.InvariantCulture));
+        }
+
+        private static Tuple<bool, string> SalaryValidator(decimal arg)
+        {
+            bool flag = true;
+            if (isModeCustom)
+            {
+                decimal maxSalaryCategoryC = 10000;
+                if (arg > maxSalaryCategoryC)
+                {
+                    flag = false;
+                }
+            }
+            else
+            {
+                if (arg < 0 || arg > decimal.MaxValue)
+                {
+                    flag = false;
+                }
+            }
+
+            return new Tuple<bool, string>(flag, arg.ToString(CultureInfo.InvariantCulture));
+        }
+
+        private static Tuple<bool, string> CategoryValidator(char arg)
+        {
+            bool flag = true;
+            if (isModeCustom)
+            {
+                if (arg < 65 || arg > 67)
+                {
+                    flag = false;
+                }
+
+                if (arg == 67)
+                {
+                    flag = false;
+                }
+            }
+            else
+            {
+                if (arg < 65 || arg > 67)
+                {
+                    flag = false;
+                }
+            }
+
+            return new Tuple<bool, string>(flag, arg.ToString(CultureInfo.InvariantCulture));
         }
 
         private static void List(string parameters)
@@ -282,42 +485,22 @@ namespace FileCabinetApp
             }
 
             Console.Write("First name: ");
-            string firstName = Console.ReadLine();
+            string firstName = ReadInput(StringConverter, FirstNameValidator);
 
             Console.Write("Last name: ");
-            string lastName = Console.ReadLine();
+            string lastName = ReadInput(StringConverter, LastNameValidator);
 
             Console.Write("Date of birth: ");
-            string dateofBirthString = Console.ReadLine();
-            var parseddateofBirth = DateTime.TryParseExact(dateofBirthString, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateofBirth);
-            if (!parseddateofBirth)
-            {
-                Console.WriteLine("Invalid Date.");
-            }
+            var dateofBirth = ReadInput(DateTimeConverter, DateOfBirthValidator);
 
             Console.Write("Cabinet number: ");
-            string cabinetNumberString = Console.ReadLine();
-            var parsedCabinetNumber = short.TryParse(cabinetNumberString, out short cabinetNumber);
-            if (!parsedCabinetNumber)
-            {
-                Console.WriteLine("Invalid Cabinet number.");
-            }
+            var cabinetNumber = ReadInput(ShortConverter, CabinetNumberValidator);
 
             Console.Write("Salary: ");
-            string salaryString = Console.ReadLine();
-            var parsedSalary = decimal.TryParse(salaryString, out decimal salary);
-            if (!parsedSalary)
-            {
-                Console.WriteLine("Invalid Salary.");
-            }
+            var salary = ReadInput(DecimalConverter, SalaryValidator);
 
             Console.Write("Category(A, B, C): ");
-            string categoryString = Console.ReadLine().ToUpperInvariant();
-            var parsedCategory = char.TryParse(categoryString, out char category);
-            if (!parsedCategory)
-            {
-                Console.WriteLine("Invalid Category.");
-            }
+            var category = ReadInput(CharConverter, CategoryValidator);
 
             try
             {

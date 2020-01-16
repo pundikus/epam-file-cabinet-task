@@ -144,6 +144,57 @@
             <param name="dateOfBirth">Date of Birth users.</param>
             <returns>an array with entries by Date of Birth.</returns>
         </member>
+        <member name="T:FileCabinetApp.IFileCabinetService">
+            <summary>
+            This Interface describes the service.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.CreateRecord(FileCabinetApp.ValueRange)">
+            <summary>
+            This method is for creating records.
+            </summary>
+            <param name="parametrs">It is object parametrs.</param>
+            <returns>unique identifier for user.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.EditRecord(FileCabinetApp.ValueRange)">
+            <summary>
+            This method is for changes records.
+            </summary>
+            <param name="parametrs">It is object parametrs.</param>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByDateOfBirth(System.String)">
+            <summary>
+            This Method find records by Date of Birth users.
+            </summary>
+            <param name="dateOfBirth">Date of Birth users.</param>
+            <returns>an array with entries by Date of Birth.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByFirstName(System.String)">
+            <summary>
+            This Method find records by Firstname users.
+            </summary>
+            <param name="firstName">Firstname users.</param>
+            <returns>an array with entries by Firstname.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.FindByLastName(System.String)">
+            <summary>
+            This Method find records by Lastname users.
+            </summary>
+            <param name="lastName">Lastname users.</param>
+            <returns>an array with entries by Lastname.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.GetRecords">
+            <summary>
+            This Method gets all records as an array.
+            </summary>
+            <returns>array all records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.GetStat">
+            <summary>
+            This Method returns count records.
+            </summary>
+            <returns>count records.</returns>
+        </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>
             This Interface sets a method for checking parameters.
