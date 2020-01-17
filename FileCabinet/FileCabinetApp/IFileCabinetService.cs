@@ -8,6 +8,12 @@ namespace FileCabinetApp
     public interface IFileCabinetService
     {
         /// <summary>
+        /// This Method gets copies part of the service behavior.
+        /// </summary>
+        /// <returns>Object from class FileCabinetServiceSnapshot.</returns>
+        FileCabinetServiceSnapshot MakeSnapshot();
+
+        /// <summary>
         /// This method is for creating records.
         /// </summary>
         /// <param name="parametrs">It is object parametrs.</param>

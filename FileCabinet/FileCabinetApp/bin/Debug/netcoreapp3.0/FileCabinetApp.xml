@@ -87,6 +87,23 @@
             Is a Category for each user.
             </value>
         </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordCsvWriter">
+            <summary>
+             This class implements write records in file to csv-format.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordCsvWriter.#ctor(System.IO.TextWriter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordCsvWriter"/> class.
+            </summary>
+            <param name="writer">Represents characters write.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordCsvWriter.Write(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            This Method implements write records in file to csv-format.
+            </summary>
+            <param name="record">It is record from our list.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetService">
             <summary>
             This is intended for service. It has all the necessary methods for creating, modifying, deleting records.
@@ -97,6 +114,12 @@
             Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetService"/> class.
             </summary>
             <param name="validator">validator for parameters.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.MakeSnapshot">
+            <summary>
+            This Method gets copies part of the service behavior.
+            </summary>
+            <returns>Object to class FileCabinetServiceSnapshot.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(FileCabinetApp.ValueRange)">
             <summary>
@@ -144,10 +167,33 @@
             <param name="dateOfBirth">Date of Birth users.</param>
             <returns>an array with entries by Date of Birth.</returns>
         </member>
+        <member name="T:FileCabinetApp.FileCabinetServiceSnapshot">
+            <summary>
+            This class designed to save the file.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.#ctor(System.Collections.Generic.List{FileCabinetApp.FileCabinetRecord})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetServiceSnapshot"/> class.
+            </summary>
+            <param name="list">List with records.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SaveToCsv(System.IO.TextWriter)">
+            <summary>
+            This Methods save file in csv-format.
+            </summary>
+            <param name="textWriter">Represents characters write.</param>
+        </member>
         <member name="T:FileCabinetApp.IFileCabinetService">
             <summary>
             This Interface describes the service.
             </summary>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.MakeSnapshot">
+            <summary>
+            This Method gets copies part of the service behavior.
+            </summary>
+            <returns>Object from class FileCabinetServiceSnapshot.</returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.CreateRecord(FileCabinetApp.ValueRange)">
             <summary>

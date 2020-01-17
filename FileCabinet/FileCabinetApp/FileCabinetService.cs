@@ -28,6 +28,17 @@ namespace FileCabinetApp
         }
 
         /// <summary>
+        /// This Method gets copies part of the service behavior.
+        /// </summary>
+        /// <returns>Object to class FileCabinetServiceSnapshot.</returns>
+        public FileCabinetServiceSnapshot MakeSnapshot()
+        {
+            var snapshot = new FileCabinetServiceSnapshot(this.list);
+
+            return snapshot;
+        }
+
+        /// <summary>
         /// This method is for creating records.
         /// </summary>
         /// <param name="parametrs">It is object parametrs.</param>

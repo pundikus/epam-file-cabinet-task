@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -36,6 +37,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("find", Find),
+            new Tuple<string, Action<string>>("export", Export),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -47,6 +49,7 @@ namespace FileCabinetApp
             new string[] { "list", "returns a list of records", "The 'list' command returns a list of records" },
             new string[] { "edit", "changes record", "The 'edit' command changes record" },
             new string[] { "find", "find records", "The 'find' command search records by input value" },
+            new string[] { "export", "export all records to file", "The 'export' command export all records to file  various format" },
         };
 
         /// <summary>
@@ -581,6 +584,58 @@ namespace FileCabinetApp
                 recordString.Append($"{item.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}, ");
 
                 Console.WriteLine(recordString);
+            }
+        }
+
+        private static void Export(string parametrs)
+        {
+            const int FormatIndex = 1;
+            const string FormatCsv = "csv";
+
+            var parametersArray = parametrs.Split('.', 2);
+
+            if (parametersArray[FormatIndex] != FormatCsv)
+            {
+                Console.WriteLine("Incorrect format");
+                return;
+            }
+
+            StreamWriter streamWriter;
+            bool rewrite = false;
+
+            try
+            {
+                if (File.Exists(parametrs))
+                {
+                    Console.Write("File is exist - rewrite " + parametrs + "? [Y/n]");
+                    string result = Console.ReadLine();
+
+                    if (result == "Y")
+                    {
+                        streamWriter = new StreamWriter(parametrs, rewrite);
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    streamWriter = new StreamWriter(parametrs);
+                }
+
+                var snapshot = fileCabinetService.MakeSnapshot();
+
+                snapshot.SaveToCsv(streamWriter);
+
+                streamWriter.Close();
+
+                Console.WriteLine("All records are exported to file " + parametrs);
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                Console.WriteLine("Export failed: " + ex.Message);
+                return;
             }
         }
 
