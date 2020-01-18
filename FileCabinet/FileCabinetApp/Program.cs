@@ -77,7 +77,7 @@ namespace FileCabinetApp
                     {
                         isModeCustom = true;
                         validator = new CustomValidator();
-                        fileCabinetService = new FileCabinetService(validator);
+                        fileCabinetService = new FileCabinetMemoryService(validator);
                     }
                 }
                 else if (inputMode.Contains(abbreviatedParametr, StringComparison.InvariantCulture))
@@ -89,19 +89,19 @@ namespace FileCabinetApp
                     {
                         isModeCustom = true;
                         validator = new CustomValidator();
-                        fileCabinetService = new FileCabinetService(validator);
+                        fileCabinetService = new FileCabinetMemoryService(validator);
                     }
                 }
                 else
                 {
                     Console.WriteLine("Incorrect input.");
-                    fileCabinetService = new FileCabinetService(validator);
+                    fileCabinetService = new FileCabinetMemoryService(validator);
                 }
             }
             catch (IndexOutOfRangeException)
             {
                 Console.WriteLine("Incorrect input.");
-                fileCabinetService = new FileCabinetService(validator);
+                fileCabinetService = new FileCabinetMemoryService(validator);
             }
 
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");

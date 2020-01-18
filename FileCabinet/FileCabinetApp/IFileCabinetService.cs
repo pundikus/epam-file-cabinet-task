@@ -7,10 +7,6 @@ namespace FileCabinetApp
     /// </summary>
     public interface IFileCabinetService
     {
-        /// <summary>
-        /// This Method gets copies part of the service behavior.
-        /// </summary>
-        /// <returns>Object from class FileCabinetServiceSnapshot.</returns>
         FileCabinetServiceSnapshot MakeSnapshot();
 
         /// <summary>
