@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml;
 
 namespace FileCabinetApp
 {
@@ -589,30 +590,36 @@ namespace FileCabinetApp
 
         private static void Export(string parametrs)
         {
-            const int FormatIndex = 1;
-            const string FormatCsv = "csv";
+            const int formatIndex = 0;
+            const int pathIndex = 1;
 
-            var parametersArray = parametrs.Split('.', 2);
+            const string formatCsv = "csv";
+            const string formatXml = "xml";
 
-            if (parametersArray[FormatIndex] != FormatCsv)
+            var parametersArrayForFromat = parametrs.Split(" ", 2);
+            string format = parametersArrayForFromat[formatIndex];
+            string path = parametersArrayForFromat[pathIndex];
+
+            if (!path.Contains(format, StringComparison.InvariantCulture))
             {
                 Console.WriteLine("Incorrect format");
                 return;
             }
 
             StreamWriter streamWriter;
+
             bool rewrite = false;
 
             try
             {
-                if (File.Exists(parametrs))
+                if (File.Exists(path))
                 {
                     Console.Write("File is exist - rewrite " + parametrs + "? [Y/n]");
                     string result = Console.ReadLine();
 
                     if (result == "Y")
                     {
-                        streamWriter = new StreamWriter(parametrs, rewrite);
+                        streamWriter = new StreamWriter(path, rewrite);
                     }
                     else
                     {
@@ -621,16 +628,24 @@ namespace FileCabinetApp
                 }
                 else
                 {
-                    streamWriter = new StreamWriter(parametrs);
+                     streamWriter = new StreamWriter(path);
                 }
 
                 var snapshot = fileCabinetService.MakeSnapshot();
 
-                snapshot.SaveToCsv(streamWriter);
+                if (format == formatCsv)
+                {
+                    snapshot.SaveToCsv(streamWriter);
+                }
+
+                if (format == formatXml)
+                {
+                    snapshot.SaveToXml(streamWriter);
+                }
 
                 streamWriter.Close();
 
-                Console.WriteLine("All records are exported to file " + parametrs);
+                Console.WriteLine("All records are exported to file " + path);
             }
             catch (DirectoryNotFoundException ex)
             {

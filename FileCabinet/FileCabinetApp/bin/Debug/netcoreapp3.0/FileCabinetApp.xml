@@ -104,6 +104,23 @@
             </summary>
             <param name="record">It is record from our list.</param>
         </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordXmlWriter">
+            <summary>
+             This class implements write records in file to xml-format.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.#ctor(System.IO.StreamWriter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordXmlWriter"/> class.
+            </summary>
+            <param name="writer">Represents characters write.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.Write(FileCabinetApp.FileCabinetRecord[])">
+            <summary>
+            This Method implements write records in file to xml-format.
+            </summary>
+            <param name="records">It is records from our list.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetService">
             <summary>
             This is intended for service. It has all the necessary methods for creating, modifying, deleting records.
@@ -178,9 +195,15 @@
             </summary>
             <param name="list">List with records.</param>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SaveToCsv(System.IO.TextWriter)">
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SaveToCsv(System.IO.StreamWriter)">
             <summary>
             This Methods save file in csv-format.
+            </summary>
+            <param name="textWriter">Represents characters write.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SaveToXml(System.IO.StreamWriter)">
+            <summary>
+            This Methods save file in xml-format.
             </summary>
             <param name="textWriter">Represents characters write.</param>
         </member>

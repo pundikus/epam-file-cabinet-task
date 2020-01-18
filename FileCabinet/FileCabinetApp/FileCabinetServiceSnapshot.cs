@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace FileCabinetApp
 {
@@ -30,22 +32,48 @@ namespace FileCabinetApp
         /// This Methods save file in csv-format.
         /// </summary>
         /// <param name="textWriter">Represents characters write.</param>
-        public void SaveToCsv(TextWriter textWriter)
+        public void SaveToCsv(StreamWriter textWriter)
         {
             if (textWriter == null)
             {
                 throw new ArgumentNullException(nameof(textWriter));
             }
 
+            this.WriteAllRecordsCsv(textWriter, this.records);
+        }
+
+        /// <summary>
+        /// This Methods save file in xml-format.
+        /// </summary>
+        /// <param name="textWriter">Represents characters write.</param>
+        public void SaveToXml(StreamWriter textWriter)
+        {
+            if (textWriter == null)
+            {
+                throw new ArgumentNullException(nameof(textWriter));
+            }
+
+            this.WriteAllRecordsXml(textWriter, this.records);
+        }
+
+        private void WriteAllRecordsCsv(StreamWriter textWriter, FileCabinetRecord[] records)
+        {
             var csvWriter = new FileCabinetRecordCsvWriter(textWriter);
 
             string fieldsName = "Id,First Name,Last Name,Date of Birth,Cabinet Number,Salary,Category";
             textWriter.WriteLine(fieldsName);
 
-            foreach (var item in this.records)
+            foreach (var item in records)
             {
                 csvWriter.Write(item);
             }
+        }
+
+        private void WriteAllRecordsXml(StreamWriter textWriter, FileCabinetRecord[] records)
+        {
+            var xmlWriter = new FileCabinetRecordXmlWriter(textWriter);
+
+            xmlWriter.Write(records);
         }
     }
 }
