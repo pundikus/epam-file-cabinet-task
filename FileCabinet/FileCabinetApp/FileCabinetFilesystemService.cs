@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -30,10 +31,10 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(parametrs));
             }
 
-            this.fileStream.Seek(0, SeekOrigin.End);
-
-            int id = 1;
+            int id = 10;
             short status = 500;
+
+            this.fileStream.Seek(0, SeekOrigin.End);
 
             var byteStatus = BitConverter.GetBytes(status);
 
@@ -84,12 +85,13 @@ namespace FileCabinetApp
 
             var categoryByte = BitConverter.GetBytes(parametrs.Category);
 
-            BinaryWriter binaryWriter = new BinaryWriter(this.fileStream);
-
             var sizerecord = this.GetSizeRecords(parametrs);
 
             byte[] record = new byte[sizerecord];
             record = this.GetRecordArray(record, byteStatus, byteId, massFNamebyte, massLNamebyte, yearByte, monthByte, dayByte, cabinetNumberByte, salaryByte, categoryByte);
+
+            BinaryWriter binaryWriter = new BinaryWriter(this.fileStream);
+
             int offset = 0;
 
             binaryWriter.Write(record, offset, byteStatus.Length);
@@ -121,8 +123,7 @@ namespace FileCabinetApp
 
             binaryWriter.Write(record, offset, categoryByte.Length);
 
-            binaryWriter.Flush(); 
-            //binaryWriter.Dispose();
+            binaryWriter.Flush();
 
             return id;
         }
@@ -154,7 +155,70 @@ namespace FileCabinetApp
         /// <inheritdoc/>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            throw new NotImplementedException();
+            this.fileStream.Seek(0, SeekOrigin.Begin);
+
+            BinaryReader binaryReader = new BinaryReader(this.fileStream);
+
+            var list = new List<FileCabinetRecord>();
+            
+            while (this.fileStream.Position < this.fileStream.Length)
+            {
+                this.fileStream.Seek(2, SeekOrigin.Current);
+
+                //var statusByte = binaryReader.ReadBytes(sizeof(short));
+                //short status = BitConverter.ToInt16(statusByte);
+                //size += sizeof(short);
+
+                var idinByte = binaryReader.ReadBytes(sizeof(int));
+                int id = BitConverter.ToInt32(idinByte);
+
+                var massChar = new char[60];
+                byte[] massFNamebyte = Encoding.Unicode.GetBytes(massChar);
+
+                var firstNameChar = binaryReader.ReadBytes(massFNamebyte.Length);
+                var firstNameFull = Encoding.Unicode.GetString(firstNameChar);
+                var firstName = this.RemoveSymbols(firstNameFull);
+
+                var lastNameChar = binaryReader.ReadBytes(massFNamebyte.Length);
+                var lastNameFull = Encoding.Unicode.GetString(lastNameChar);
+                var lastName = this.RemoveSymbols(lastNameFull);
+
+                var yearByte = binaryReader.ReadBytes(sizeof(int));
+                int year = BitConverter.ToInt32(yearByte);
+
+                var monthByte = binaryReader.ReadBytes(sizeof(int));
+                int month = BitConverter.ToInt32(monthByte);
+
+                var dayByte = binaryReader.ReadBytes(sizeof(int));
+                int day = BitConverter.ToInt32(dayByte);
+
+                DateTime dateofBirth = new DateTime(year, month, day);
+
+                var cabinetNumberByte = binaryReader.ReadBytes(sizeof(short));
+                short cabinetNumber = BitConverter.ToInt16(cabinetNumberByte);
+
+                decimal salary = binaryReader.ReadDecimal();
+
+                var categoryByte = binaryReader.ReadBytes(sizeof(char));
+                char category = BitConverter.ToChar(categoryByte);
+
+                var record = new FileCabinetRecord
+                {
+                    Id = id,
+                    FirstName = firstName,
+                    LastName = lastName,
+                    DateOfBirth = dateofBirth,
+                    CabinetNumber = cabinetNumber,
+                    Salary = salary,
+                    Category = category,
+                };
+
+                list.Add(record);
+            }
+
+            ReadOnlyCollection<FileCabinetRecord> records = new ReadOnlyCollection<FileCabinetRecord>(list);
+
+            return records;
         }
 
         /// <inheritdoc/>
@@ -244,39 +308,39 @@ namespace FileCabinetApp
         {
             int position = 0;
 
-            record = AddArrayToResultArray(position, record, byteStatus);
+            record = this.AddArrayToResultArray(position, record, byteStatus);
             position += byteStatus.Length;
 
-            record = AddArrayToResultArray(position, record, byteId);
+            record = this.AddArrayToResultArray(position, record, byteId);
             position += byteId.Length;
 
-            record = AddArrayToResultArray(position, record, massFNamebyte);
+            record = this.AddArrayToResultArray(position, record, massFNamebyte);
             position += massFNamebyte.Length;
 
-            record = AddArrayToResultArray(position, record, massLNamebyte);
+            record = this.AddArrayToResultArray(position, record, massLNamebyte);
             position += massLNamebyte.Length;
 
-            record = AddArrayToResultArray(position, record, yearByte);
+            record = this.AddArrayToResultArray(position, record, yearByte);
             position += yearByte.Length;
 
-            record = AddArrayToResultArray(position, record, monthByte);
+            record = this.AddArrayToResultArray(position, record, monthByte);
             position += monthByte.Length;
 
-            record = AddArrayToResultArray(position, record, dayByte);
+            record = this.AddArrayToResultArray(position, record, dayByte);
             position += dayByte.Length;
 
-            record = AddArrayToResultArray(position, record, cabinetNumberByte);
+            record = this.AddArrayToResultArray(position, record, cabinetNumberByte);
             position += cabinetNumberByte.Length;
 
-            record = AddArrayToResultArray(position, record, salaryByte);
+            record = this.AddArrayToResultArray(position, record, salaryByte);
             position += salaryByte.Length;
 
-            record = AddArrayToResultArray(position, record, categoryByte);
+            record = this.AddArrayToResultArray(position, record, categoryByte);
 
             return record;
         }
 
-        private static byte[] AddArrayToResultArray(int position, byte[] result, byte[] mass)
+        private byte[] AddArrayToResultArray(int position, byte[] result, byte[] mass)
         {
             int j = 0;
             for (int i = position; i < mass.Length + position; i++)
@@ -286,6 +350,21 @@ namespace FileCabinetApp
             }
 
             return result;
+        }
+
+        private string RemoveSymbols(string str)
+        {
+            char removdSymbol = '\0';
+
+            foreach (var item in str)
+            {
+                if (item.Equals(removdSymbol))
+                {
+                    str = str.TrimEnd(item);
+                }
+            }
+
+            return str;
         }
     }
 }
