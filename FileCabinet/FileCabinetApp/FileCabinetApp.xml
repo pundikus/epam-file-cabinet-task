@@ -58,6 +58,9 @@
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.GetStat">
             <inheritdoc/>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.MakeSnapshot">
+            <inheritdoc/>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>
             This is intended for service. It has all the necessary methods for creating, modifying, deleting records.
@@ -243,6 +246,12 @@
             <summary>
             This Interface describes the service.
             </summary>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.MakeSnapshot">
+            <summary>
+            This Method make snapshot collection.
+            </summary>
+            <returns>snapshot collection.</returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.CreateRecord(FileCabinetApp.ValueRange)">
             <summary>

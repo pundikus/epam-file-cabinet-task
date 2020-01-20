@@ -627,6 +627,13 @@ namespace FileCabinetApp
 
             var parametersArrayForFromat = parametrs.Split(" ", 2);
             string format = parametersArrayForFromat[formatIndex];
+
+            if (parametersArrayForFromat.Length == 1)
+            {
+                Console.WriteLine("Incorrect input");
+                return;
+            }
+
             string path = parametersArrayForFromat[pathIndex];
 
             if (!path.Contains(format, StringComparison.InvariantCulture))

@@ -31,8 +31,20 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(parametrs));
             }
 
-            int id = 10;
-            short status = 500;
+            BinaryWriter binaryWriter;
+
+            if (!this.fileStream.CanWrite)
+            {
+                this.fileStream = File.OpenWrite(this.fileStream.Name);
+                binaryWriter = new BinaryWriter(this.fileStream);
+            }
+            else
+            {
+                binaryWriter = new BinaryWriter(this.fileStream);
+            }
+
+            int id = new Random().Next(0, 1000);
+            short status = 0;
 
             this.fileStream.Seek(0, SeekOrigin.End);
 
@@ -90,8 +102,6 @@ namespace FileCabinetApp
             byte[] record = new byte[sizerecord];
             record = this.GetRecordArray(record, byteStatus, byteId, massFNamebyte, massLNamebyte, yearByte, monthByte, dayByte, cabinetNumberByte, salaryByte, categoryByte);
 
-            BinaryWriter binaryWriter = new BinaryWriter(this.fileStream);
-
             int offset = 0;
 
             binaryWriter.Write(record, offset, byteStatus.Length);
@@ -123,7 +133,7 @@ namespace FileCabinetApp
 
             binaryWriter.Write(record, offset, categoryByte.Length);
 
-            binaryWriter.Flush();
+            binaryWriter.Dispose();
 
             return id;
         }
@@ -131,7 +141,130 @@ namespace FileCabinetApp
         /// <inheritdoc/>
         public void EditRecord(ValueRange parametrs)
         {
-            throw new NotImplementedException();
+            if (parametrs == null)
+            {
+                throw new ArgumentNullException(nameof(parametrs));
+            }
+
+            BinaryReader binaryReader;
+            BinaryWriter binaryWriter;
+
+            if (!this.fileStream.CanRead || this.fileStream.CanWrite)
+            {
+                this.fileStream = File.Open(this.fileStream.Name, FileMode.Open);
+                binaryReader = new BinaryReader(this.fileStream);
+                binaryWriter = new BinaryWriter(this.fileStream);
+            }
+            else
+            {
+                binaryReader = new BinaryReader(this.fileStream);
+                binaryWriter = new BinaryWriter(this.fileStream);
+            }
+
+            int position = 2;
+
+            while (this.fileStream.Position < this.fileStream.Length)
+            {
+                this.fileStream.Seek(position, SeekOrigin.Begin);
+                var idinByte = binaryReader.ReadBytes(sizeof(int));
+                int id = BitConverter.ToInt32(idinByte);
+
+                if (id.Equals(parametrs.Id))
+                {
+                    this.fileStream.Seek(position - 2, SeekOrigin.Begin);
+                    short status = 0;
+                    byte[] statusByte = BitConverter.GetBytes(status);
+
+                    var massChar = new char[60];
+                    for (int i = 0; i < massChar.Length; i++)
+                    {
+                        massChar[i] = '\0';
+                    }
+
+                    byte[] massFNamebyte = Encoding.Unicode.GetBytes(massChar);
+                    var firstNameByte = Encoding.Unicode.GetBytes(parametrs.FirstName);
+                    if (firstNameByte.Length < massFNamebyte.Length)
+                    {
+                        for (int i = 0; i < firstNameByte.Length; i++)
+                        {
+                            massFNamebyte[i] = firstNameByte[i];
+                        }
+                    }
+
+                    byte[] massLNamebyte = Encoding.Unicode.GetBytes(massChar);
+                    var lastNameByte = Encoding.Unicode.GetBytes(parametrs.LastName);
+                    if (lastNameByte.Length < massLNamebyte.Length)
+                    {
+                        for (int i = 0; i < lastNameByte.Length; i++)
+                        {
+                            massLNamebyte[i] = lastNameByte[i];
+                        }
+                    }
+
+                    var yearByte = BitConverter.GetBytes(parametrs.DateOfBirth.Year);
+
+                    var monthByte = BitConverter.GetBytes(parametrs.DateOfBirth.Month);
+
+                    var dayByte = BitConverter.GetBytes(parametrs.DateOfBirth.Day);
+
+                    var cabinetNumberByte = BitConverter.GetBytes(parametrs.CabinetNumber);
+
+                    int[] bits = decimal.GetBits(parametrs.Salary);
+                    List<byte> bytes = new List<byte>();
+                    foreach (int i in bits)
+                    {
+                        bytes.AddRange(BitConverter.GetBytes(i));
+                    }
+
+                    var salaryByte = bytes.ToArray();
+
+                    var sizerecord = this.GetSizeRecords(parametrs);
+                    var categoryByte = BitConverter.GetBytes(parametrs.Category);
+
+                    byte[] record = new byte[sizerecord];
+                    record = this.GetRecordArray(record, statusByte, idinByte, massFNamebyte, massLNamebyte, yearByte, monthByte, dayByte, cabinetNumberByte, salaryByte, categoryByte);
+
+                    int offset = 0;
+
+                    binaryWriter.Write(record, offset, statusByte.Length);
+                    offset += statusByte.Length;
+
+                    binaryWriter.Write(record, offset, idinByte.Length);
+                    offset += idinByte.Length;
+
+                    binaryWriter.Write(record, offset, massFNamebyte.Length);
+                    offset += massFNamebyte.Length;
+
+                    binaryWriter.Write(record, offset, massLNamebyte.Length);
+                    offset += massLNamebyte.Length;
+
+                    binaryWriter.Write(record, offset, yearByte.Length);
+                    offset += yearByte.Length;
+
+                    binaryWriter.Write(record, offset, monthByte.Length);
+                    offset += monthByte.Length;
+
+                    binaryWriter.Write(record, offset, dayByte.Length);
+                    offset += dayByte.Length;
+
+                    binaryWriter.Write(record, offset, cabinetNumberByte.Length);
+                    offset += cabinetNumberByte.Length;
+
+                    binaryWriter.Write(record, offset, salaryByte.Length);
+                    offset += salaryByte.Length;
+
+                    binaryWriter.Write(record, offset, categoryByte.Length);
+
+                    break;
+                }
+                else
+                {
+                    position += this.GetSizeRecords(parametrs);
+                }
+            }
+
+            binaryReader.Dispose();
+            binaryWriter.Dispose();
         }
 
         /// <inheritdoc/>
@@ -155,16 +288,23 @@ namespace FileCabinetApp
         /// <inheritdoc/>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            this.fileStream.Seek(0, SeekOrigin.Begin);
+            BinaryReader binaryReader;
 
-            BinaryReader binaryReader = new BinaryReader(this.fileStream);
+            if (!this.fileStream.CanRead)
+            {
+                this.fileStream = File.OpenRead(this.fileStream.Name);
+                binaryReader = new BinaryReader(this.fileStream);
+            }
+            else
+            {
+                binaryReader = new BinaryReader(this.fileStream);
+            }
 
             var list = new List<FileCabinetRecord>();
 
             while (this.fileStream.Position < this.fileStream.Length)
             {
                 this.fileStream.Seek(2, SeekOrigin.Current);
-
                 //var statusByte = binaryReader.ReadBytes(sizeof(short));
                 //short status = BitConverter.ToInt16(statusByte);
                 //size += sizeof(short);
@@ -218,6 +358,7 @@ namespace FileCabinetApp
 
             ReadOnlyCollection<FileCabinetRecord> records = new ReadOnlyCollection<FileCabinetRecord>(list);
 
+            binaryReader.Dispose();
             return records;
         }
 
@@ -227,22 +368,28 @@ namespace FileCabinetApp
             return this.GetRecords().Count;
         }
 
+        /// <inheritdoc/>
         public FileCabinetServiceSnapshot MakeSnapshot()
         {
-            throw new NotImplementedException();
+            var records = this.GetRecords();
+
+            var listRecords = new List<FileCabinetRecord>();
+
+            foreach (var item in records)
+            {
+                listRecords.Add(item);
+            }
+
+            var snapshot = new FileCabinetServiceSnapshot(listRecords);
+
+            return snapshot;
         }
 
         private int GetSizeRecords(ValueRange parametrs)
         {
-            int id = 1;
             int sizerecord = 0;
-            short status = 500;
-
-            var byteStatus = BitConverter.GetBytes(status);
-            sizerecord += byteStatus.Length;
-
-            var byteId = BitConverter.GetBytes(id);
-            sizerecord += byteId.Length;
+            sizerecord += sizeof(short);
+            sizerecord += sizeof(int);
 
             var massChar = new char[60];
             for (int i = 0; i < massChar.Length; i++)
@@ -251,55 +398,16 @@ namespace FileCabinetApp
             }
 
             byte[] massFNamebyte = Encoding.Unicode.GetBytes(massChar);
-
-            var firstNameByte = Encoding.Unicode.GetBytes(parametrs.FirstName);
-            if (firstNameByte.Length < massFNamebyte.Length)
-            {
-                for (int i = 0; i < firstNameByte.Length; i++)
-                {
-                    massFNamebyte[i] = firstNameByte[i];
-                }
-            }
-
             sizerecord += massFNamebyte.Length;
-
             byte[] massLNamebyte = Encoding.Unicode.GetBytes(massChar);
-
-            var lastNameByte = Encoding.Unicode.GetBytes(parametrs.LastName);
-            if (lastNameByte.Length < massLNamebyte.Length)
-            {
-                for (int i = 0; i < lastNameByte.Length; i++)
-                {
-                    massLNamebyte[i] = lastNameByte[i];
-                }
-            }
-
             sizerecord += massLNamebyte.Length;
 
-            var yearByte = BitConverter.GetBytes(parametrs.DateOfBirth.Year);
-            sizerecord += yearByte.Length;
-
-            var monthByte = BitConverter.GetBytes(parametrs.DateOfBirth.Month);
-            sizerecord += monthByte.Length;
-
-            var dayByte = BitConverter.GetBytes(parametrs.DateOfBirth.Day);
-            sizerecord += dayByte.Length;
-
-            var cabinetNumberByte = BitConverter.GetBytes(parametrs.CabinetNumber);
-            sizerecord += cabinetNumberByte.Length;
-
-            int[] bits = decimal.GetBits(parametrs.Salary);
-            List<byte> bytes = new List<byte>();
-            foreach (int i in bits)
-            {
-                bytes.AddRange(BitConverter.GetBytes(i));
-            }
-
-            var salaryByte = bytes.ToArray();
-            sizerecord += salaryByte.Length;
-
-            var categoryByte = BitConverter.GetBytes(parametrs.Category);
-            sizerecord += categoryByte.Length;
+            sizerecord += sizeof(int); 
+            sizerecord += sizeof(int);
+            sizerecord += sizeof(int);
+            sizerecord += sizeof(short);
+            sizerecord += sizeof(decimal); 
+            sizerecord += sizeof(char);
 
             return sizerecord;
         }

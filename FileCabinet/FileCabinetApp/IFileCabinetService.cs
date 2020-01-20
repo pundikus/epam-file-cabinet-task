@@ -7,6 +7,10 @@ namespace FileCabinetApp
     /// </summary>
     public interface IFileCabinetService
     {
+        /// <summary>
+        /// This Method make snapshot collection.
+        /// </summary>
+        /// <returns>snapshot collection.</returns>
         FileCabinetServiceSnapshot MakeSnapshot();
 
         /// <summary>
