@@ -14,8 +14,8 @@ namespace FileCabinetApp
     public static class Program
     {
         private const string DeveloperName = "Nikita Pundis";
-        private const string ModeMessage = "Select verification mode (default or custom: )";
-        private const string StorageMessage = "Select storage(memory or file: )";
+        private const string ModeMessage = "Select verification mode (default or custom): ";
+        private const string StorageMessage = "Select storage(memory or file): ";
         private const string HintMessage = "Enter your command, or enter 'help' to get help.";
         private const string DefaultMessage = "Using default validation rules.";
         private const string CustomMessage = "Using custom validation rules.";
@@ -75,6 +75,8 @@ namespace FileCabinetApp
             const string fileParameters = "file";
             const string customParametrs = "custom";
 
+            const int storageIndex = 1;
+
             var inputsArrayParamsMode = Array.Empty<string>();
             var inputsArrayParamsStorage = Array.Empty<string>();
             try
@@ -86,51 +88,14 @@ namespace FileCabinetApp
                     inputsArrayParamsMode = inputMode.Split('=', 2);
                     if (inputsArrayParamsMode[modeIndex].Equals(customParametrs, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        int storageIndex = 1;
                         isModeCustom = true;
                         validator = new CustomValidator();
 
-                        if (inputStor.Contains(fullParameterStor, StringComparison.InvariantCulture))
-                        {
-                            inputsArrayParamsStorage = inputStor.Split('=', 2);
-                            if (inputsArrayParamsStorage[storageIndex].Equals(fileParameters, StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                isStorageFile = true;
-                                string fileName = @"f:\cabinet-records.db";
-                                FileStream fileStream = File.Create(fileName);
-
-                                fileCabinetService = new FileCabinetFilesystemService(fileStream);
-                            }
-                            else
-                            {
-                                fileCabinetService = new FileCabinetMemoryService(validator);
-                            }
-                        }
-                        else if (inputStor.Contains(abbreviatedParameterStor, StringComparison.InvariantCulture))
-                        {
-                            inputsArrayParamsStorage = inputStor.Split(' ', 2);
-                            if (inputsArrayParamsStorage[storageIndex].Equals(fileParameters, StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                isStorageFile = true;
-                                string fileName = @"f:\cabinet-records.db";
-                                FileStream fileStream = File.Create(fileName);
-
-                                fileCabinetService = new FileCabinetFilesystemService(fileStream);
-                            }
-                            else
-                            {
-                                fileCabinetService = new FileCabinetMemoryService(validator);
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("Incorrect input for storage.");
-                        }
+                        CheckStorageInput(inputStor, fullParameterStor, abbreviatedParameterStor, inputsArrayParamsStorage, storageIndex, fileParameters);
                     }
                 }
                 else if (inputMode.Contains(abbreviatedParameterValid, StringComparison.InvariantCulture))
                 {
-                    int storageIndex = 1;
                     int modeIndex = 1;
 
                     inputsArrayParamsMode = inputMode.Split(' ', 2);
@@ -139,91 +104,24 @@ namespace FileCabinetApp
                         isModeCustom = true;
                         validator = new CustomValidator();
 
-                        if (inputStor.Contains(fullParameterStor, StringComparison.InvariantCulture))
-                        {
-                            inputsArrayParamsStorage = inputStor.Split('=', 2);
-                            if (inputsArrayParamsStorage[storageIndex].Equals(fileParameters, StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                isStorageFile = true;
-                                string fileName = @"f:\cabinet-records.db";
-                                FileStream fileStream = File.Create(fileName);
-
-                                fileCabinetService = new FileCabinetFilesystemService(fileStream);
-                            }
-                            else
-                            {
-                                fileCabinetService = new FileCabinetMemoryService(validator);
-                            }
-                        }
-                        else if (inputStor.Contains(abbreviatedParameterStor, StringComparison.InvariantCulture))
-                        {
-                            inputsArrayParamsStorage = inputStor.Split(' ', 2);
-                            if (inputsArrayParamsStorage[storageIndex].Equals(fileParameters, StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                isStorageFile = true;
-                                string fileName = @"f:\cabinet-records.db";
-                                FileStream fileStream = File.Create(fileName);
-
-                                fileCabinetService = new FileCabinetFilesystemService(fileStream);
-                            }
-                            else
-                            {
-                                fileCabinetService = new FileCabinetMemoryService(validator);
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("Incorrect input for storage.");
-                        }
+                        CheckStorageInput(inputStor, fullParameterStor, abbreviatedParameterStor, inputsArrayParamsStorage, storageIndex, fileParameters);
+                    }
+                    else
+                    {
+                        CheckStorageInput(inputStor, fullParameterStor, abbreviatedParameterStor, inputsArrayParamsStorage, storageIndex, fileParameters);
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Incorrect input for verification.");
+                    Console.WriteLine("Incorrect input for validation-rules.");
 
-                    int storageIndex = 1;
-                    if (inputStor.Contains(fullParameterStor, StringComparison.InvariantCulture))
-                    {
-                        inputsArrayParamsStorage = inputStor.Split('=', 2);
-                        if (inputsArrayParamsStorage[storageIndex].Equals(fileParameters, StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            isStorageFile = true;
-                            string fileName = @"f:\cabinet-records.db";
-                            FileStream fileStream = File.Create(fileName);
-
-                            fileCabinetService = new FileCabinetFilesystemService(fileStream);
-                        }
-                        else
-                        {
-                            fileCabinetService = new FileCabinetMemoryService(validator);
-                        }
-                    }
-                    else if (inputStor.Contains(abbreviatedParameterStor, StringComparison.InvariantCulture))
-                    {
-                        inputsArrayParamsStorage = inputStor.Split(' ', 2);
-                        if (inputsArrayParamsStorage[storageIndex].Equals(fileParameters, StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            isStorageFile = true;
-                            string fileName = @"f:\cabinet-records.db";
-                            FileStream fileStream = File.Create(fileName);
-
-                            fileCabinetService = new FileCabinetFilesystemService(fileStream);
-                        }
-                        else
-                        {
-                            fileCabinetService = new FileCabinetMemoryService(validator);
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Incorrect input for storage.");
-                    }
+                    CheckStorageInput(inputStor, fullParameterStor, abbreviatedParameterStor, inputsArrayParamsStorage, storageIndex, fileParameters);
                 }
             }
             catch (IndexOutOfRangeException)
             {
                 Console.WriteLine("Incorrect input.");
-                fileCabinetService = new FileCabinetMemoryService(validator);
+                CheckStorageInput(inputStor, fullParameterStor, abbreviatedParameterStor, inputsArrayParamsStorage, storageIndex, fileParameters);
             }
 
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
@@ -782,6 +680,67 @@ namespace FileCabinetApp
             {
                 Console.WriteLine("Export failed: " + ex.Message);
                 return;
+            }
+        }
+
+        private static void CheckStorageInput(string inputStor, string fullParameterStor, string abbreviatedParameterStor, string[] inputsArrayParamsStorage, int storageIndex, string fileParameters)
+        {
+            try
+            {
+                if (inputStor.Contains(fullParameterStor, StringComparison.InvariantCulture))
+                {
+                    inputsArrayParamsStorage = inputStor.Split('=', 2);
+                    if (inputsArrayParamsStorage[storageIndex].Equals(fileParameters, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        isStorageFile = true;
+                        string fileName = @"f:\cabinet-records.db";
+                        FileStream fileStream;
+
+                        if (File.Exists(fileName))
+                        {
+                            fileStream = File.Create(fileName);
+                        }
+                        else
+                        {
+                            fileStream = File.Open(fileName, FileMode.Open);
+                        }
+
+                        fileCabinetService = new FileCabinetFilesystemService(fileStream);
+                    }
+                    else
+                    {
+                        fileCabinetService = new FileCabinetMemoryService(validator);
+                    }
+                }
+                else if (inputStor.Contains(abbreviatedParameterStor, StringComparison.InvariantCulture))
+                {
+                    inputsArrayParamsStorage = inputStor.Split(' ', 2);
+                    if (inputsArrayParamsStorage[storageIndex].Equals(fileParameters, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        isStorageFile = true;
+                        string fileName = @"f:\cabinet-records.db";
+                        FileStream fileStream;
+
+                        if (File.Exists(fileName))
+                        {
+                            fileStream = File.Open(fileName, FileMode.Open);
+                        }
+                        else
+                        {
+                            fileStream = File.Create(fileName);
+                        }
+
+                        fileCabinetService = new FileCabinetFilesystemService(fileStream);
+                    }
+                    else
+                    {
+                        fileCabinetService = new FileCabinetMemoryService(validator);
+                    }
+                }
+            }
+            catch (IndexOutOfRangeException)
+            {
+                Console.WriteLine("Incorrect input.");
             }
         }
 
