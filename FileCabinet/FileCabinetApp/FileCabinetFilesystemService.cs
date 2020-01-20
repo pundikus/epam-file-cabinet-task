@@ -160,7 +160,7 @@ namespace FileCabinetApp
             BinaryReader binaryReader = new BinaryReader(this.fileStream);
 
             var list = new List<FileCabinetRecord>();
-            
+
             while (this.fileStream.Position < this.fileStream.Length)
             {
                 this.fileStream.Seek(2, SeekOrigin.Current);
@@ -224,7 +224,7 @@ namespace FileCabinetApp
         /// <inheritdoc/>
         public int GetStat()
         {
-            throw new NotImplementedException();
+            return this.GetRecords().Count;
         }
 
         public FileCabinetServiceSnapshot MakeSnapshot()
