@@ -502,7 +502,7 @@ namespace FileCabinetApp
                     Console.WriteLine(recordString);
                 }
             }
-            catch (Exception)
+            catch (ArgumentNullException)
             {
                 Console.WriteLine("List is empty!");
                 return;
