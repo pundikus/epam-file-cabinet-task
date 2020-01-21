@@ -270,24 +270,306 @@ namespace FileCabinetApp
         /// <inheritdoc/>
         public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {
-            throw new NotImplementedException();
+            var resultList = new List<FileCabinetRecord>();
+
+            BinaryReader binaryReader;
+
+            if (!this.fileStream.CanRead)
+            {
+                this.fileStream = File.OpenRead(this.fileStream.Name);
+                binaryReader = new BinaryReader(this.fileStream);
+            }
+            else
+            {
+                binaryReader = new BinaryReader(this.fileStream);
+            }
+
+            int position = sizeof(short) + sizeof(int) + 240;
+
+            while (this.fileStream.Position < this.fileStream.Length)
+            {
+                this.fileStream.Seek(position, SeekOrigin.Begin);
+
+                if (this.fileStream.Position > this.fileStream.Length)
+                {
+                    break;
+                }
+
+                var yearInByte = binaryReader.ReadBytes(sizeof(int));
+                int yearIn = BitConverter.ToInt32(yearInByte);
+
+                var monthInByte = binaryReader.ReadBytes(sizeof(int));
+                int monthIn = BitConverter.ToInt32(monthInByte);
+
+                var dayInByte = binaryReader.ReadBytes(sizeof(int));
+                int dayIn = BitConverter.ToInt32(dayInByte);
+
+                DateTime dateofBirth = new DateTime(yearIn, monthIn, dayIn);
+
+                var a = DateTime.Parse(dateOfBirth, CultureInfo.InvariantCulture);
+
+              //  string dateToString = dateofBirth.ToString(CultureInfo.InvariantCulture);
+
+                if (a.Equals(dateofBirth))
+                {
+                    this.fileStream.Seek(position - 244, SeekOrigin.Begin);
+                    //var statusByte = binaryReader.ReadBytes(sizeof(short));
+                    //short status = BitConverter.ToInt16(statusByte);
+                    //size += sizeof(short);
+
+                    var idinByte = binaryReader.ReadBytes(sizeof(int));
+                    int id = BitConverter.ToInt32(idinByte);
+
+                    var massChar = new char[60];
+                    byte[] massFNamebyte = Encoding.Unicode.GetBytes(massChar);
+
+                    var firstNameChar = binaryReader.ReadBytes(massFNamebyte.Length);
+                    var firstNameFull = Encoding.Unicode.GetString(firstNameChar);
+                    var firstNameInFile = this.RemoveSymbols(firstNameFull);
+
+                    byte[] masLNamebyte = Encoding.Unicode.GetBytes(massChar);
+                    var lastNameChar = binaryReader.ReadBytes(masLNamebyte.Length);
+                    var lastNameFull = Encoding.Unicode.GetString(lastNameChar);
+                    var lastNameInFile = this.RemoveSymbols(lastNameFull);
+
+                    var yearByte = binaryReader.ReadBytes(sizeof(int));
+                    int year = BitConverter.ToInt32(yearByte);
+
+                    var monthByte = binaryReader.ReadBytes(sizeof(int));
+                    int month = BitConverter.ToInt32(monthByte);
+
+                    var dayByte = binaryReader.ReadBytes(sizeof(int));
+                    int day = BitConverter.ToInt32(dayByte);
+
+                    DateTime dateofBirthInFile = new DateTime(year, month, day);
+
+                    var cabinetNumberByte = binaryReader.ReadBytes(sizeof(short));
+                    short cabinetNumber = BitConverter.ToInt16(cabinetNumberByte);
+
+                    decimal salary = binaryReader.ReadDecimal();
+
+                    var categoryByte = binaryReader.ReadBytes(sizeof(char));
+                    char category = BitConverter.ToChar(categoryByte);
+
+                    var record = new FileCabinetRecord
+                    {
+                        Id = id,
+                        FirstName = firstNameInFile,
+                        LastName = lastNameInFile,
+                        DateOfBirth = dateofBirthInFile,
+                        CabinetNumber = cabinetNumber,
+                        Salary = salary,
+                        Category = category,
+                    };
+
+                    resultList.Add(record);
+                }
+
+                position += 278;
+            }
+
+            binaryReader.Dispose();
+
+            var result = new ReadOnlyCollection<FileCabinetRecord>(resultList);
+
+            return result;
         }
 
         /// <inheritdoc/>
         public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
         {
-            throw new NotImplementedException();
+            var resultList = new List<FileCabinetRecord>();
+
+            BinaryReader binaryReader;
+
+            if (!this.fileStream.CanRead)
+            {
+                this.fileStream = File.OpenRead(this.fileStream.Name);
+                binaryReader = new BinaryReader(this.fileStream);
+            }
+            else
+            {
+                binaryReader = new BinaryReader(this.fileStream);
+            }
+
+            int position = sizeof(short) + sizeof(int);
+
+            while (this.fileStream.Position < this.fileStream.Length)
+            {
+                this.fileStream.Seek(position, SeekOrigin.Begin);
+
+                var massChar = new char[60];
+                byte[] masFNamebyte = Encoding.Unicode.GetBytes(massChar);
+
+                var firstnameChar = binaryReader.ReadBytes(masFNamebyte.Length);
+                var firstnameFull = Encoding.Unicode.GetString(firstnameChar);
+                var firstnameInFile = this.RemoveSymbols(firstnameFull);
+
+                if (firstName.Equals(firstnameInFile, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    this.fileStream.Seek(position - 4, SeekOrigin.Begin);
+                    //var statusByte = binaryReader.ReadBytes(sizeof(short));
+                    //short status = BitConverter.ToInt16(statusByte);
+                    //size += sizeof(short);
+
+                    var idinByte = binaryReader.ReadBytes(sizeof(int));
+                    int id = BitConverter.ToInt32(idinByte);
+
+                    byte[] massFNamebyte = Encoding.Unicode.GetBytes(massChar);
+
+                    var firstNameChar = binaryReader.ReadBytes(massFNamebyte.Length);
+                    var firstNameFull = Encoding.Unicode.GetString(firstNameChar);
+                    var firstNameInFile = this.RemoveSymbols(firstNameFull);
+
+                    var lastNameChar = binaryReader.ReadBytes(massFNamebyte.Length);
+                    var lastNameFull = Encoding.Unicode.GetString(lastNameChar);
+                    var lastName = this.RemoveSymbols(lastNameFull);
+
+                    var yearByte = binaryReader.ReadBytes(sizeof(int));
+                    int year = BitConverter.ToInt32(yearByte);
+
+                    var monthByte = binaryReader.ReadBytes(sizeof(int));
+                    int month = BitConverter.ToInt32(monthByte);
+
+                    var dayByte = binaryReader.ReadBytes(sizeof(int));
+                    int day = BitConverter.ToInt32(dayByte);
+
+                    DateTime dateofBirth = new DateTime(year, month, day);
+
+                    var cabinetNumberByte = binaryReader.ReadBytes(sizeof(short));
+                    short cabinetNumber = BitConverter.ToInt16(cabinetNumberByte);
+
+                    decimal salary = binaryReader.ReadDecimal();
+
+                    var categoryByte = binaryReader.ReadBytes(sizeof(char));
+                    char category = BitConverter.ToChar(categoryByte);
+
+                    var record = new FileCabinetRecord
+                    {
+                        Id = id,
+                        FirstName = firstNameInFile,
+                        LastName = lastName,
+                        DateOfBirth = dateofBirth,
+                        CabinetNumber = cabinetNumber,
+                        Salary = salary,
+                        Category = category,
+                    };
+
+                    resultList.Add(record);
+                }
+
+                position += 278;
+            }
+
+            binaryReader.Dispose();
+
+            var result = new ReadOnlyCollection<FileCabinetRecord>(resultList);
+
+            return result;
         }
 
         /// <inheritdoc/>
         public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
         {
-            throw new NotImplementedException();
+            var resultList = new List<FileCabinetRecord>();
+
+            BinaryReader binaryReader;
+
+            if (!this.fileStream.CanRead)
+            {
+                this.fileStream = File.OpenRead(this.fileStream.Name);
+                binaryReader = new BinaryReader(this.fileStream);
+            }
+            else
+            {
+                binaryReader = new BinaryReader(this.fileStream);
+            }
+
+            int position = sizeof(short) + sizeof(int) + 120;
+
+            while (this.fileStream.Position < this.fileStream.Length)
+            {
+                this.fileStream.Seek(position, SeekOrigin.Begin);
+
+                var massChar = new char[60];
+                byte[] masLNamebyte = Encoding.Unicode.GetBytes(massChar);
+
+                var lastnameChar = binaryReader.ReadBytes(masLNamebyte.Length);
+                var lastnameFull = Encoding.Unicode.GetString(lastnameChar);
+                var lastnameInFile = this.RemoveSymbols(lastnameFull);
+
+                if (lastName.Equals(lastnameInFile, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    this.fileStream.Seek(position - 124, SeekOrigin.Begin);
+                    //var statusByte = binaryReader.ReadBytes(sizeof(short));
+                    //short status = BitConverter.ToInt16(statusByte);
+                    //size += sizeof(short);
+
+                    var idinByte = binaryReader.ReadBytes(sizeof(int));
+                    int id = BitConverter.ToInt32(idinByte);
+
+                    byte[] massFNamebyte = Encoding.Unicode.GetBytes(massChar);
+
+                    var firstNameChar = binaryReader.ReadBytes(massFNamebyte.Length);
+                    var firstNameFull = Encoding.Unicode.GetString(firstNameChar);
+                    var firstNameInFile = this.RemoveSymbols(firstNameFull);
+
+                    var lastNameChar = binaryReader.ReadBytes(masLNamebyte.Length);
+                    var lastNameFull = Encoding.Unicode.GetString(lastNameChar);
+                    var lastNameInFile = this.RemoveSymbols(lastNameFull);
+
+                    var yearByte = binaryReader.ReadBytes(sizeof(int));
+                    int year = BitConverter.ToInt32(yearByte);
+
+                    var monthByte = binaryReader.ReadBytes(sizeof(int));
+                    int month = BitConverter.ToInt32(monthByte);
+
+                    var dayByte = binaryReader.ReadBytes(sizeof(int));
+                    int day = BitConverter.ToInt32(dayByte);
+
+                    DateTime dateofBirth = new DateTime(year, month, day);
+
+                    var cabinetNumberByte = binaryReader.ReadBytes(sizeof(short));
+                    short cabinetNumber = BitConverter.ToInt16(cabinetNumberByte);
+
+                    decimal salary = binaryReader.ReadDecimal();
+
+                    var categoryByte = binaryReader.ReadBytes(sizeof(char));
+                    char category = BitConverter.ToChar(categoryByte);
+
+                    var record = new FileCabinetRecord
+                    {
+                        Id = id,
+                        FirstName = firstNameInFile,
+                        LastName = lastNameInFile,
+                        DateOfBirth = dateofBirth,
+                        CabinetNumber = cabinetNumber,
+                        Salary = salary,
+                        Category = category,
+                    };
+
+                    resultList.Add(record);
+                }
+
+                position += 278;
+            }
+
+            binaryReader.Dispose();
+
+            var result = new ReadOnlyCollection<FileCabinetRecord>(resultList);
+
+            return result;
         }
 
         /// <inheritdoc/>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
+            var fi = new FileInfo(this.fileStream.Name);
+            if (fi.Length == 0)
+            {
+                Console.WriteLine("File is empty!");
+            }
+
             BinaryReader binaryReader;
 
             if (!this.fileStream.CanRead)
@@ -402,11 +684,11 @@ namespace FileCabinetApp
             byte[] massLNamebyte = Encoding.Unicode.GetBytes(massChar);
             sizerecord += massLNamebyte.Length;
 
-            sizerecord += sizeof(int); 
+            sizerecord += sizeof(int);
             sizerecord += sizeof(int);
             sizerecord += sizeof(int);
             sizerecord += sizeof(short);
-            sizerecord += sizeof(decimal); 
+            sizerecord += sizeof(decimal);
             sizerecord += sizeof(char);
 
             return sizerecord;

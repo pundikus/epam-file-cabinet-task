@@ -186,7 +186,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(dateOfBirth));
             }
 
-            string dateOfBirthString = dateOfBirth.ToString(CultureInfo.InvariantCulture);
+            dateOfBirth.ToString(CultureInfo.InvariantCulture);
 
             ReadOnlyCollection<FileCabinetRecord> readOnlyList = new ReadOnlyCollection<FileCabinetRecord>(this.dateOfBirthDictionary[dateOfBirth]);
 

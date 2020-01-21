@@ -483,21 +483,29 @@ namespace FileCabinetApp
 
         private static void List(string parameters)
         {
-            var listRecords = fileCabinetService.GetRecords();
-
-            foreach (var item in listRecords)
+            try
             {
-                var recordString = new StringBuilder();
+                var listRecords = fileCabinetService.GetRecords();
 
-                recordString.Append($"#{item.Id}, ");
-                recordString.Append($"{item.FirstName}, ");
-                recordString.Append($"{item.LastName}, ");
-                recordString.Append($"{item.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}, ");
-                recordString.Append($"{item.CabinetNumber}, ");
-                recordString.Append($"{item.Salary}y.e, ");
-                recordString.Append($"{item.Category}");
+                foreach (var item in listRecords)
+                {
+                    var recordString = new StringBuilder();
 
-                Console.WriteLine(recordString);
+                    recordString.Append($"#{item.Id}, ");
+                    recordString.Append($"{item.FirstName}, ");
+                    recordString.Append($"{item.LastName}, ");
+                    recordString.Append($"{item.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}, ");
+                    recordString.Append($"{item.CabinetNumber}, ");
+                    recordString.Append($"{item.Salary}y.e, ");
+                    recordString.Append($"{item.Category}");
+
+                    Console.WriteLine(recordString);
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("List is empty!");
+                return;
             }
         }
 
@@ -744,10 +752,16 @@ namespace FileCabinetApp
                         fileCabinetService = new FileCabinetMemoryService(validator);
                     }
                 }
+                else
+                {
+                    Console.WriteLine("Incorrect Storage input.");
+                    fileCabinetService = new FileCabinetMemoryService(validator);
+                }
             }
             catch (IndexOutOfRangeException)
             {
-                Console.WriteLine("Incorrect input.");
+                Console.WriteLine("Incorrect Storage input.");
+                fileCabinetService = new FileCabinetMemoryService(validator);
             }
         }
 
