@@ -157,7 +157,7 @@ namespace FileCabinetGenerator
 
             if (isCsv)
             {
-                //SaveToCsv(streamWriter);
+                SaveToCsv(streamWriter, records);
             }
 
             if (isXml)
@@ -176,6 +176,8 @@ namespace FileCabinetGenerator
 
         private static bool CheckInputFormat(string[] str, string type)
         {
+            str[value] = str[value].Trim();
+
             if (str[value].Equals(type))
             {
                 return true;
@@ -328,7 +330,7 @@ namespace FileCabinetGenerator
         {
             Random rnd = new Random();
 
-            int value = rnd.Next(1, 3);
+            int value = rnd.Next(1, 4);
             char category = '\0';
 
             if(value == 1)
@@ -349,20 +351,27 @@ namespace FileCabinetGenerator
             return category;
         }
 
-        private void SaveToCsv(StreamWriter streamWriter)
+        private static void SaveToCsv(StreamWriter streamWriter, RecordModel[] records)
         {
+            if (streamWriter == null)
+            {
+                throw new ArgumentNullException(nameof(streamWriter));
+            }
 
+            WriteAllRecordsCsv(streamWriter, records);
         }
 
-        //private void WriteAllRecordsCsv(StreamWriter textWriter, FileCabinetRecord[] records)
-        //{
-        //    string fieldsName = "Id,First Name,Last Name,Date of Birth,Cabinet Number,Salary,Category";
-        //    textWriter.WriteLine(fieldsName);
+        private static void WriteAllRecordsCsv(StreamWriter textWriter, RecordModel[] records)
+        {
+            var csvWriter = new RecordCsvWriter(textWriter);
 
-        //    foreach (var item in records)
-        //    {
-        //        csvWriter.Write(item);
-        //    }
-        //}
+            string fieldsName = "Id,First Name,Last Name,Date of Birth,Cabinet Number,Salary,Category";
+            textWriter.WriteLine(fieldsName);
+
+            foreach (var item in records)
+            {
+                csvWriter.Write(item);
+            }
+        }
     }
 }
