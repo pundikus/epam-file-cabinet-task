@@ -162,7 +162,7 @@ namespace FileCabinetGenerator
 
             if (isXml)
             {
-                //SaveToXml(streamWriter);
+                SaveToXml(streamWriter, records);
             }
 
             streamWriter.Close();
@@ -361,6 +361,16 @@ namespace FileCabinetGenerator
             WriteAllRecordsCsv(streamWriter, records);
         }
 
+        private static void SaveToXml(StreamWriter streamWriter, RecordModel[] records)
+        {
+            if (streamWriter == null)
+            {
+                throw new ArgumentNullException(nameof(streamWriter));
+            }
+
+            WriteAllRecordsXml(streamWriter, records);
+        }
+
         private static void WriteAllRecordsCsv(StreamWriter textWriter, RecordModel[] records)
         {
             var csvWriter = new RecordCsvWriter(textWriter);
@@ -372,6 +382,13 @@ namespace FileCabinetGenerator
             {
                 csvWriter.Write(item);
             }
+        }
+
+        private static void WriteAllRecordsXml(StreamWriter textWriter, RecordModel[] records)
+        {
+            var xmlWriter = new RecordXmlWriter(textWriter);
+
+            xmlWriter.Write(records);
         }
     }
 }
