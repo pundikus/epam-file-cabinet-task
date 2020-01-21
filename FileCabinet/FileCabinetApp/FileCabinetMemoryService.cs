@@ -8,7 +8,7 @@ namespace FileCabinetApp
     /// <summary>
     /// This is intended for service. It has all the necessary methods for creating, modifying, deleting records.
     /// </summary>
-    public class FileCabinetService : IFileCabinetService
+    public class FileCabinetMemoryService : IFileCabinetService
     {
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
 
@@ -19,10 +19,10 @@ namespace FileCabinetApp
         private IRecordValidator validator;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileCabinetService"/> class.
+        /// Initializes a new instance of the <see cref="FileCabinetMemoryService"/> class.
         /// </summary>
         /// <param name="validator">validator for parameters.</param>
-        public FileCabinetService(IRecordValidator validator)
+        public FileCabinetMemoryService(IRecordValidator validator)
         {
             this.validator = validator;
         }
@@ -186,7 +186,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(dateOfBirth));
             }
 
-            string dateOfBirthString = dateOfBirth.ToString(CultureInfo.InvariantCulture);
+            dateOfBirth.ToString(CultureInfo.InvariantCulture);
 
             ReadOnlyCollection<FileCabinetRecord> readOnlyList = new ReadOnlyCollection<FileCabinetRecord>(this.dateOfBirthDictionary[dateOfBirth]);
 
