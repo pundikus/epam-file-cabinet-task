@@ -44,6 +44,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("export", Export),
+            new Tuple<string, Action<string>>("import-csv", Import),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -56,6 +57,7 @@ namespace FileCabinetApp
             new string[] { "edit", "changes record", "The 'edit' command changes record" },
             new string[] { "find", "find records", "The 'find' command search records by input value" },
             new string[] { "export", "export all records to file", "The 'export' command export all records to file  various format" },
+            new string[] { "import csv", "import all records in file", "The 'import' command import all records in file csv format" },
         };
 
         /// <summary>
@@ -763,6 +765,12 @@ namespace FileCabinetApp
                 Console.WriteLine("Incorrect Storage input.");
                 fileCabinetService = new FileCabinetMemoryService(validator);
             }
+        }
+
+        private static void Import(string parametrs)
+        {
+            var paramsArray = parametrs.Split(' ', 2);
+
         }
 
         private static void Exit(string parameters)
