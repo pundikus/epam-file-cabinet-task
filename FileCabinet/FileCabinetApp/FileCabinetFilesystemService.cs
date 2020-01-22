@@ -759,7 +759,41 @@ namespace FileCabinetApp
 
         public void Restore(FileCabinetServiceSnapshot snapshot)
         {
-            throw new NotImplementedException();
+            if (snapshot == null)
+            {
+                throw new ArgumentNullException(nameof(snapshot));
+            }
+
+            var records = snapshot.Records;
+
+            if (this.GetRecords().Count == 0)
+            {
+                foreach (var recordImport in records)
+                {
+                    var model = new ValueRange(recordImport.Id, recordImport.FirstName, recordImport.LastName, recordImport.DateOfBirth, recordImport.CabinetNumber, recordImport.Salary, recordImport.Category);
+
+                    this.CreateRecord(model);
+                }
+            }
+            else
+            {
+                foreach (var recordImport in records)
+                {
+                    var model = new ValueRange(recordImport.Id, recordImport.FirstName, recordImport.LastName, recordImport.DateOfBirth, recordImport.CabinetNumber, recordImport.Salary, recordImport.Category);
+
+                    foreach (var record in this.GetRecords())
+                    {
+                        if (recordImport.Id == record.Id)
+                        {
+                            this.EditRecord(model);
+                        }
+                        else
+                        {
+                            this.CreateRecord(model);
+                        }
+                    }
+                }
+            }
         }
     }
 }

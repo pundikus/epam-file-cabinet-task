@@ -771,7 +771,7 @@ namespace FileCabinetApp
                 if (File.Exists(path))
                 {
                     StreamReader streamReader = new StreamReader(fileStream);
-                    
+
                     IList<FileCabinetRecord> records;
 
                     records = snapshot.LoadFromCsv(streamReader);
