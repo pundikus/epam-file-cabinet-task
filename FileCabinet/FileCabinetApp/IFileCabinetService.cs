@@ -27,6 +27,12 @@ namespace FileCabinetApp
         void EditRecord(ValueRange parametrs);
 
         /// <summary>
+        /// This method load records from file.
+        /// </summary>
+        /// <param name="snapshot">It is copy data.</param>
+        void Restore(FileCabinetServiceSnapshot snapshot);
+
+        /// <summary>
         /// This Method find records by Date of Birth users.
         /// </summary>
         /// <param name="dateOfBirth">Date of Birth users.</param>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
@@ -14,13 +15,16 @@ namespace FileCabinetApp
     public static class Program
     {
         private const string DeveloperName = "Nikita Pundis";
-        private const string ModeMessage = "Select verification mode (default or custom): ";
-        private const string StorageMessage = "Select storage(memory or file): ";
         private const string HintMessage = "Enter your command, or enter 'help' to get help.";
         private const string DefaultMessage = "Using default validation rules.";
         private const string CustomMessage = "Using custom validation rules.";
         private const string MemoryMessage = "Using memory storage.";
         private const string FileMessage = "Using file storage.";
+
+        private const int ModeParameterIndex = 0;
+        private const int ModeParameterValue = 1;
+        private const int StorageParameterIndex = 2;
+        private const int StorageParameterValue = 3;
 
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
@@ -44,7 +48,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("export", Export),
-            new Tuple<string, Action<string>>("import-csv", Import),
+            new Tuple<string, Action<string>>("import", Import),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -57,19 +61,15 @@ namespace FileCabinetApp
             new string[] { "edit", "changes record", "The 'edit' command changes record" },
             new string[] { "find", "find records", "The 'find' command search records by input value" },
             new string[] { "export", "export all records to file", "The 'export' command export all records to file  various format" },
-            new string[] { "import csv", "import all records in file", "The 'import' command import all records in file csv format" },
+            new string[] { "import", "import all records from file", "The 'import' command import all records from file various format" },
         };
 
         /// <summary>
         /// This is the main method in which all kinds of user interaction is performed.
         /// </summary>
-        public static void Main()
+        /// <param name="args">Parameters command-line.</param>
+        public static void Main(string[] args)
         {
-            Console.Write(ModeMessage);
-            var inputMode = Console.ReadLine();
-            Console.Write(StorageMessage);
-            var inputStor = Console.ReadLine();
-
             const string fullParameterStor = "--storage";
             const string abbreviatedParameterStor = "-s";
             const string fullParameterValid = "--validation-rules";
@@ -77,53 +77,43 @@ namespace FileCabinetApp
             const string fileParameters = "file";
             const string customParametrs = "custom";
 
-            const int storageIndex = 1;
-
             var inputsArrayParamsMode = Array.Empty<string>();
-            var inputsArrayParamsStorage = Array.Empty<string>();
-            try
+
+            if (args[ModeParameterIndex].Contains(fullParameterValid, StringComparison.InvariantCulture))
             {
-                if (inputMode.Contains(fullParameterValid, StringComparison.InvariantCulture))
+                int modeIndex = 1;
+
+                inputsArrayParamsMode = args[ModeParameterIndex].Split('=', 2);
+
+                if (inputsArrayParamsMode[modeIndex].Equals(customParametrs, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    int modeIndex = 1;
+                    isModeCustom = true;
+                    validator = new CustomValidator();
 
-                    inputsArrayParamsMode = inputMode.Split('=', 2);
-                    if (inputsArrayParamsMode[modeIndex].Equals(customParametrs, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        isModeCustom = true;
-                        validator = new CustomValidator();
-
-                        CheckStorageInput(inputStor, fullParameterStor, abbreviatedParameterStor, inputsArrayParamsStorage, storageIndex, fileParameters);
-                    }
-                }
-                else if (inputMode.Contains(abbreviatedParameterValid, StringComparison.InvariantCulture))
-                {
-                    int modeIndex = 1;
-
-                    inputsArrayParamsMode = inputMode.Split(' ', 2);
-                    if (inputsArrayParamsMode[modeIndex].Equals(customParametrs, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        isModeCustom = true;
-                        validator = new CustomValidator();
-
-                        CheckStorageInput(inputStor, fullParameterStor, abbreviatedParameterStor, inputsArrayParamsStorage, storageIndex, fileParameters);
-                    }
-                    else
-                    {
-                        CheckStorageInput(inputStor, fullParameterStor, abbreviatedParameterStor, inputsArrayParamsStorage, storageIndex, fileParameters);
-                    }
+                    CheckStorageInput(fullParameterStor, abbreviatedParameterStor, args, fileParameters);
                 }
                 else
                 {
-                    Console.WriteLine("Incorrect input for validation-rules.");
-
-                    CheckStorageInput(inputStor, fullParameterStor, abbreviatedParameterStor, inputsArrayParamsStorage, storageIndex, fileParameters);
+                    CheckStorageInput(fullParameterStor, abbreviatedParameterStor, args, fileParameters);
                 }
             }
-            catch (IndexOutOfRangeException)
+            else if (args[ModeParameterIndex].Contains(abbreviatedParameterValid, StringComparison.InvariantCulture))
             {
-                Console.WriteLine("Incorrect input.");
-                CheckStorageInput(inputStor, fullParameterStor, abbreviatedParameterStor, inputsArrayParamsStorage, storageIndex, fileParameters);
+                if (args[ModeParameterValue].Equals(customParametrs, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    isModeCustom = true;
+                    validator = new CustomValidator();
+
+                    CheckStorageInput(fullParameterStor, abbreviatedParameterStor, args, fileParameters);
+                }
+                else
+                {
+                    CheckStorageInput(fullParameterStor, abbreviatedParameterStor, args, fileParameters);
+                }
+            }
+            else
+            {
+                CheckStorageInput(fullParameterStor, abbreviatedParameterStor, args, fileParameters);
             }
 
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
@@ -489,6 +479,11 @@ namespace FileCabinetApp
             {
                 var listRecords = fileCabinetService.GetRecords();
 
+                if (listRecords.Count == 0)
+                {
+                    Console.WriteLine("List records is Empty.");
+                }
+
                 foreach (var item in listRecords)
                 {
                     var recordString = new StringBuilder();
@@ -700,14 +695,14 @@ namespace FileCabinetApp
             }
         }
 
-        private static void CheckStorageInput(string inputStor, string fullParameterStor, string abbreviatedParameterStor, string[] inputsArrayParamsStorage, int storageIndex, string fileParameters)
+        private static void CheckStorageInput(string fullParameterStor, string abbreviatedParameterStor, string[] inputsArrayParamsStorage, string fileParameters)
         {
             try
             {
-                if (inputStor.Contains(fullParameterStor, StringComparison.InvariantCulture))
+                if (inputsArrayParamsStorage[StorageParameterIndex - 1].Contains(fullParameterStor, StringComparison.InvariantCulture))
                 {
-                    inputsArrayParamsStorage = inputStor.Split('=', 2);
-                    if (inputsArrayParamsStorage[storageIndex].Equals(fileParameters, StringComparison.InvariantCultureIgnoreCase))
+                    var inputsArray = inputsArrayParamsStorage[StorageParameterIndex - 1].Split('=', 2);
+                    if (inputsArray[1].Equals(fileParameters, StringComparison.InvariantCultureIgnoreCase))
                     {
                         isStorageFile = true;
                         string fileName = @"f:\cabinet-records.db";
@@ -729,10 +724,9 @@ namespace FileCabinetApp
                         fileCabinetService = new FileCabinetMemoryService(validator);
                     }
                 }
-                else if (inputStor.Contains(abbreviatedParameterStor, StringComparison.InvariantCulture))
+                else if (inputsArrayParamsStorage[2].Equals(abbreviatedParameterStor, StringComparison.InvariantCulture))
                 {
-                    inputsArrayParamsStorage = inputStor.Split(' ', 2);
-                    if (inputsArrayParamsStorage[storageIndex].Equals(fileParameters, StringComparison.InvariantCultureIgnoreCase))
+                    if (inputsArrayParamsStorage[3].Equals(fileParameters, StringComparison.InvariantCultureIgnoreCase))
                     {
                         isStorageFile = true;
                         string fileName = @"f:\cabinet-records.db";
@@ -756,21 +750,44 @@ namespace FileCabinetApp
                 }
                 else
                 {
-                    Console.WriteLine("Incorrect Storage input.");
                     fileCabinetService = new FileCabinetMemoryService(validator);
                 }
             }
             catch (IndexOutOfRangeException)
             {
-                Console.WriteLine("Incorrect Storage input.");
                 fileCabinetService = new FileCabinetMemoryService(validator);
             }
         }
 
         private static void Import(string parametrs)
         {
-            var paramsArray = parametrs.Split(' ', 2);
+            string[] parameters = parametrs.Split(' ', 2);
+            string path = parameters[1];
 
+            using (FileStream fileStream = File.OpenRead(path))
+            {
+                var snapshot = new FileCabinetServiceSnapshot(fileCabinetService.GetRecords());
+
+                if (File.Exists(path))
+                {
+                    StreamReader streamReader = new StreamReader(fileStream);
+                    
+                    IList<FileCabinetRecord> records;
+
+                    records = snapshot.LoadFromCsv(streamReader);
+
+                    snapshot = new FileCabinetServiceSnapshot(records);
+
+                    fileCabinetService.Restore(snapshot);
+
+                    Console.WriteLine(fileCabinetService.GetRecords().Count + " records were imported from " + path);
+                }
+                else
+                {
+                    Console.WriteLine("Import error: file " + path + " is not exist.");
+                    return;
+                }
+            } 
         }
 
         private static void Exit(string parameters)

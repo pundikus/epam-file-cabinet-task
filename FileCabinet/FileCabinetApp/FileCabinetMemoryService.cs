@@ -76,11 +76,6 @@ namespace FileCabinetApp
         /// <returns>array all records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            if (this.list == null)
-            {
-                Console.WriteLine("List records is Empty.");
-            }
-
             ReadOnlyCollection<FileCabinetRecord> readOnlyList = new ReadOnlyCollection<FileCabinetRecord>(this.list);
 
             return readOnlyList;
@@ -121,8 +116,8 @@ namespace FileCabinetApp
 
             var recordById = this.list.Find(x => x.Id == parametrs.Id);
 
-            this.list.Remove(recordById);
-            this.list.Add(record);
+            this.list.RemoveAt(recordById.Id - 1);
+            this.list.Insert(recordById.Id - 1, record);
 
             var newrecordById = this.list.Find(x => x.Id == parametrs.Id);
 
@@ -191,6 +186,46 @@ namespace FileCabinetApp
             ReadOnlyCollection<FileCabinetRecord> readOnlyList = new ReadOnlyCollection<FileCabinetRecord>(this.dateOfBirthDictionary[dateOfBirth]);
 
             return readOnlyList;
+        }
+
+        /// <summary>
+        /// This method load records from file.
+        /// </summary>
+        /// <param name="snapshot">It is copy data.</param>
+        public void Restore(FileCabinetServiceSnapshot snapshot)
+        {
+            if (snapshot == null)
+            {
+                throw new ArgumentNullException(nameof(snapshot));
+            }
+
+            var records = snapshot.Records;
+            if (this.GetRecords().Count == 0)
+            {
+                foreach (var recordImport in records)
+                {
+                    this.list.Add(recordImport);
+                }
+            }
+            else
+            {
+                foreach (var recordImport in records)
+                {
+                    var model = new ValueRange(recordImport.Id, recordImport.FirstName, recordImport.LastName, recordImport.DateOfBirth, recordImport.CabinetNumber, recordImport.Salary, recordImport.Category);
+
+                    foreach (var record in this.GetRecords())
+                    {
+                        if (recordImport.Id == record.Id)
+                        {
+                            this.EditRecord(model);
+                        }
+                        else
+                        {
+                            this.list.Add(recordImport);
+                        }
+                    }
+                }
+            }
         }
 
         private static void AddRecord(Dictionary<string, List<FileCabinetRecord>> dictionary, string key, FileCabinetRecord record)

@@ -6,12 +6,16 @@ namespace FileCabinetGenerator
 {
     class Program
     {
-        private const string FirstMessage = "Enter command line options:";
-        private const string OptionsDescription = "Output format type (csv, xml). Output file name. Amount of generated records. ID value to start.";
         private const string OutputTypeCsv = "csv";
         private const string OutputTypeXml = "xml";
-        private const int parametr = 0;
-        private const int value = 1;
+        private const int TypeParameterIndex = 0;
+        private const int TypeParameterValue = 1;
+        private const int OutputParameterIndex = 2;
+        private const int OutputParameterValue = 3;
+        private const int AmountParameterIndex = 4;
+        private const int AmountParameterValue = 5;
+        private const int StartIdParameterIndex = 6;
+        private const int StartIdParameterValue = 7;
 
         private static int amountRecords;
         private static int startId;
@@ -21,102 +25,117 @@ namespace FileCabinetGenerator
 
         static void Main(string[] args)
         {
-            Console.WriteLine(FirstMessage);
-            Console.WriteLine(OptionsDescription);
+            const int parameterIndex = 0;
+            const int parameterValue = 1;
 
             const string outputTypeName = "--output-type";
             const string outputPathName = "--output";
             const string recordsAmountName = "--records-amount";
             const string startIdName = "--start-id";
 
-            const string outputTypeNameShort = "t";
-            const string outputPathNameShort = "o";
-            const string recordsAmountNameShort = "a";
-            const string startIdNameShort = "i";
+            const string outputTypeNameShort = "-t";
+            const string outputPathNameShort = "-o";
+            const string recordsAmountNameShort = "-a";
+            const string startIdNameShort = "-i";
 
-            var inputMode = Console.ReadLine();
-
-            if (inputMode.Contains('='))
+            if (args[0].Contains('='))
             {
-                var parameters = inputMode.Split(' ', 4);
-
-                foreach (var item in parameters)
+                foreach (var item in args)
                 {
-                    var interiorParameters = item.Split('=', 2);
+                    string[] parameters = item.Split('=', 2);
 
-                    if (interiorParameters[parametr].Equals(outputTypeName))
+                    if (parameters[parameterIndex].Equals(outputTypeName))
                     {
-                        isCsv = CheckInputFormat(interiorParameters, OutputTypeCsv);
-                        isXml = CheckInputFormat(interiorParameters, OutputTypeXml);
-                    }
-
-                    if (interiorParameters[parametr].Equals(outputPathName))
-                    {
-                        var pathFormat = interiorParameters[value].Split('.', 2);
-
-                        if (pathFormat[value].Contains(OutputTypeCsv) || pathFormat[value].Contains(OutputTypeXml))
+                        if (parameters[parameterValue].Equals(OutputTypeCsv))
                         {
-                            path = interiorParameters[value];
+                            isCsv = true;
+                        }
+
+                        if (parameters[parameterValue].Equals(OutputTypeXml))
+                        {
+                            isXml = true;
                         }
                     }
 
-                    if (interiorParameters[parametr].Equals(recordsAmountName))
+                    if (parameters[parameterIndex].Equals(outputPathName))
                     {
-                        amountRecords = Convert.ToInt32(interiorParameters[value]);
+                        if (isCsv)
+                        {
+                            path = parameters[parameterValue];
+                        }
+                        else if (isXml)
+                        {
+                            path = parameters[parameterValue];
+                        }
+                        else
+                        {
+                            Console.WriteLine("Incorrect Format!");
+                            return;
+                        }
                     }
 
-                    if (interiorParameters[parametr].Equals(startIdName))
+                    if (parameters[parameterIndex].Equals(recordsAmountName))
                     {
-                        startId = Convert.ToInt32(interiorParameters[value]);
+                        amountRecords = Convert.ToInt32(parameters[parameterValue]);
+                    }
+
+                    if (parameters[parameterIndex].Equals(startIdName))
+                    {
+                        startId = Convert.ToInt32(parameters[parameterValue]);
                     }
                 }
             }
             else
             {
-                var badParameters = inputMode.Split('-', 5);
-                var parameters = new string[4];
-                for (int i = 1; i < badParameters.Length; i++)
-                {
-                    parameters[i - 1] = badParameters[i];
-                }
-
-                foreach (var item in parameters)
-                {
-                    var interiorParameters = item.Split(' ', 2);
-
-                    if (interiorParameters[parametr].Equals(outputTypeNameShort))
+                foreach (var item in args)
+                { 
+                    if (args[TypeParameterIndex].Equals(outputTypeNameShort))
                     {
-                        isCsv = CheckInputFormat(interiorParameters, OutputTypeCsv);
-                        isXml = CheckInputFormat(interiorParameters, OutputTypeXml);
-                    }
-
-                    if (interiorParameters[parametr].Equals(outputPathNameShort))
-                    {
-                        var pathFormat = interiorParameters[value].Split('.', 2);
-
-                        if (pathFormat[value].Contains(OutputTypeCsv) || pathFormat[value].Contains(OutputTypeXml))
+                        if (args[TypeParameterValue].Equals(OutputTypeCsv))
                         {
-                            path = interiorParameters[value];
+                            isCsv = true;
+                        }
+
+                        if (args[TypeParameterValue].Equals(OutputTypeXml))
+                        {
+                            isXml = true;
                         }
                     }
 
-                    if (interiorParameters[parametr].Equals(recordsAmountNameShort))
+                    if (args[OutputParameterIndex].Equals(outputPathNameShort))
                     {
-                        amountRecords = Convert.ToInt32(interiorParameters[value]);
+                        if (isCsv)
+                        {
+                            path = args[OutputParameterValue];
+                        }
+                        else if (isXml)
+                        {
+                            path = args[OutputParameterValue];
+                        }
+                        else
+                        {
+                            Console.WriteLine("Incorrect Format!");
+                            return;
+                        }
                     }
 
-                    if (interiorParameters[parametr].Equals(startIdNameShort))
+                    if (args[AmountParameterIndex].Equals(recordsAmountNameShort))
                     {
-                        startId = Convert.ToInt32(interiorParameters[value]);
+                        amountRecords = Convert.ToInt32(args[AmountParameterValue]);
+                    }
+
+                    if (args[StartIdParameterIndex].Equals(startIdNameShort))
+                    {
+                        startId = Convert.ToInt32(args[StartIdParameterValue]);
                     }
                 }
             }
 
-            RecordModel[] records = new RecordModel[amountRecords];
+            var records = new FileCabinetApp.FileCabinetRecord[amountRecords];
 
             for (int i = 0; i < amountRecords; i++)
             {
-                var record = new RecordModel
+                var record = new FileCabinetApp.FileCabinetRecord
                 {
                     Id = startId,
                     FirstName = GeneratorFirstName(),
@@ -172,18 +191,6 @@ namespace FileCabinetGenerator
             Console.WriteLine(amountRecords + " records were written to " + path);
 
             Console.ReadLine();
-        }
-
-        private static bool CheckInputFormat(string[] str, string type)
-        {
-            str[value] = str[value].Trim();
-
-            if (str[value].Equals(type))
-            {
-                return true;
-            }
-
-            return false;
         }
 
         private static string GeneratorFirstName()
@@ -311,7 +318,7 @@ namespace FileCabinetGenerator
         {
             Random rnd = new Random();
 
-            short value = (short)rnd.Next(0, 800);
+            short value = (short)rnd.Next(1, 1000);
 
             return value;
         }
@@ -331,7 +338,7 @@ namespace FileCabinetGenerator
             Random rnd = new Random();
 
             int value = rnd.Next(1, 4);
-            char category = '\0';
+            char category = 'A';
 
             if(value == 1)
             {
@@ -351,7 +358,7 @@ namespace FileCabinetGenerator
             return category;
         }
 
-        private static void SaveToCsv(StreamWriter streamWriter, RecordModel[] records)
+        private static void SaveToCsv(StreamWriter streamWriter, FileCabinetApp.FileCabinetRecord[] records)
         {
             if (streamWriter == null)
             {
@@ -361,7 +368,7 @@ namespace FileCabinetGenerator
             WriteAllRecordsCsv(streamWriter, records);
         }
 
-        private static void SaveToXml(StreamWriter streamWriter, RecordModel[] records)
+        private static void SaveToXml(StreamWriter streamWriter, FileCabinetApp.FileCabinetRecord[] records)
         {
             if (streamWriter == null)
             {
@@ -371,7 +378,7 @@ namespace FileCabinetGenerator
             WriteAllRecordsXml(streamWriter, records);
         }
 
-        private static void WriteAllRecordsCsv(StreamWriter textWriter, RecordModel[] records)
+        private static void WriteAllRecordsCsv(StreamWriter textWriter, FileCabinetApp.FileCabinetRecord[] records)
         {
             var csvWriter = new RecordCsvWriter(textWriter);
 
@@ -384,7 +391,7 @@ namespace FileCabinetGenerator
             }
         }
 
-        private static void WriteAllRecordsXml(StreamWriter textWriter, RecordModel[] records)
+        private static void WriteAllRecordsXml(StreamWriter textWriter, FileCabinetApp.FileCabinetRecord[] records)
         {
             var xmlWriter = new RecordXmlWriter(textWriter);
 

@@ -26,7 +26,7 @@ namespace FileCabinetApp
         /// <summary>
         /// This Method implements write records in file to csv-format.
         /// </summary>
-        /// <param name="record">It is record from our list.</param>
+        /// <param name="record">It is record from list.</param>
         public void Write(FileCabinetRecord record)
         {
             if (record == null)

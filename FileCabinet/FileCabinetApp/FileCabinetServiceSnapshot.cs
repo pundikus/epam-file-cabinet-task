@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -18,15 +19,23 @@ namespace FileCabinetApp
         /// Initializes a new instance of the <see cref="FileCabinetServiceSnapshot"/> class.
         /// </summary>
         /// <param name="list">List with records.</param>
-        public FileCabinetServiceSnapshot(List<FileCabinetRecord> list)
+        public FileCabinetServiceSnapshot(IList<FileCabinetRecord> list)
         {
             if (list == null)
             {
                 throw new ArgumentNullException(nameof(list));
             }
 
-            this.records = list.ToArray();
+            this.Records = new ReadOnlyCollection<FileCabinetRecord>(list);
         }
+
+        /// <summary>
+        /// Gets collection Records.
+        /// </summary>
+        /// <value>
+        /// Collection Records.
+        /// </value>
+        public ReadOnlyCollection<FileCabinetRecord> Records { get; }
 
         /// <summary>
         /// This Methods save file in csv-format.
@@ -54,6 +63,18 @@ namespace FileCabinetApp
             }
 
             this.WriteAllRecordsXml(textWriter, this.records);
+        }
+
+        /// <summary>
+        /// This Methods load from file in csv-format.
+        /// </summary>
+        /// <param name="streamReader">Represents characters read.</param>
+        /// <returns>List records.</returns>
+        public IList<FileCabinetRecord> LoadFromCsv(StreamReader streamReader)
+        {
+            FileCabinetRecordCsvReader csvReader = new FileCabinetRecordCsvReader(streamReader);
+
+            return csvReader.ReadAll();
         }
 
         private void WriteAllRecordsCsv(StreamWriter textWriter, FileCabinetRecord[] records)

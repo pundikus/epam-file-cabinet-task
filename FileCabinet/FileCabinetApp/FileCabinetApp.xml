@@ -124,6 +124,12 @@
             <param name="dateOfBirth">Date of Birth users.</param>
             <returns>an array with entries by Date of Birth.</returns>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>
+            This method load records from file.
+            </summary>
+            <param name="snapshot">It is copy data.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
             This is the class that stores all the record properties.
@@ -185,6 +191,23 @@
             Is a Category for each user.
             </value>
         </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordCsvReader">
+            <summary>
+            This class implements read records from file in csv-format.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordCsvReader.#ctor(System.IO.StreamReader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordCsvReader"/> class.
+            </summary>
+            <param name="reader">Represents characters read.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordCsvReader.ReadAll">
+            <summary>
+            This Method implements read records from file in csv-format.
+            </summary>
+            <returns>List records.</returns>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecordCsvWriter">
             <summary>
              This class implements write records in file to csv-format.
@@ -200,7 +223,7 @@
             <summary>
             This Method implements write records in file to csv-format.
             </summary>
-            <param name="record">It is record from our list.</param>
+            <param name="record">It is record from list.</param>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecordXmlWriter">
             <summary>
@@ -224,11 +247,19 @@
             This class designed to save the file.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.#ctor(System.Collections.Generic.List{FileCabinetApp.FileCabinetRecord})">
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.#ctor(System.Collections.Generic.IList{FileCabinetApp.FileCabinetRecord})">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetServiceSnapshot"/> class.
             </summary>
             <param name="list">List with records.</param>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetServiceSnapshot.Records">
+            <summary>
+            Gets collection Records.
+            </summary>
+            <value>
+            Collection Records.
+            </value>
         </member>
         <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SaveToCsv(System.IO.StreamWriter)">
             <summary>
@@ -241,6 +272,13 @@
             This Methods save file in xml-format.
             </summary>
             <param name="textWriter">Represents characters write.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.LoadFromCsv(System.IO.StreamReader)">
+            <summary>
+            This Methods load from file in csv-format.
+            </summary>
+            <param name="streamReader">Represents characters read.</param>
+            <returns>List records.</returns>
         </member>
         <member name="T:FileCabinetApp.IFileCabinetService">
             <summary>
@@ -265,6 +303,12 @@
             This method is for changes records.
             </summary>
             <param name="parametrs">It is object parametrs.</param>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>
+            This method load records from file.
+            </summary>
+            <param name="snapshot">It is copy data.</param>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.FindByDateOfBirth(System.String)">
             <summary>
@@ -315,10 +359,11 @@
             This class is needed for user interaction.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Program.Main">
+        <member name="M:FileCabinetApp.Program.Main(System.String[])">
             <summary>
             This is the main method in which all kinds of user interaction is performed.
             </summary>
+            <param name="args">Parameters command-line.</param>
         </member>
         <member name="T:FileCabinetApp.ValueRange">
             <summary>

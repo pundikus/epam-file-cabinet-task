@@ -23,7 +23,7 @@ namespace FileCabinetGenerator
         /// This Method implements write records in file to csv-format.
         /// </summary>
         /// <param name="record">It is record from our list.</param>
-        public void Write(RecordModel record)
+        public void Write(FileCabinetApp.FileCabinetRecord record)
         {
             if (record == null)
             {

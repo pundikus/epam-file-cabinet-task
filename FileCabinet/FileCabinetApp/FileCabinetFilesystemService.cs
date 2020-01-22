@@ -97,7 +97,7 @@ namespace FileCabinetApp
 
             var categoryByte = BitConverter.GetBytes(parametrs.Category);
 
-            var sizerecord = this.GetSizeRecords(parametrs);
+            var sizerecord = this.GetSizeRecords();
 
             byte[] record = new byte[sizerecord];
             record = this.GetRecordArray(record, byteStatus, byteId, massFNamebyte, massLNamebyte, yearByte, monthByte, dayByte, cabinetNumberByte, salaryByte, categoryByte);
@@ -218,7 +218,7 @@ namespace FileCabinetApp
 
                     var salaryByte = bytes.ToArray();
 
-                    var sizerecord = this.GetSizeRecords(parametrs);
+                    var sizerecord = this.GetSizeRecords();
                     var categoryByte = BitConverter.GetBytes(parametrs.Category);
 
                     byte[] record = new byte[sizerecord];
@@ -259,7 +259,7 @@ namespace FileCabinetApp
                 }
                 else
                 {
-                    position += this.GetSizeRecords(parametrs);
+                    position += this.GetSizeRecords();
                 }
             }
 
@@ -662,12 +662,12 @@ namespace FileCabinetApp
                 listRecords.Add(item);
             }
 
-            var snapshot = new FileCabinetServiceSnapshot(listRecords);
+            var snapshot = new FileCabinetServiceSnapshot(this.GetRecords());
 
             return snapshot;
         }
 
-        private int GetSizeRecords(ValueRange parametrs)
+        private int GetSizeRecords()
         {
             int sizerecord = 0;
             sizerecord += sizeof(short);
@@ -755,6 +755,11 @@ namespace FileCabinetApp
             }
 
             return str;
+        }
+
+        public void Restore(FileCabinetServiceSnapshot snapshot)
+        {
+            throw new NotImplementedException();
         }
     }
 }

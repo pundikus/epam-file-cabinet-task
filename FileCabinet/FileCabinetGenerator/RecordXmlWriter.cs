@@ -25,7 +25,7 @@ namespace FileCabinetGenerator
         /// This Method implements write records in file to xml-format.
         /// </summary>
         /// <param name="records">It is records from our list.</param>
-        public void Write(RecordModel[] records)
+        public void Write(FileCabinetApp.FileCabinetRecord[] records)
         {
             if (records == null)
             {
