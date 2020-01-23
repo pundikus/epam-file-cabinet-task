@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
@@ -25,32 +26,16 @@ namespace FileCabinetGenerator
         /// This Method implements write records in file to xml-format.
         /// </summary>
         /// <param name="records">It is records from our list.</param>
-        public void Write(FileCabinetApp.FileCabinetRecord[] records)
+        public void Write(List<FileCabinetApp.FileCabinetRecord> records)
         {
             if (records == null)
             {
                 throw new ArgumentNullException(nameof(records));
             }
 
-            XmlSerializer serializer = new XmlSerializer(typeof(XElement));
+            XmlSerializer serializer = new XmlSerializer(typeof(List<FileCabinetApp.FileCabinetRecord>));
 
-            XElement root = new XElement("records");
-
-            foreach (var item in records)
-            {
-                root.Add(new XElement(
-                    "record",
-                    new XAttribute("id", item.Id),
-                    new XElement("name", new XAttribute("first", item.FirstName), new XAttribute("last", item.LastName)),
-                    new XElement("dateOfBirth", item.DateOfBirth.ToString(CultureInfo.InvariantCulture)),
-                    new XElement("cabinetnumber", item.CabinetNumber),
-                    new XElement("salary", item.Salary),
-                    new XElement("category", item.Category)));
-            }
-
-            serializer.Serialize(this.writer, root);
-
-            this.writer.WriteLine(serializer);
+            serializer.Serialize(this.writer, records);
         }
     }
 }

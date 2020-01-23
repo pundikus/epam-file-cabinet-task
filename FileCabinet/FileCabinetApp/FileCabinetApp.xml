@@ -9,7 +9,7 @@
             This class implements the custom method for checking parameters.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(FileCabinetApp.ValueRange)">
+        <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
             <summary>
             This Method check parametrs.
             </summary>
@@ -20,7 +20,7 @@
             This class implements the default method for checking parameters.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.ValueRange)">
+        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
             <summary>
             This Method check parametrs.
             </summary>
@@ -37,10 +37,10 @@
             </summary>
             <param name="fileStream">Providers for file operation.</param>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetFilesystemService.CreateRecord(FileCabinetApp.ValueRange)">
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetFilesystemService.EditRecord(FileCabinetApp.ValueRange)">
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.EditRecord(FileCabinetApp.FileCabinetRecord)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.FindByDateOfBirth(System.String)">
@@ -61,6 +61,9 @@
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.MakeSnapshot">
             <inheritdoc/>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <inheritdoc/>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>
             This is intended for service. It has all the necessary methods for creating, modifying, deleting records.
@@ -78,7 +81,7 @@
             </summary>
             <returns>Object to class FileCabinetServiceSnapshot.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.CreateRecord(FileCabinetApp.ValueRange)">
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
             <summary>
             This method is for creating records.
             </summary>
@@ -97,7 +100,7 @@
             </summary>
             <returns>count records.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.EditRecord(FileCabinetApp.ValueRange)">
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.EditRecord(FileCabinetApp.FileCabinetRecord)">
             <summary>
             This method is for changes records.
             </summary>
@@ -132,7 +135,35 @@
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
-            This is the class that stores all the record properties.
+            This class storage parametrs.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecord.#ctor(System.String,System.String,System.DateTime,System.Int16,System.Decimal,System.Char)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecord"/> class.
+            </summary>
+            <param name="firstName">It is Firstname user.</param>
+            <param name="lastName">It is Lastname user.</param>
+            <param name="dateOfBirth">It is Date of Birth user.</param>
+            <param name="cabinetNumber">It is Cabinet Number user.</param>
+            <param name="salary">It is Salary user.</param>
+            <param name="category">It is Category user.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecord.#ctor(System.Int32,System.String,System.String,System.DateTime,System.Int16,System.Decimal,System.Char)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecord"/> class.
+            </summary>
+            <param name="id">It is unique identificator user.</param>
+            <param name="firstName">It is Firstname user.</param>
+            <param name="lastName">It is Lastname user.</param>
+            <param name="dateOfBirth">It is Date of Birth user.</param>
+            <param name="cabinetNumber">It is Cabinet Number user.</param>
+            <param name="salary">It is Salary user.</param>
+            <param name="category">It is Category user.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecord.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecord"/> class.
             </summary>
         </member>
         <member name="P:FileCabinetApp.FileCabinetRecord.Id">
@@ -225,6 +256,23 @@
             </summary>
             <param name="record">It is record from list.</param>
         </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordXmlReader">
+            <summary>
+            This class implements read records from file in csv-format.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlReader.#ctor(System.IO.StreamReader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordXmlReader"/> class.
+            </summary>
+            <param name="reader">Represents characters read.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlReader.ReadAll">
+            <summary>
+            This Method implements read records from file in csv-format.
+            </summary>
+            <returns>List records.</returns>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecordXmlWriter">
             <summary>
              This class implements write records in file to xml-format.
@@ -280,6 +328,13 @@
             <param name="streamReader">Represents characters read.</param>
             <returns>List records.</returns>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.LoadFromXml(System.IO.StreamReader)">
+            <summary>
+            This Methods load from file in xml-format.
+            </summary>
+            <param name="streamReader">Represents characters read.</param>
+            <returns>List records.</returns>
+        </member>
         <member name="T:FileCabinetApp.IFileCabinetService">
             <summary>
             This Interface describes the service.
@@ -291,14 +346,14 @@
             </summary>
             <returns>snapshot collection.</returns>
         </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.CreateRecord(FileCabinetApp.ValueRange)">
+        <member name="M:FileCabinetApp.IFileCabinetService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
             <summary>
             This method is for creating records.
             </summary>
             <param name="parametrs">It is object parametrs.</param>
             <returns>unique identifier for user.</returns>
         </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.EditRecord(FileCabinetApp.ValueRange)">
+        <member name="M:FileCabinetApp.IFileCabinetService.EditRecord(FileCabinetApp.FileCabinetRecord)">
             <summary>
             This method is for changes records.
             </summary>
@@ -348,7 +403,7 @@
             This Interface sets a method for checking parameters.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.IRecordValidator.ValidateParameters(FileCabinetApp.ValueRange)">
+        <member name="M:FileCabinetApp.IRecordValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
             <summary>
             This Method check parametrs.
             </summary>
@@ -364,90 +419,6 @@
             This is the main method in which all kinds of user interaction is performed.
             </summary>
             <param name="args">Parameters command-line.</param>
-        </member>
-        <member name="T:FileCabinetApp.ValueRange">
-            <summary>
-            This class storage parametrs.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.ValueRange.#ctor(System.String,System.String,System.DateTime,System.Int16,System.Decimal,System.Char)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.ValueRange"/> class.
-            </summary>
-            <param name="firstName">It is Firstname user.</param>
-            <param name="lastName">It is Lastname user.</param>
-            <param name="dateOfBirth">It is Date of Birth user.</param>
-            <param name="cabinetNumber">It is Cabinet Number user.</param>
-            <param name="salary">It is Salary user.</param>
-            <param name="category">It is Category user.</param>
-        </member>
-        <member name="M:FileCabinetApp.ValueRange.#ctor(System.Int32,System.String,System.String,System.DateTime,System.Int16,System.Decimal,System.Char)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.ValueRange"/> class.
-            </summary>
-            <param name="id">It is unique identificator user.</param>
-            <param name="firstName">It is Firstname user.</param>
-            <param name="lastName">It is Lastname user.</param>
-            <param name="dateOfBirth">It is Date of Birth user.</param>
-            <param name="cabinetNumber">It is Cabinet Number user.</param>
-            <param name="salary">It is Salary user.</param>
-            <param name="category">It is Category user.</param>
-        </member>
-        <member name="P:FileCabinetApp.ValueRange.Id">
-            <summary>
-            Gets is a unique identifier for each user.
-            </summary>
-            <value>
-            Is a unique identifier for each user.
-            </value>
-        </member>
-        <member name="P:FileCabinetApp.ValueRange.FirstName">
-            <summary>
-            Gets is a Firstname for each user.
-            </summary>
-            <value>
-            Is a Firstname for each user.
-            </value>
-        </member>
-        <member name="P:FileCabinetApp.ValueRange.LastName">
-            <summary>
-            Gets is a Lastname for each user.
-            </summary>
-            <value>
-            Is a Lastname for each user.
-            </value>
-        </member>
-        <member name="P:FileCabinetApp.ValueRange.DateOfBirth">
-            <summary>
-            Gets is a Date of Birth for each user.
-            </summary>
-            <value>
-            Is a Date of Birth for each user.
-            </value>
-        </member>
-        <member name="P:FileCabinetApp.ValueRange.CabinetNumber">
-            <summary>
-            Gets is a cabinet number for each user.
-            </summary>
-            <value>
-            Is a cabinet number for each user.
-            </value>
-        </member>
-        <member name="P:FileCabinetApp.ValueRange.Salary">
-            <summary>
-            Gets is a Salary for each user.
-            </summary>
-            <value>
-            Is a Salary for each user.
-            </value>
-        </member>
-        <member name="P:FileCabinetApp.ValueRange.Category">
-            <summary>
-            Gets is a Category for each user.
-            </summary>
-            <value>
-            Is a Category for each user.
-            </value>
         </member>
     </members>
 </doc>

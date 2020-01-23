@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
@@ -132,7 +133,8 @@ namespace FileCabinetGenerator
             }
 
             var records = new FileCabinetApp.FileCabinetRecord[amountRecords];
-
+            var list = new List<FileCabinetApp.FileCabinetRecord>(amountRecords);
+            
             for (int i = 0; i < amountRecords; i++)
             {
                 var record = new FileCabinetApp.FileCabinetRecord
@@ -149,6 +151,7 @@ namespace FileCabinetGenerator
                 startId++;
 
                 records[i] = record;
+                list.Add(record);
             }
 
             StreamWriter streamWriter;
@@ -181,7 +184,7 @@ namespace FileCabinetGenerator
 
             if (isXml)
             {
-                SaveToXml(streamWriter, records);
+                SaveToXml(streamWriter, list);
             }
 
             streamWriter.Close();
@@ -368,7 +371,7 @@ namespace FileCabinetGenerator
             WriteAllRecordsCsv(streamWriter, records);
         }
 
-        private static void SaveToXml(StreamWriter streamWriter, FileCabinetApp.FileCabinetRecord[] records)
+        private static void SaveToXml(StreamWriter streamWriter, List<FileCabinetApp.FileCabinetRecord> records)
         {
             if (streamWriter == null)
             {
@@ -391,7 +394,7 @@ namespace FileCabinetGenerator
             }
         }
 
-        private static void WriteAllRecordsXml(StreamWriter textWriter, FileCabinetApp.FileCabinetRecord[] records)
+        private static void WriteAllRecordsXml(StreamWriter textWriter, List<FileCabinetApp.FileCabinetRecord> records)
         {
             var xmlWriter = new RecordXmlWriter(textWriter);
 

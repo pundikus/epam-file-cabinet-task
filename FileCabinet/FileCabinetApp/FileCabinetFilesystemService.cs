@@ -24,7 +24,7 @@ namespace FileCabinetApp
         }
 
         /// <inheritdoc/>
-        public int CreateRecord(ValueRange parametrs)
+        public int CreateRecord(FileCabinetRecord parametrs)
         {
             if (parametrs == null)
             {
@@ -139,7 +139,7 @@ namespace FileCabinetApp
         }
 
         /// <inheritdoc/>
-        public void EditRecord(ValueRange parametrs)
+        public void EditRecord(FileCabinetRecord parametrs)
         {
             if (parametrs == null)
             {
@@ -565,10 +565,6 @@ namespace FileCabinetApp
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
             var fi = new FileInfo(this.fileStream.Name);
-            if (fi.Length == 0)
-            {
-                Console.WriteLine("File is empty!");
-            }
 
             BinaryReader binaryReader;
 
@@ -667,6 +663,46 @@ namespace FileCabinetApp
             return snapshot;
         }
 
+        /// <inheritdoc/>
+        public void Restore(FileCabinetServiceSnapshot snapshot)
+        {
+            if (snapshot == null)
+            {
+                throw new ArgumentNullException(nameof(snapshot));
+            }
+
+            var records = snapshot.Records;
+
+            if (this.GetRecords().Count == 0)
+            {
+                foreach (var recordImport in records)
+                {
+                    var model = new FileCabinetRecord((int)recordImport.Id, (string)recordImport.FirstName, (string)recordImport.LastName, (DateTime)recordImport.DateOfBirth, (short)recordImport.CabinetNumber, (decimal)recordImport.Salary, (char)recordImport.Category);
+
+                    this.CreateRecord(model);
+                }
+            }
+            else
+            {
+                foreach (var recordImport in records)
+                {
+                    var model = new FileCabinetRecord((int)recordImport.Id, (string)recordImport.FirstName, (string)recordImport.LastName, (DateTime)recordImport.DateOfBirth, (short)recordImport.CabinetNumber, (decimal)recordImport.Salary, (char)recordImport.Category);
+
+                    foreach (var record in this.GetRecords())
+                    {
+                        if (recordImport.Id == record.Id)
+                        {
+                            this.EditRecord(model);
+                        }
+                        else
+                        {
+                            this.CreateRecord(model);
+                        }
+                    }
+                }
+            }
+        }
+
         private int GetSizeRecords()
         {
             int sizerecord = 0;
@@ -755,45 +791,6 @@ namespace FileCabinetApp
             }
 
             return str;
-        }
-
-        public void Restore(FileCabinetServiceSnapshot snapshot)
-        {
-            if (snapshot == null)
-            {
-                throw new ArgumentNullException(nameof(snapshot));
-            }
-
-            var records = snapshot.Records;
-
-            if (this.GetRecords().Count == 0)
-            {
-                foreach (var recordImport in records)
-                {
-                    var model = new ValueRange(recordImport.Id, recordImport.FirstName, recordImport.LastName, recordImport.DateOfBirth, recordImport.CabinetNumber, recordImport.Salary, recordImport.Category);
-
-                    this.CreateRecord(model);
-                }
-            }
-            else
-            {
-                foreach (var recordImport in records)
-                {
-                    var model = new ValueRange(recordImport.Id, recordImport.FirstName, recordImport.LastName, recordImport.DateOfBirth, recordImport.CabinetNumber, recordImport.Salary, recordImport.Category);
-
-                    foreach (var record in this.GetRecords())
-                    {
-                        if (recordImport.Id == record.Id)
-                        {
-                            this.EditRecord(model);
-                        }
-                        else
-                        {
-                            this.CreateRecord(model);
-                        }
-                    }
-                }
-            }
-        }
+        }  
     }
 }

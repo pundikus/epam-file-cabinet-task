@@ -77,6 +77,18 @@ namespace FileCabinetApp
             return csvReader.ReadAll();
         }
 
+        /// <summary>
+        /// This Methods load from file in xml-format.
+        /// </summary>
+        /// <param name="streamReader">Represents characters read.</param>
+        /// <returns>List records.</returns>
+        public IList<FileCabinetRecord> LoadFromXml(StreamReader streamReader)
+        {
+            FileCabinetRecordXmlReader xmlReader = new FileCabinetRecordXmlReader(streamReader);
+
+            return xmlReader.ReadAll();
+        }
+
         private void WriteAllRecordsCsv(StreamWriter textWriter, FileCabinetRecord[] records)
         {
             var csvWriter = new FileCabinetRecordCsvWriter(textWriter);

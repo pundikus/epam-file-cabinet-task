@@ -43,7 +43,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="parametrs">It is object parametrs.</param>
         /// <returns>unique identifier for user.</returns>
-        public int CreateRecord(ValueRange parametrs)
+        public int CreateRecord(FileCabinetRecord parametrs)
         {
             if (parametrs == null)
             {
@@ -94,7 +94,7 @@ namespace FileCabinetApp
         /// This method is for changes records.
         /// </summary>
         /// <param name="parametrs">It is object parametrs.</param>
-        public void EditRecord(ValueRange parametrs)
+        public void EditRecord(FileCabinetRecord parametrs)
         {
             if (parametrs == null)
             {
@@ -204,25 +204,42 @@ namespace FileCabinetApp
             {
                 foreach (var recordImport in records)
                 {
-                    this.list.Add(recordImport);
+                    var model = new FileCabinetRecord((int)recordImport.Id, (string)recordImport.FirstName, (string)recordImport.LastName, (DateTime)recordImport.DateOfBirth, (short)recordImport.CabinetNumber, (decimal)recordImport.Salary, (char)recordImport.Category);
+
+                    try
+                    {
+                        this.validator.ValidateParameters(model);
+
+                        this.list.Add(recordImport);
+                        this.AddRecordInAllDictionary(recordImport);
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Console.WriteLine(recordImport.Id + ex.Message);
+                    }
                 }
             }
             else
             {
                 foreach (var recordImport in records)
                 {
-                    var model = new ValueRange(recordImport.Id, recordImport.FirstName, recordImport.LastName, recordImport.DateOfBirth, recordImport.CabinetNumber, recordImport.Salary, recordImport.Category);
+                //    var model = new FileCabinetRecord((int)recordImport.Id, (string)recordImport.FirstName, (string)recordImport.LastName, (DateTime)recordImport.DateOfBirth, (short)recordImport.CabinetNumber, (decimal)recordImport.Salary, (char)recordImport.Category);
 
-                    foreach (var record in this.GetRecords())
+                    try
                     {
-                        if (recordImport.Id == record.Id)
+                        this.validator.ValidateParameters(recordImport);
+
+                        for (int i = 0; i < this.list.Count; i++)
                         {
-                            this.EditRecord(model);
+                            if (recordImport.Id == this.list[i].Id)
+                            {
+                                this.EditRecord(recordImport);
+                            }
                         }
-                        else
-                        {
-                            this.list.Add(recordImport);
-                        }
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Console.WriteLine(recordImport.Id + ex.Message);
                     }
                 }
             }

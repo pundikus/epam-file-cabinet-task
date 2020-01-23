@@ -18,13 +18,13 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="parametrs">It is object parametrs.</param>
         /// <returns>unique identifier for user.</returns>
-        int CreateRecord(ValueRange parametrs);
+        int CreateRecord(FileCabinetRecord parametrs);
 
         /// <summary>
         /// This method is for changes records.
         /// </summary>
         /// <param name="parametrs">It is object parametrs.</param>
-        void EditRecord(ValueRange parametrs);
+        void EditRecord(FileCabinetRecord parametrs);
 
         /// <summary>
         /// This method load records from file.

@@ -260,7 +260,7 @@ namespace FileCabinetApp
                     Console.Write("Category(A, B, C): ");
                     var category = ReadInput(CharConverter, CategoryValidator);
 
-                    ValueRange parametrs = new ValueRange(firstName, lastName, dateofBirth, cabinetNumber, salary, category);
+                    FileCabinetRecord parametrs = new FileCabinetRecord(firstName, lastName, dateofBirth, cabinetNumber, salary, category);
 
                     int record = fileCabinetService.CreateRecord(parametrs);
 
@@ -542,7 +542,7 @@ namespace FileCabinetApp
 
             try
             {
-                ValueRange parametrs = new ValueRange(id, firstName, lastName, dateofBirth, cabinetNumber, salary, category);
+                FileCabinetRecord parametrs = new FileCabinetRecord(id, firstName, lastName, dateofBirth, cabinetNumber, salary, category);
 
                 fileCabinetService.EditRecord(parametrs);
             }
@@ -761,33 +761,49 @@ namespace FileCabinetApp
 
         private static void Import(string parametrs)
         {
+            const string formatCsv = "csv";
+            const string formatXml = "xml";
+
             string[] parameters = parametrs.Split(' ', 2);
             string path = parameters[1];
 
-            using (FileStream fileStream = File.OpenRead(path))
-            {
-                var snapshot = new FileCabinetServiceSnapshot(fileCabinetService.GetRecords());
+            var snapshot = new FileCabinetServiceSnapshot(fileCabinetService.GetRecords());
 
-                if (File.Exists(path))
+            if (File.Exists(path))
+            {
+                using (FileStream fileStream = File.OpenRead(path))
                 {
                     StreamReader streamReader = new StreamReader(fileStream);
 
                     IList<FileCabinetRecord> records;
 
-                    records = snapshot.LoadFromCsv(streamReader);
+                    if (parameters[0].Equals(formatCsv, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        records = snapshot.LoadFromCsv(streamReader);
 
-                    snapshot = new FileCabinetServiceSnapshot(records);
+                        snapshot = new FileCabinetServiceSnapshot(records);
 
-                    fileCabinetService.Restore(snapshot);
+                        fileCabinetService.Restore(snapshot);
+                    }
+                    else if (parameters[0].Equals(formatXml, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        records = snapshot.LoadFromXml(streamReader);
+
+                        snapshot = new FileCabinetServiceSnapshot(records);
+
+                        fileCabinetService.Restore(snapshot);
+                    }
 
                     Console.WriteLine(fileCabinetService.GetRecords().Count + " records were imported from " + path);
+
+                    streamReader.Dispose();
                 }
-                else
-                {
-                    Console.WriteLine("Import error: file " + path + " is not exist.");
-                    return;
-                }
-            } 
+            }
+            else
+            {
+                Console.WriteLine("Import error: file " + path + " is not exist.");
+                return;
+            }
         }
 
         private static void Exit(string parameters)
