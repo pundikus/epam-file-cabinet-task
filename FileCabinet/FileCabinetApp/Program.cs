@@ -24,7 +24,6 @@ namespace FileCabinetApp
         private const int ModeParameterIndex = 0;
         private const int ModeParameterValue = 1;
         private const int StorageParameterIndex = 2;
-        private const int StorageParameterValue = 3;
 
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;

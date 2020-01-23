@@ -223,8 +223,6 @@ namespace FileCabinetApp
             {
                 foreach (var recordImport in records)
                 {
-                //    var model = new FileCabinetRecord((int)recordImport.Id, (string)recordImport.FirstName, (string)recordImport.LastName, (DateTime)recordImport.DateOfBirth, (short)recordImport.CabinetNumber, (decimal)recordImport.Salary, (char)recordImport.Category);
-
                     try
                     {
                         this.validator.ValidateParameters(recordImport);

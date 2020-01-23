@@ -43,7 +43,7 @@ namespace FileCabinetApp
                 binaryWriter = new BinaryWriter(this.fileStream);
             }
 
-            int id = new Random().Next(0, 1000);
+            int id = parametrs.Id;
             short status = 0;
 
             this.fileStream.Seek(0, SeekOrigin.End);
@@ -308,7 +308,7 @@ namespace FileCabinetApp
 
                 var a = DateTime.Parse(dateOfBirth, CultureInfo.InvariantCulture);
 
-              //  string dateToString = dateofBirth.ToString(CultureInfo.InvariantCulture);
+                //string dateToString = dateofBirth.ToString(CultureInfo.InvariantCulture);
 
                 if (a.Equals(dateofBirth))
                 {
@@ -677,26 +677,18 @@ namespace FileCabinetApp
             {
                 foreach (var recordImport in records)
                 {
-                    var model = new FileCabinetRecord((int)recordImport.Id, (string)recordImport.FirstName, (string)recordImport.LastName, (DateTime)recordImport.DateOfBirth, (short)recordImport.CabinetNumber, (decimal)recordImport.Salary, (char)recordImport.Category);
-
-                    this.CreateRecord(model);
+                    this.CreateRecord(recordImport);
                 }
             }
             else
             {
                 foreach (var recordImport in records)
                 {
-                    var model = new FileCabinetRecord((int)recordImport.Id, (string)recordImport.FirstName, (string)recordImport.LastName, (DateTime)recordImport.DateOfBirth, (short)recordImport.CabinetNumber, (decimal)recordImport.Salary, (char)recordImport.Category);
-
                     foreach (var record in this.GetRecords())
                     {
                         if (recordImport.Id == record.Id)
                         {
-                            this.EditRecord(model);
-                        }
-                        else
-                        {
-                            this.CreateRecord(model);
+                            this.EditRecord(recordImport);
                         }
                     }
                 }
@@ -791,6 +783,6 @@ namespace FileCabinetApp
             }
 
             return str;
-        }  
+        }
     }
 }
