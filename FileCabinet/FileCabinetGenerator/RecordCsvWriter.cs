@@ -2,15 +2,11 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
 
-namespace FileCabinetApp
+namespace FileCabinetGenerator
 {
-    /// <summary>
-    ///  This class implements write records in file to csv-format.
-    /// </summary>
-    public class FileCabinetRecordCsvWriter
+    public class RecordCsvWriter
     {
         private TextWriter writer;
 
@@ -18,7 +14,7 @@ namespace FileCabinetApp
         /// Initializes a new instance of the <see cref="FileCabinetRecordCsvWriter"/> class.
         /// </summary>
         /// <param name="writer">Represents characters write.</param>
-        public FileCabinetRecordCsvWriter(TextWriter writer)
+        public RecordCsvWriter(TextWriter writer)
         {
             this.writer = writer;
         }
@@ -26,8 +22,8 @@ namespace FileCabinetApp
         /// <summary>
         /// This Method implements write records in file to csv-format.
         /// </summary>
-        /// <param name="record">It is record from list.</param>
-        public void Write(FileCabinetRecord record)
+        /// <param name="record">It is record from our list.</param>
+        public void Write(FileCabinetApp.FileCabinetRecord record)
         {
             if (record == null)
             {

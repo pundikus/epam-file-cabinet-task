@@ -43,7 +43,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="parametrs">It is object parametrs.</param>
         /// <returns>unique identifier for user.</returns>
-        public int CreateRecord(ValueRange parametrs)
+        public int CreateRecord(FileCabinetRecord parametrs)
         {
             if (parametrs == null)
             {
@@ -76,11 +76,6 @@ namespace FileCabinetApp
         /// <returns>array all records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            if (this.list == null)
-            {
-                Console.WriteLine("List records is Empty.");
-            }
-
             ReadOnlyCollection<FileCabinetRecord> readOnlyList = new ReadOnlyCollection<FileCabinetRecord>(this.list);
 
             return readOnlyList;
@@ -99,7 +94,7 @@ namespace FileCabinetApp
         /// This method is for changes records.
         /// </summary>
         /// <param name="parametrs">It is object parametrs.</param>
-        public void EditRecord(ValueRange parametrs)
+        public void EditRecord(FileCabinetRecord parametrs)
         {
             if (parametrs == null)
             {
@@ -121,8 +116,8 @@ namespace FileCabinetApp
 
             var recordById = this.list.Find(x => x.Id == parametrs.Id);
 
-            this.list.Remove(recordById);
-            this.list.Add(record);
+            this.list.RemoveAt(recordById.Id - 1);
+            this.list.Insert(recordById.Id - 1, record);
 
             var newrecordById = this.list.Find(x => x.Id == parametrs.Id);
 
@@ -191,6 +186,61 @@ namespace FileCabinetApp
             ReadOnlyCollection<FileCabinetRecord> readOnlyList = new ReadOnlyCollection<FileCabinetRecord>(this.dateOfBirthDictionary[dateOfBirth]);
 
             return readOnlyList;
+        }
+
+        /// <summary>
+        /// This method load records from file.
+        /// </summary>
+        /// <param name="snapshot">It is copy data.</param>
+        public void Restore(FileCabinetServiceSnapshot snapshot)
+        {
+            if (snapshot == null)
+            {
+                throw new ArgumentNullException(nameof(snapshot));
+            }
+
+            var records = snapshot.Records;
+            if (this.GetRecords().Count == 0)
+            {
+                foreach (var recordImport in records)
+                {
+                    var model = new FileCabinetRecord((int)recordImport.Id, (string)recordImport.FirstName, (string)recordImport.LastName, (DateTime)recordImport.DateOfBirth, (short)recordImport.CabinetNumber, (decimal)recordImport.Salary, (char)recordImport.Category);
+
+                    try
+                    {
+                        this.validator.ValidateParameters(model);
+
+                        this.list.Add(recordImport);
+                        this.AddRecordInAllDictionary(recordImport);
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Console.WriteLine(recordImport.Id + ex.Message);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var recordImport in records)
+                {
+                    try
+                    {
+                        this.validator.ValidateParameters(recordImport);
+
+                        for (int i = 0; i < this.list.Count; i++)
+                        {
+                            if (recordImport.Id == this.list[i].Id)
+                            {
+                                this.EditRecord(recordImport);
+                            }
+                        }
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Console.WriteLine(recordImport.Id + ex.Message);
+                    }
+                }
+            }
         }
 
         private static void AddRecord(Dictionary<string, List<FileCabinetRecord>> dictionary, string key, FileCabinetRecord record)

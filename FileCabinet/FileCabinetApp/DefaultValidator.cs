@@ -13,7 +13,7 @@ namespace FileCabinetApp
         /// This Method check parametrs.
         /// </summary>
         /// <param name="parametrs">It is user input parametrs.</param>
-        public void ValidateParameters(ValueRange parametrs)
+        public void ValidateParameters(FileCabinetRecord parametrs)
         {
             if (parametrs == null)
             {

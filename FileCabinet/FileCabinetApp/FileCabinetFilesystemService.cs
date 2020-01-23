@@ -24,7 +24,7 @@ namespace FileCabinetApp
         }
 
         /// <inheritdoc/>
-        public int CreateRecord(ValueRange parametrs)
+        public int CreateRecord(FileCabinetRecord parametrs)
         {
             if (parametrs == null)
             {
@@ -43,7 +43,7 @@ namespace FileCabinetApp
                 binaryWriter = new BinaryWriter(this.fileStream);
             }
 
-            int id = new Random().Next(0, 1000);
+            int id = parametrs.Id;
             short status = 0;
 
             this.fileStream.Seek(0, SeekOrigin.End);
@@ -97,7 +97,7 @@ namespace FileCabinetApp
 
             var categoryByte = BitConverter.GetBytes(parametrs.Category);
 
-            var sizerecord = this.GetSizeRecords(parametrs);
+            var sizerecord = this.GetSizeRecords();
 
             byte[] record = new byte[sizerecord];
             record = this.GetRecordArray(record, byteStatus, byteId, massFNamebyte, massLNamebyte, yearByte, monthByte, dayByte, cabinetNumberByte, salaryByte, categoryByte);
@@ -139,7 +139,7 @@ namespace FileCabinetApp
         }
 
         /// <inheritdoc/>
-        public void EditRecord(ValueRange parametrs)
+        public void EditRecord(FileCabinetRecord parametrs)
         {
             if (parametrs == null)
             {
@@ -218,7 +218,7 @@ namespace FileCabinetApp
 
                     var salaryByte = bytes.ToArray();
 
-                    var sizerecord = this.GetSizeRecords(parametrs);
+                    var sizerecord = this.GetSizeRecords();
                     var categoryByte = BitConverter.GetBytes(parametrs.Category);
 
                     byte[] record = new byte[sizerecord];
@@ -259,7 +259,7 @@ namespace FileCabinetApp
                 }
                 else
                 {
-                    position += this.GetSizeRecords(parametrs);
+                    position += this.GetSizeRecords();
                 }
             }
 
@@ -308,7 +308,7 @@ namespace FileCabinetApp
 
                 var a = DateTime.Parse(dateOfBirth, CultureInfo.InvariantCulture);
 
-              //  string dateToString = dateofBirth.ToString(CultureInfo.InvariantCulture);
+                //string dateToString = dateofBirth.ToString(CultureInfo.InvariantCulture);
 
                 if (a.Equals(dateofBirth))
                 {
@@ -565,10 +565,6 @@ namespace FileCabinetApp
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
             var fi = new FileInfo(this.fileStream.Name);
-            if (fi.Length == 0)
-            {
-                Console.WriteLine("File is empty!");
-            }
 
             BinaryReader binaryReader;
 
@@ -662,12 +658,44 @@ namespace FileCabinetApp
                 listRecords.Add(item);
             }
 
-            var snapshot = new FileCabinetServiceSnapshot(listRecords);
+            var snapshot = new FileCabinetServiceSnapshot(this.GetRecords());
 
             return snapshot;
         }
 
-        private int GetSizeRecords(ValueRange parametrs)
+        /// <inheritdoc/>
+        public void Restore(FileCabinetServiceSnapshot snapshot)
+        {
+            if (snapshot == null)
+            {
+                throw new ArgumentNullException(nameof(snapshot));
+            }
+
+            var records = snapshot.Records;
+
+            if (this.GetRecords().Count == 0)
+            {
+                foreach (var recordImport in records)
+                {
+                    this.CreateRecord(recordImport);
+                }
+            }
+            else
+            {
+                foreach (var recordImport in records)
+                {
+                    foreach (var record in this.GetRecords())
+                    {
+                        if (recordImport.Id == record.Id)
+                        {
+                            this.EditRecord(recordImport);
+                        }
+                    }
+                }
+            }
+        }
+
+        private int GetSizeRecords()
         {
             int sizerecord = 0;
             sizerecord += sizeof(short);
