@@ -8,6 +8,12 @@ namespace FileCabinetApp
     public interface IFileCabinetService
     {
         /// <summary>
+        /// This Method remove record.
+        /// </summary>
+        /// <param name="id">Id record.</param>
+        int RemoveRecord(int id);
+
+        /// <summary>
         /// This Method make snapshot collection.
         /// </summary>
         /// <returns>snapshot collection.</returns>

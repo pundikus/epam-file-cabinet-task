@@ -243,6 +243,25 @@ namespace FileCabinetApp
             }
         }
 
+        /// <summary>
+        /// This Method remove record by Id.
+        /// </summary>
+        /// <param name="id">It is Id record.</param>
+        /// <returns>Removed record.</returns>
+        public int RemoveRecord(int id)
+        {
+            var recordById = this.list.Find(x => x.Id == id);
+            if (recordById == null)
+            {
+                return 0;
+            }
+
+            this.list.Remove(recordById);
+            this.DeleteRecordFromAllDictionary(recordById);
+
+            return recordById.Id;
+        }
+
         private static void AddRecord(Dictionary<string, List<FileCabinetRecord>> dictionary, string key, FileCabinetRecord record)
         {
             if (dictionary.ContainsKey(key))

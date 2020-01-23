@@ -48,6 +48,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("export", Export),
             new Tuple<string, Action<string>>("import", Import),
+            new Tuple<string, Action<string>>("remove", Remove),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -802,6 +803,28 @@ namespace FileCabinetApp
             {
                 Console.WriteLine("Import error: file " + path + " is not exist.");
                 return;
+            }
+        }
+
+        private static void Remove(string parameters)
+        {
+            var parsedId = int.TryParse(parameters, NumberStyles.Integer, CultureInfo.InvariantCulture, out int id);
+            if (!parsedId)
+            {
+                Console.WriteLine("Record #" + fileCabinetService.RemoveRecord(id) + " doesn't exists");
+
+                return;
+            }
+
+            int removedId = fileCabinetService.RemoveRecord(id);
+
+            if (removedId == 0)
+            {
+                Console.WriteLine("Record #" + id + " doesn't exists");
+            }
+            else
+            {
+                Console.WriteLine("Record #" + removedId + " is removed.");
             }
         }
 

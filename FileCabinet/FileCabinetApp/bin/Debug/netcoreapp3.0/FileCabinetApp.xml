@@ -133,6 +133,13 @@
             </summary>
             <param name="snapshot">It is copy data.</param>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.RemoveRecord(System.Int32)">
+            <summary>
+            This Method remove record by Id.
+            </summary>
+            <param name="id">It is Id record.</param>
+            <returns>Removed record.</returns>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
             This class storage parametrs.
@@ -339,6 +346,12 @@
             <summary>
             This Interface describes the service.
             </summary>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.RemoveRecord(System.Int32)">
+            <summary>
+            This Method remove record.
+            </summary>
+            <param name="id">Id record.</param>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.MakeSnapshot">
             <summary>

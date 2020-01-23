@@ -784,5 +784,10 @@ namespace FileCabinetApp
 
             return str;
         }
+
+        public int RemoveRecord(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
