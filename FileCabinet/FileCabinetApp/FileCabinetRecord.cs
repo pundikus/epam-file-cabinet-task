@@ -56,7 +56,6 @@ namespace FileCabinetApp
         /// </summary>
         public FileCabinetRecord()
         {
-
         }
 
         /// <summary>

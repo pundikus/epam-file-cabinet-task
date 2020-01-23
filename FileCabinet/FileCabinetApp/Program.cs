@@ -816,11 +816,19 @@ namespace FileCabinetApp
                 return;
             }
 
+            var listRecords = fileCabinetService.GetRecords();
+
+            if (!listRecords.Any(x => x.Id == id))
+            {
+                Console.WriteLine($"Record #{id} doesn't exists.");
+                return;
+            }
+
             int removedId = fileCabinetService.RemoveRecord(id);
 
-            if (removedId == 0)
+            if (isStorageFile)
             {
-                Console.WriteLine("Record #" + id + " doesn't exists");
+                Console.WriteLine("Record #" + removedId + " marked as deleted.");
             }
             else
             {

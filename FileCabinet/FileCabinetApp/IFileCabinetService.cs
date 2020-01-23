@@ -11,6 +11,7 @@ namespace FileCabinetApp
         /// This Method remove record.
         /// </summary>
         /// <param name="id">Id record.</param>
+        /// <returns>Id removed record.</returns>
         int RemoveRecord(int id);
 
         /// <summary>
