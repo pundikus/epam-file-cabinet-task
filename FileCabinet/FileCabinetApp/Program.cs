@@ -20,6 +20,7 @@ namespace FileCabinetApp
         private const string CustomMessage = "Using custom validation rules.";
         private const string MemoryMessage = "Using memory storage.";
         private const string FileMessage = "Using file storage.";
+        private const string FileName = @"f:\cabinet-records.db";
 
         private const int ModeParameterIndex = 0;
         private const int ModeParameterValue = 1;
@@ -32,6 +33,8 @@ namespace FileCabinetApp
         private static IRecordValidator validator = new DefaultValidator();
 
         private static IFileCabinetService fileCabinetService;
+
+        private static int countRemovedRecord = 0;
 
         private static bool isRunning = true;
         private static bool isModeCustom = false;
@@ -48,6 +51,8 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("export", Export),
             new Tuple<string, Action<string>>("import", Import),
+            new Tuple<string, Action<string>>("remove", Remove),
+            new Tuple<string, Action<string>>("purge", Purge),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -55,12 +60,13 @@ namespace FileCabinetApp
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
             new string[] { "stat", "gets the number of records", "The 'stat' command returns the number of records." },
-            new string[] { "create", "creates a new record", "The 'create' command creates a new record" },
-            new string[] { "list", "returns a list of records", "The 'list' command returns a list of records" },
-            new string[] { "edit", "changes record", "The 'edit' command changes record" },
-            new string[] { "find", "find records", "The 'find' command search records by input value" },
-            new string[] { "export", "export all records to file", "The 'export' command export all records to file  various format" },
-            new string[] { "import", "import all records from file", "The 'import' command import all records from file various format" },
+            new string[] { "create", "creates a new record", "The 'create' command creates a new record." },
+            new string[] { "list", "returns a list of records", "The 'list' command returns a list of records." },
+            new string[] { "edit", "changes record", "The 'edit' command changes record." },
+            new string[] { "find", "find records", "The 'find' command search records by input value." },
+            new string[] { "export", "export all records to file", "The 'export' command export all records to file  various format." },
+            new string[] { "import", "import all records from file", "The 'import' command import all records from file various format." },
+            new string[] { "purge", "delete marks record from binary file", "The 'perge' command delete all records marked for deletion (only Filesystemservice)." },
         };
 
         /// <summary>
@@ -232,7 +238,16 @@ namespace FileCabinetApp
         {
             int recordsCount = fileCabinetService.GetStat();
 
-            Console.WriteLine($"{recordsCount} record(s).");
+            if (isStorageFile)
+            {
+                Console.WriteLine($"{recordsCount} record(s).");
+                Console.WriteLine($"{countRemovedRecord} records was deleted.");
+            }
+            else
+            {
+                Console.WriteLine($"{recordsCount} record(s).");
+                Console.WriteLine("0 records was deleted.");
+            }
         }
 
         private static void Create(string parameters)
@@ -704,16 +719,20 @@ namespace FileCabinetApp
                     if (inputsArray[1].Equals(fileParameters, StringComparison.InvariantCultureIgnoreCase))
                     {
                         isStorageFile = true;
-                        string fileName = @"f:\cabinet-records.db";
                         FileStream fileStream;
 
-                        if (File.Exists(fileName))
+                        if (isStorageFile)
                         {
-                            fileStream = File.Create(fileName);
+                            File.Delete(FileName);
+                        }
+
+                        if (!File.Exists(FileName))
+                        {
+                            fileStream = File.Create(FileName);
                         }
                         else
                         {
-                            fileStream = File.Open(fileName, FileMode.Open);
+                            fileStream = File.Open(FileName, FileMode.Open);
                         }
 
                         fileCabinetService = new FileCabinetFilesystemService(fileStream);
@@ -728,16 +747,21 @@ namespace FileCabinetApp
                     if (inputsArrayParamsStorage[3].Equals(fileParameters, StringComparison.InvariantCultureIgnoreCase))
                     {
                         isStorageFile = true;
-                        string fileName = @"f:\cabinet-records.db";
+
+                        if (isStorageFile)
+                        {
+                            File.Delete(FileName);
+                        }
+
                         FileStream fileStream;
 
-                        if (File.Exists(fileName))
+                        if (File.Exists(FileName))
                         {
-                            fileStream = File.Open(fileName, FileMode.Open);
+                            fileStream = File.Open(FileName, FileMode.Open);
                         }
                         else
                         {
-                            fileStream = File.Create(fileName);
+                            fileStream = File.Create(FileName);
                         }
 
                         fileCabinetService = new FileCabinetFilesystemService(fileStream);
@@ -793,7 +817,7 @@ namespace FileCabinetApp
                         fileCabinetService.Restore(snapshot);
                     }
 
-                    Console.WriteLine(fileCabinetService.GetRecords().Count + " records were imported from " + path);
+                    Console.WriteLine(snapshot.Records.Count + " records were imported from " + path);
 
                     streamReader.Dispose();
                 }
@@ -801,6 +825,55 @@ namespace FileCabinetApp
             else
             {
                 Console.WriteLine("Import error: file " + path + " is not exist.");
+                return;
+            }
+        }
+
+        private static void Remove(string parameters)
+        {
+            var parsedId = int.TryParse(parameters, NumberStyles.Integer, CultureInfo.InvariantCulture, out int id);
+            if (!parsedId)
+            {
+                Console.WriteLine("Record #" + fileCabinetService.RemoveRecord(id) + " doesn't exists");
+
+                return;
+            }
+
+            var listRecords = fileCabinetService.GetRecords();
+
+            if (!listRecords.Any(x => x.Id == id))
+            {
+                Console.WriteLine($"Record #{id} doesn't exists.");
+                return;
+            }
+
+            int removedId = fileCabinetService.RemoveRecord(id);
+
+            if (isStorageFile)
+            {
+                Console.WriteLine("Record #" + removedId + " marked as deleted.");
+            }
+            else
+            {
+                Console.WriteLine("Record #" + removedId + " is removed.");
+            }
+        }
+
+        private static void Purge(string parameters)
+        {
+            int countRecords = fileCabinetService.GetRecords().Count;
+            int countRemovedRecords = 0;
+            if (isStorageFile)
+            {
+                countRemovedRecords = fileCabinetService.PurgeRecords();
+
+                countRemovedRecord += countRemovedRecords;
+
+                Console.WriteLine($"Data file procesing is completed: {countRemovedRecords} of {countRecords} records were purged.");
+            }
+            else
+            {
+                Console.WriteLine("FileCabinetMemoryService does not support this command.");
                 return;
             }
         }

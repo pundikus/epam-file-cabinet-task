@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -31,7 +32,17 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(parametrs));
             }
 
+            int id;
             BinaryWriter binaryWriter;
+
+            if (parametrs.Id == 0)
+            {
+                id = this.GetRecords().Count + 1;
+            }
+            else
+            {
+                id = parametrs.Id;
+            }
 
             if (!this.fileStream.CanWrite)
             {
@@ -43,10 +54,9 @@ namespace FileCabinetApp
                 binaryWriter = new BinaryWriter(this.fileStream);
             }
 
-            int id = parametrs.Id;
-            short status = 0;
-
             this.fileStream.Seek(0, SeekOrigin.End);
+
+            short status = 0;
 
             var byteStatus = BitConverter.GetBytes(status);
 
@@ -161,17 +171,26 @@ namespace FileCabinetApp
                 binaryWriter = new BinaryWriter(this.fileStream);
             }
 
-            int position = 2;
+            int position = 0;
 
             while (this.fileStream.Position < this.fileStream.Length)
             {
                 this.fileStream.Seek(position, SeekOrigin.Begin);
+
+                var statusMass = binaryReader.ReadBytes(sizeof(short));
+                var bitsStatus = new BitArray(statusMass);
+                if (bitsStatus[2])
+                {
+                    Console.WriteLine("This records it's marks as deleted!");
+                    break;
+                }
+
                 var idinByte = binaryReader.ReadBytes(sizeof(int));
                 int id = BitConverter.ToInt32(idinByte);
 
                 if (id.Equals(parametrs.Id))
                 {
-                    this.fileStream.Seek(position - 2, SeekOrigin.Begin);
+                    this.fileStream.Seek(position, SeekOrigin.Begin);
                     short status = 0;
                     byte[] statusByte = BitConverter.GetBytes(status);
 
@@ -285,9 +304,21 @@ namespace FileCabinetApp
             }
 
             int position = sizeof(short) + sizeof(int) + 240;
+            int positionDeleteRecords = 0;
 
             while (this.fileStream.Position < this.fileStream.Length)
             {
+                this.fileStream.Seek(positionDeleteRecords, SeekOrigin.Begin);
+
+                var status = binaryReader.ReadBytes(sizeof(short));
+                var bitsStatus = new BitArray(status);
+                if (bitsStatus[2])
+                {
+                    position += this.GetSizeRecords();
+                }
+
+                positionDeleteRecords += this.GetSizeRecords();
+
                 this.fileStream.Seek(position, SeekOrigin.Begin);
 
                 if (this.fileStream.Position > this.fileStream.Length)
@@ -308,14 +339,9 @@ namespace FileCabinetApp
 
                 var a = DateTime.Parse(dateOfBirth, CultureInfo.InvariantCulture);
 
-                //string dateToString = dateofBirth.ToString(CultureInfo.InvariantCulture);
-
                 if (a.Equals(dateofBirth))
                 {
                     this.fileStream.Seek(position - 244, SeekOrigin.Begin);
-                    //var statusByte = binaryReader.ReadBytes(sizeof(short));
-                    //short status = BitConverter.ToInt16(statusByte);
-                    //size += sizeof(short);
 
                     var idinByte = binaryReader.ReadBytes(sizeof(int));
                     int id = BitConverter.ToInt32(idinByte);
@@ -393,9 +419,21 @@ namespace FileCabinetApp
             }
 
             int position = sizeof(short) + sizeof(int);
+            int positionDeleteRecords = 0;
 
             while (this.fileStream.Position < this.fileStream.Length)
             {
+                this.fileStream.Seek(positionDeleteRecords, SeekOrigin.Begin);
+
+                var status = binaryReader.ReadBytes(sizeof(short));
+                var bitsStatus = new BitArray(status);
+                if (bitsStatus[2])
+                {
+                    position += this.GetSizeRecords();
+                }
+
+                positionDeleteRecords += this.GetSizeRecords();
+
                 this.fileStream.Seek(position, SeekOrigin.Begin);
 
                 var massChar = new char[60];
@@ -408,9 +446,6 @@ namespace FileCabinetApp
                 if (firstName.Equals(firstnameInFile, StringComparison.InvariantCultureIgnoreCase))
                 {
                     this.fileStream.Seek(position - 4, SeekOrigin.Begin);
-                    //var statusByte = binaryReader.ReadBytes(sizeof(short));
-                    //short status = BitConverter.ToInt16(statusByte);
-                    //size += sizeof(short);
 
                     var idinByte = binaryReader.ReadBytes(sizeof(int));
                     int id = BitConverter.ToInt32(idinByte);
@@ -486,9 +521,21 @@ namespace FileCabinetApp
             }
 
             int position = sizeof(short) + sizeof(int) + 120;
+            int positionDeleteRecords = 0;
 
             while (this.fileStream.Position < this.fileStream.Length)
             {
+                this.fileStream.Seek(positionDeleteRecords, SeekOrigin.Begin);
+
+                var status = binaryReader.ReadBytes(sizeof(short));
+                var bitsStatus = new BitArray(status);
+                if (bitsStatus[2])
+                {
+                    position += this.GetSizeRecords();
+                }
+
+                positionDeleteRecords += this.GetSizeRecords();
+
                 this.fileStream.Seek(position, SeekOrigin.Begin);
 
                 var massChar = new char[60];
@@ -501,9 +548,6 @@ namespace FileCabinetApp
                 if (lastName.Equals(lastnameInFile, StringComparison.InvariantCultureIgnoreCase))
                 {
                     this.fileStream.Seek(position - 124, SeekOrigin.Begin);
-                    //var statusByte = binaryReader.ReadBytes(sizeof(short));
-                    //short status = BitConverter.ToInt16(statusByte);
-                    //size += sizeof(short);
 
                     var idinByte = binaryReader.ReadBytes(sizeof(int));
                     int id = BitConverter.ToInt32(idinByte);
@@ -580,12 +624,11 @@ namespace FileCabinetApp
 
             var list = new List<FileCabinetRecord>();
 
+            this.fileStream.Seek(0, SeekOrigin.Begin);
+
             while (this.fileStream.Position < this.fileStream.Length)
             {
                 this.fileStream.Seek(2, SeekOrigin.Current);
-                //var statusByte = binaryReader.ReadBytes(sizeof(short));
-                //short status = BitConverter.ToInt16(statusByte);
-                //size += sizeof(short);
 
                 var idinByte = binaryReader.ReadBytes(sizeof(int));
                 int id = BitConverter.ToInt32(idinByte);
@@ -682,17 +725,152 @@ namespace FileCabinetApp
             }
             else
             {
+                var recordList = this.GetRecords();
+
+                var newList = new List<FileCabinetRecord>();
+                foreach (var item in recordList)
+                {
+                    newList.Add(item);
+                }
+
                 foreach (var recordImport in records)
                 {
-                    foreach (var record in this.GetRecords())
+                    var recordbyId = newList.Find(x => x.Id == recordImport.Id);
+
+                    if (recordbyId != null)
                     {
-                        if (recordImport.Id == record.Id)
-                        {
-                            this.EditRecord(recordImport);
-                        }
+                        this.EditRecord(recordImport);
+                    }
+                    else
+                    {
+                        this.CreateRecord(recordImport);
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// This Method marks the entry as deleted.
+        /// </summary>
+        /// <param name="removedId">It is Id removed record.</param>
+        /// <returns>Id marks record.</returns>
+        public int RemoveRecord(int removedId)
+        {
+            BinaryReader binaryReader;
+            BinaryWriter binaryWriter;
+
+            if (!this.fileStream.CanRead || this.fileStream.CanWrite)
+            {
+                this.fileStream = File.Open(this.fileStream.Name, FileMode.Open);
+                binaryReader = new BinaryReader(this.fileStream);
+                binaryWriter = new BinaryWriter(this.fileStream);
+            }
+            else
+            {
+                binaryReader = new BinaryReader(this.fileStream);
+                binaryWriter = new BinaryWriter(this.fileStream);
+            }
+
+            int position = 2;
+            int id = 0;
+
+            while (this.fileStream.Position < this.fileStream.Length)
+            {
+                this.fileStream.Seek(position, SeekOrigin.Begin);
+                var idinByte = binaryReader.ReadBytes(sizeof(int));
+                id = BitConverter.ToInt32(idinByte);
+
+                if (id.Equals(removedId))
+                {
+                    this.fileStream.Seek(position - 2, SeekOrigin.Begin);
+
+                    var status = binaryReader.ReadBytes(sizeof(short));
+
+                    this.fileStream.Seek(position - 2, SeekOrigin.Begin);
+
+                    var bitsStatus = new BitArray(status);
+                    bitsStatus[2] = true;
+                    bitsStatus.CopyTo(status, 0);
+
+                    binaryWriter.Write(status);
+
+                    break;
+                }
+
+                position += 278;
+            }
+
+            binaryReader.Dispose();
+            binaryWriter.Dispose();
+
+            return id;
+        }
+
+        /// <summary>
+        /// This Method flush marks records.
+        /// </summary>
+        /// <returns>Count removed records.</returns>
+        public int PurgeRecords()
+        {
+            BinaryReader binaryReader;
+            BinaryWriter binaryWriter;
+
+            int countRemovedRecords = 0;
+
+            if (!this.fileStream.CanRead || this.fileStream.CanWrite)
+            {
+                this.fileStream = File.Open(this.fileStream.Name, FileMode.Open);
+                binaryReader = new BinaryReader(this.fileStream);
+                binaryWriter = new BinaryWriter(this.fileStream);
+            }
+            else
+            {
+                binaryReader = new BinaryReader(this.fileStream);
+                binaryWriter = new BinaryWriter(this.fileStream);
+            }
+
+            int positionDeleteRecords = 0;
+
+            while (this.fileStream.Position < this.fileStream.Length)
+            {
+                this.fileStream.Seek(positionDeleteRecords, SeekOrigin.Begin);
+
+                var status = binaryReader.ReadBytes(sizeof(short));
+                if (status.Length == 0)
+                {
+                    break;
+                }
+
+                var bitsStatus = new BitArray(status);
+                if (bitsStatus[2])
+                {
+                    countRemovedRecords++;
+
+                    this.fileStream.Seek(positionDeleteRecords + this.GetSizeRecords(), SeekOrigin.Begin);
+                    var buffer = binaryReader.ReadBytes((int)this.fileStream.Length - positionDeleteRecords);
+
+                    this.fileStream.Seek(positionDeleteRecords, SeekOrigin.Begin);
+                    binaryWriter.Write(buffer);
+
+                    this.fileStream.SetLength(this.fileStream.Length - this.GetSizeRecords());
+                    positionDeleteRecords += this.GetSizeRecords();
+                }
+                else
+                {
+                    positionDeleteRecords += this.GetSizeRecords();
+                }
+
+                if (this.fileStream.Position == this.fileStream.Length)
+                {
+                    positionDeleteRecords = 0;
+                    this.fileStream.Seek(positionDeleteRecords, SeekOrigin.Begin);
+                }
+            }
+
+            binaryReader.Dispose();
+            binaryWriter.Dispose();
+
+            return countRemovedRecords;
         }
 
         private int GetSizeRecords()

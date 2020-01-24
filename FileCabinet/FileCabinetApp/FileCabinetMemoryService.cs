@@ -204,11 +204,9 @@ namespace FileCabinetApp
             {
                 foreach (var recordImport in records)
                 {
-                    var model = new FileCabinetRecord((int)recordImport.Id, (string)recordImport.FirstName, (string)recordImport.LastName, (DateTime)recordImport.DateOfBirth, (short)recordImport.CabinetNumber, (decimal)recordImport.Salary, (char)recordImport.Category);
-
                     try
                     {
-                        this.validator.ValidateParameters(model);
+                        this.validator.ValidateParameters(recordImport);
 
                         this.list.Add(recordImport);
                         this.AddRecordInAllDictionary(recordImport);
@@ -223,24 +221,46 @@ namespace FileCabinetApp
             {
                 foreach (var recordImport in records)
                 {
-                    try
-                    {
-                        this.validator.ValidateParameters(recordImport);
+                    this.validator.ValidateParameters(recordImport);
 
-                        for (int i = 0; i < this.list.Count; i++)
-                        {
-                            if (recordImport.Id == this.list[i].Id)
-                            {
-                                this.EditRecord(recordImport);
-                            }
-                        }
-                    }
-                    catch (ArgumentException ex)
+                    var recordById = this.list.Find(x => x.Id == recordImport.Id);
+
+                    if (recordById != null)
                     {
-                        Console.WriteLine(recordImport.Id + ex.Message);
+                        this.EditRecord(recordImport);
+                    }
+                    else
+                    {
+                        this.list.Add(recordImport);
+                        this.AddRecordInAllDictionary(recordImport);
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// This Method remove record by Id.
+        /// </summary>
+        /// <param name="id">It is Id record.</param>
+        /// <returns>Removed record.</returns>
+        public int RemoveRecord(int id)
+        {
+            var recordById = this.list.Find(x => x.Id == id);
+            if (recordById == null)
+            {
+                return 0;
+            }
+
+            this.list.Remove(recordById);
+            this.DeleteRecordFromAllDictionary(recordById);
+
+            return recordById.Id;
+        }
+
+        /// <inheritdoc/>
+        public int PurgeRecords()
+        {
+            throw new NotImplementedException();
         }
 
         private static void AddRecord(Dictionary<string, List<FileCabinetRecord>> dictionary, string key, FileCabinetRecord record)
