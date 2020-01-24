@@ -289,6 +289,48 @@
             The service to get information and modify.
             </summary>
         </member>
+        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.FirstNameValidator(System.String)">
+            <summary>
+            This Method validate First Name.
+            </summary>
+            <param name="arg">input value.</param>
+            <returns>check valid.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.LastNameValidator(System.String)">
+            <summary>
+            This Method validate Last Name.
+            </summary>
+            <param name="arg">input value.</param>
+            <returns>check valid.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.DateOfBirthValidator(System.DateTime)">
+            <summary>
+            This Method validate Date Of Birth.
+            </summary>
+            <param name="arg">input value.</param>
+            <returns>check valid.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.CabinetNumberValidator(System.Int16)">
+            <summary>
+            This Method validate Cabinet Number.
+            </summary>
+            <param name="arg">input value.</param>
+            <returns>check valid.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.SalaryValidator(System.Decimal)">
+            <summary>
+            This Method validate Salary.
+            </summary>
+            <param name="arg">input value.</param>
+            <returns>check valid.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.CategoryValidator(System.Char)">
+            <summary>
+            This Method validate Category.
+            </summary>
+            <param name="arg">input value.</param>
+            <returns>check valid.</returns>
+        </member>
         <member name="M:FileCabinetApp.ServiceCommandHandlerBase.ReadInput``1(System.Func{System.String,System.Tuple{System.Boolean,System.String,``0}},System.Func{``0,System.Tuple{System.Boolean,System.String}})">
             <summary>
             Parses and validates the user's input.
@@ -333,58 +375,17 @@
             <param name="arg">input value.</param>
             <returns>convert value.</returns>
         </member>
-        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.FirstNameValidator(System.String)">
-            <summary>
-            This Method validate First Name.
-            </summary>
-            <param name="arg">input value.</param>
-            <returns>check valid.</returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.LastNameValidator(System.String)">
-            <summary>
-            This Method validate Last Name.
-            </summary>
-            <param name="arg">input value.</param>
-            <returns>check valid.</returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.DateOfBirthValidator(System.DateTime)">
-            <summary>
-            This Method validate Date Of Birth.
-            </summary>
-            <param name="arg">input value.</param>
-            <returns>check valid.</returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.CabinetNumberValidator(System.Int16)">
-            <summary>
-            This Method validate Cabinet Number.
-            </summary>
-            <param name="arg">input value.</param>
-            <returns>check valid.</returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.SalaryValidator(System.Decimal)">
-            <summary>
-            This Method validate Salary.
-            </summary>
-            <param name="arg">input value.</param>
-            <returns>check valid.</returns>
-        </member>
-        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.CategoryValidator(System.Char)">
-            <summary>
-            This Method validate Category.
-            </summary>
-            <param name="arg">input value.</param>
-            <returns>check valid.</returns>
-        </member>
         <member name="T:FileCabinetApp.CustomValidator">
             <summary>
-            This class implements the custom method for checking parameters.
+            Custom validator input.
             </summary>
         </member>
         <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
             <summary>
-            This Method check parametrs.
+            Validates the input.
             </summary>
-            <param name="parametrs">It is user input parametrs.</param>
+            <param name="record">Record to validate.</param>
+            <returns>Exception message.</returns>
         </member>
         <member name="T:FileCabinetApp.DefaultRecordPrinter">
             <summary>
@@ -405,14 +406,15 @@
         </member>
         <member name="T:FileCabinetApp.DefaultValidator">
             <summary>
-            This class implements the default method for checking parameters.
+            Default validator for user's input.
             </summary>
         </member>
         <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
             <summary>
-            This Method check parametrs.
+            Validates the user's input.
             </summary>
-            <param name="parametrs">It is user input parametrs.</param>
+            <param name="record">Record to validate.</param>
+            <returns>Exception message.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -616,6 +618,234 @@
             <param name="streamReader">Represents characters read.</param>
             <returns>List records.</returns>
         </member>
+        <member name="T:FileCabinetApp.Validators.ICabinetNumberValidator">
+            <summary>
+            Favourite number validator.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.ICabinetNumberValidator.Validate(System.Int16)">
+            <summary>
+            Validates Cabinet Number input.
+            </summary>
+            <param name="cabinetNumber">Cabinet Number to validate.</param>
+            <returns>Whether Cabine tNumber is valid.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Validators.ICategoryValidator">
+            <summary>
+            Category validator.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.ICategoryValidator.Validate(System.Char)">
+            <summary>
+            Category input.
+            </summary>
+            <param name="category">Category to validate.</param>
+            <returns>Whether Category is valid.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Validators.ISalaryValidator">
+            <summary>
+            Salary validator.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.ISalaryValidator.Validate(System.Decimal)">
+            <summary>
+            Validates salary input.
+            </summary>
+            <param name="salary">Salary to validate.</param>
+            <returns>Whether salary are valid.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Validators.CustomCabinetNumberValidator">
+            <summary>
+            Custom favourite number validator.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.CustomCabinetNumberValidator.Validate(System.Int16)">
+            <summary>
+            Validates favourite number of user's input.
+            </summary>
+            <param name="cabinetNumber">Favourite number to validate.</param>
+            <returns>Whether favourite number is valid.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Validators.CustomCategoryValidator">
+            <summary>
+            Custom favourite character validator.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.CustomCategoryValidator.Validate(System.Char)">
+            <summary>
+            Validates favourite character of user's input.
+            </summary>
+            <param name="category">Favourite character to validate.</param>
+            <returns>Whether favourite character is valid.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Validators.CustomDateOfBirthValidator">
+            <summary>
+            Custom date of birth validator.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.CustomDateOfBirthValidator.Validate(System.DateTime)">
+            <summary>
+            Validates date of birth input.
+            </summary>
+            <param name="dateOfBirth">Date of birth to validate.</param>
+            <returns>Whether date of birth is valid.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Validators.CustomFirstNameValidator">
+            <summary>
+            Custom first name validator.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.CustomFirstNameValidator.Validate(System.String)">
+            <summary>
+            Validates first name of user's input.
+            </summary>
+            <param name="firstName">First name to validate.</param>
+            <returns>Whether first name is valid.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Validators.CustomLastNameValidator">
+            <summary>
+            Custom last name validator.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.CustomLastNameValidator.Validate(System.String)">
+            <summary>
+            Validates last name of user's input.
+            </summary>
+            <param name="lastName">Last name to validate.</param>
+            <returns>Whether last name is valid.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Validators.CustomSalaryValidator">
+            <summary>
+            Custom Salary validator.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.CustomSalaryValidator.Validate(System.Decimal)">
+            <summary>
+            Validates Salary of user's input.
+            </summary>
+            <param name="salary">Salary to validate.</param>
+            <returns>Whether Salary are valid.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Validators.DefaultCabinetNumberValidator">
+            <summary>
+            Favourite number validator.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.DefaultCabinetNumberValidator.Validate(System.Int16)">
+            <summary>
+            Validates Cabinet number input.
+            </summary>
+            <param name="cabinetNumber">Cabinet number to validate.</param>
+            <returns>Whether Cabinet number is valid.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Validators.DefaultCategoryValidator">
+            <summary>
+            Favourite character validator.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.DefaultCategoryValidator.Validate(System.Char)">
+            <summary>
+            Validates category of input.
+            </summary>
+            <param name="category">category to validate.</param>
+            <returns>Whether category is valid.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Validators.DefaultDateOfBirthValidator">
+            <summary>
+            Date of birth validator.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.DefaultDateOfBirthValidator.Validate(System.DateTime)">
+            <summary>
+            Validates date of birth of user's input.
+            </summary>
+            <param name="dateOfBirth">Date of birth to validate.</param>
+            <returns>Whether date of birth is valid.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Validators.DefaultFirstNameValidator">
+            <summary>
+            First name validator.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.DefaultFirstNameValidator.Validate(System.String)">
+            <summary>
+            Validates first name of user's input.
+            </summary>
+            <param name="firstName">First name to validate.</param>
+            <returns>Whether first name is valid.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Validators.DefaultLastNameValidator">
+            <summary>
+            Last name validator.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.DefaultLastNameValidator.Validate(System.String)">
+            <summary>
+            Validates last name of user's input.
+            </summary>
+            <param name="lastName">Last name to validate.</param>
+            <returns>Whether last name is valid.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Validators.DefaultSalaryValidator">
+            <summary>
+            Donations validator.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.DefaultSalaryValidator.Validate(System.Decimal)">
+            <summary>
+            Validates salary of user's input.
+            </summary>
+            <param name="salary">Salary to validate.</param>
+            <returns>Whether salary are valid.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Interfaces.Validators.IDateOfBirthValidator">
+            <summary>
+            Date of birth validator.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Interfaces.Validators.IDateOfBirthValidator.Validate(System.DateTime)">
+            <summary>
+            Validates date of birth of user's input.
+            </summary>
+            <param name="dateOfBirth">Date of birth to validate.</param>
+            <returns>Whether date of birth is valid.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Interfaces.Validators.IFirstNameValidator">
+            <summary>
+            First name validator.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Interfaces.Validators.IFirstNameValidator.Validate(System.String)">
+            <summary>
+            Validates first name of user's input.
+            </summary>
+            <param name="firstName">First name to validate.</param>
+            <returns>Whether first name is valid.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Interfaces.Validators.ILastNameValidator">
+            <summary>
+            Last name validator.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Interfaces.Validators.ILastNameValidator.Validate(System.String)">
+            <summary>
+            Validates last name of user's input.
+            </summary>
+            <param name="lastName">Last name to validate.</param>
+            <returns>Whether last name is valid.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Interfaces.Validators.IRecordValidator">
+            <summary>
+            Validator for input.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Interfaces.Validators.IRecordValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Validates the input.
+            </summary>
+            <param name="record">Record to validate.</param>
+            <returns>Exception message.</returns>
+        </member>
         <member name="T:FileCabinetApp.ICommandHandler">
             <summary>
             This interface sets behavor.
@@ -722,17 +952,6 @@
             </summary>
             <param name="records">Records to print.</param>
         </member>
-        <member name="T:FileCabinetApp.IRecordValidator">
-            <summary>
-            This Interface sets a method for checking parameters.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.IRecordValidator.ValidateParameters(FileCabinetApp.FileCabinetRecord)">
-            <summary>
-            This Method check parametrs.
-            </summary>
-            <param name="parametrs">It is user input parametrs.</param>
-        </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
             This class is needed for user interaction.
@@ -816,7 +1035,7 @@
             This is intended for service. It has all the necessary methods for creating, modifying, deleting records.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.#ctor(FileCabinetApp.IRecordValidator)">
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.#ctor(FileCabinetApp.Interfaces.Validators.IRecordValidator)">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetMemoryService"/> class.
             </summary>

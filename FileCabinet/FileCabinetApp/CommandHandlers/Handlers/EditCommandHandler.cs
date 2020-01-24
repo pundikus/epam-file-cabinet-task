@@ -57,22 +57,22 @@ namespace FileCabinetApp.Handlers
             }
 
             Console.Write("First name: ");
-            string firstName = ReadInput(StringConverter, FirstNameValidator);
+            string firstName = this.ReadInput(this.StringConverter, this.FirstNameValidator);
 
             Console.Write("Last name: ");
-            string lastName = ReadInput(StringConverter, LastNameValidator);
+            string lastName = this.ReadInput(this.StringConverter, this.LastNameValidator);
 
             Console.Write("Date of birth: ");
-            var dateofBirth = ReadInput(DateTimeConverter, DateOfBirthValidator);
+            var dateofBirth = this.ReadInput(this.DateTimeConverter, this.DateOfBirthValidator);
 
             Console.Write("Cabinet number: ");
-            var cabinetNumber = ReadInput(ShortConverter, CabinetNumberValidator);
+            var cabinetNumber = this.ReadInput(this.ShortConverter, this.CabinetNumberValidator);
 
             Console.Write("Salary: ");
-            var salary = ReadInput(DecimalConverter, SalaryValidator);
+            var salary = this.ReadInput(this.DecimalConverter, this.SalaryValidator);
 
             Console.Write("Category(A, B, C): ");
-            var category = ReadInput(CharConverter, CategoryValidator);
+            var category = this.ReadInput(this.CharConverter, this.CategoryValidator);
 
             try
             {

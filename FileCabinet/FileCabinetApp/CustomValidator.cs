@@ -1,84 +1,57 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using FileCabinetApp.Interfaces.Validators;
+using FileCabinetApp.Validators;
 
 namespace FileCabinetApp
 {
     /// <summary>
-    /// This class implements the custom method for checking parameters.
+    /// Custom validator input.
     /// </summary>
     public class CustomValidator : IRecordValidator
     {
         /// <summary>
-        /// This Method check parametrs.
+        /// Validates the input.
         /// </summary>
-        /// <param name="parametrs">It is user input parametrs.</param>
-        public void ValidateParameters(FileCabinetRecord parametrs)
+        /// <param name="record">Record to validate.</param>
+        /// <returns>Exception message.</returns>
+        public string ValidateParameters(FileCabinetRecord record)
         {
-            if (parametrs == null)
+            if (record == null)
             {
-                throw new ArgumentNullException(nameof(parametrs));
+                throw new ArgumentNullException($"{record} object is invalid.");
             }
 
-            foreach (var item in new string("!@#$%^&*():;{}=+1234567890/|\"'<>.,").ToCharArray())
+            if (!new CustomFirstNameValidator().Validate(record.FirstName))
             {
-                if (parametrs.FirstName.Contains(item, StringComparison.InvariantCulture))
-                {
-                    throw new ArgumentException($"{nameof(parametrs.FirstName)} is not correct.");
-                }
-
-                if (parametrs.LastName.Contains(item, StringComparison.InvariantCulture))
-                {
-                    throw new ArgumentException($"{nameof(parametrs.LastName)} is not correct.");
-                }
+                return "First name is invalid.";
             }
 
-            DateTime validDate = new DateTime(2002, 1, 1);
-            if (parametrs.DateOfBirth > validDate)
+            if (!new CustomLastNameValidator().Validate(record.LastName))
             {
-                throw new ArgumentException($"{nameof(parametrs.DateOfBirth)} does not suit us.");
+                return "Last name is invalid.";
             }
 
-            decimal maxSalaryCategoryA = 1000;
-            if (parametrs.Category == 65 && parametrs.Salary > maxSalaryCategoryA)
+            if (!new CustomDateOfBirthValidator().Validate(record.DateOfBirth))
             {
-                throw new ArgumentException($"{nameof(parametrs.Category)} does not match wages without bonus.");
+                return "Date of birth is invalid.";
             }
 
-            decimal maxSalaryCategpryB = 5000;
-            if (parametrs.Category == 66 && parametrs.Salary > maxSalaryCategpryB)
+            if (!new CustomCabinetNumberValidator().Validate(record.CabinetNumber))
             {
-                throw new ArgumentException($"{nameof(parametrs.Category)} does not match wages without bonus.");
+                return "Cabinet Number is invalid.";
             }
 
-            decimal maxSalaryCategoryC = 10000;
-            if (parametrs.Category == 67 && parametrs.Salary > maxSalaryCategoryC)
+            if (!new CustomCategoryValidator().Validate(record.Category))
             {
-                throw new ArgumentException($"{nameof(parametrs.Category)} does not match wages without bonus.");
+                return "Category is invalid.";
             }
 
-            short maxCabinetNumberCategoryA = 500;
-            if (parametrs.Category == 65 && parametrs.CabinetNumber > maxCabinetNumberCategoryA)
+            if (!new CustomSalaryValidator().Validate(record.Salary))
             {
-                throw new ArgumentException($"{nameof(parametrs.CabinetNumber)} does not match this category.");
+                return "Salary invalid.";
             }
 
-            short maxCabinetNumberCategoryB = 1000;
-            if (parametrs.Category == 66 && parametrs.CabinetNumber > maxCabinetNumberCategoryB)
-            {
-                throw new ArgumentException($"{nameof(parametrs.CabinetNumber)} does not match this category.");
-            }
-
-            short maxCabinetNumberCategoryC = 1500;
-            if (parametrs.Category == 67 && parametrs.CabinetNumber > maxCabinetNumberCategoryC)
-            {
-                throw new ArgumentException($"{nameof(parametrs.CabinetNumber)} does not match this category.");
-            }
-
-            if (parametrs.Category < 65 || parametrs.Category > 67)
-            {
-                throw new ArgumentException($"{nameof(parametrs.Category)} is not correct.");
-            }
+            return null;
         }
     }
 }

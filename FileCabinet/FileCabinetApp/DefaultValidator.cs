@@ -1,67 +1,59 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using FileCabinetApp.Interfaces.Validators;
+using FileCabinetApp.Validators;
 
 namespace FileCabinetApp
 {
     /// <summary>
-    /// This class implements the default method for checking parameters.
+    /// Default validator for user's input.
     /// </summary>
     public class DefaultValidator : IRecordValidator
     {
         /// <summary>
-        /// This Method check parametrs.
+        /// Validates the user's input.
         /// </summary>
-        /// <param name="parametrs">It is user input parametrs.</param>
-        public void ValidateParameters(FileCabinetRecord parametrs)
+        /// <param name="record">Record to validate.</param>
+        /// <returns>Exception message.</returns>
+        public string ValidateParameters(FileCabinetRecord record)
         {
-            if (parametrs == null)
+            if (record == null)
             {
-                throw new ArgumentNullException(nameof(parametrs));
+                return $"{record} object is invalid.";
             }
 
-            if (parametrs.FirstName == null || string.IsNullOrEmpty(parametrs.FirstName.Trim()))
+            if (!new DefaultFirstNameValidator().Validate(record.FirstName))
             {
-                throw new ArgumentNullException($"{nameof(parametrs.FirstName)} cannot be empty.");
+                return "First name is invalid.";
             }
 
-            if (parametrs.FirstName.Length < 2 || parametrs.FirstName.Length > 60)
+            if (!new DefaultLastNameValidator().Validate(record.LastName))
             {
-                throw new ArgumentException($"{nameof(parametrs.FirstName)} is not correct.");
+                return "Last name is invalid.";
             }
 
-            if (parametrs.LastName == null || string.IsNullOrEmpty(parametrs.LastName.Trim()))
+            if (!new DefaultDateOfBirthValidator().Validate(record.DateOfBirth))
             {
-                throw new ArgumentNullException($"{nameof(parametrs.LastName)} cannot be empty.");
+                return "Date of birth is invalid.";
             }
 
-            if (parametrs.LastName.Length < 2 || parametrs.LastName.Length > 60)
+            if (!new DefaultCabinetNumberValidator().Validate(record.CabinetNumber))
             {
-                throw new ArgumentException($"{nameof(parametrs.LastName)} is not correct.");
+                return "Cabinet Number is invalid.";
             }
 
-            DateTime minDate = new DateTime(1950, 1, 1);
-            DateTime maxDate = DateTime.Now;
-
-            if (parametrs.DateOfBirth < minDate || parametrs.DateOfBirth > maxDate)
+            if (!new DefaultCategoryValidator().Validate(record.Category))
             {
-                throw new ArgumentException($"{nameof(parametrs.DateOfBirth)} is not correct.");
+                return "Category is invalid.";
             }
 
-            if (parametrs.CabinetNumber < 1 || parametrs.CabinetNumber > 1500)
+            if (!new DefaultSalaryValidator().Validate(record.Salary))
             {
-                throw new ArgumentException($"{nameof(parametrs.CabinetNumber)} is not correct.");
+                return "Salary are invalid.";
             }
 
-            if (parametrs.Salary < 0 || parametrs.Salary > decimal.MaxValue)
-            {
-                throw new ArgumentException($"{nameof(parametrs.Salary)} is not correct.");
-            }
-
-            if (parametrs.Category < 65 || parametrs.Category > 67)
-            {
-                throw new ArgumentException($"{nameof(parametrs.Category)} is not correct.");
-            }
+            return null;
         }
     }
 }
