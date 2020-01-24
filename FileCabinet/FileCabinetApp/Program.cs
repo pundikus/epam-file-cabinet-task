@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Xml;
+using FileCabinetApp.Handlers;
 
 namespace FileCabinetApp
 {
@@ -34,6 +29,14 @@ namespace FileCabinetApp
         private const int StorageParameterIndex = 2;
 
         private static IRecordValidator validator = new DefaultValidator();
+
+        /// <summary>
+        /// Gets or sets it is count removed records.
+        /// </summary>
+        /// <value>
+        /// It is count removed records.
+        /// </value>
+        public static int CountRemovedRecord { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether gets or sets.
@@ -102,9 +105,30 @@ namespace FileCabinetApp
 
         private static ICommandHandler CreateCommandHandlers()
         {
-            var commandHandler = new CommandHandler();
+            var createHandler = new CreateCommandHandler();
+            var editHandler = new EditCommandHandler();
+            var findHandler = new FindCommandHandler();
+            var listHandler = new ListCommandHandler();
+            var statHandler = new StatCommandHandler();
+            var exportHandler = new ExportCommandHandler();
+            var importHandler = new ImportCommandHandler();
+            var removeHandler = new RemoveCommandHandler();
+            var purgeHandler = new PurgeCommandHandler();
+            var helpHandler = new HelpCommandHandler();
+            var exitHandler = new ExitCommandHandler();
 
-            return commandHandler;
+            createHandler.SetNext(editHandler)
+                         .SetNext(removeHandler)
+                         .SetNext(findHandler)
+                         .SetNext(listHandler)
+                         .SetNext(statHandler)
+                         .SetNext(exportHandler)
+                         .SetNext(importHandler)
+                         .SetNext(purgeHandler)
+                         .SetNext(helpHandler)
+                         .SetNext(exitHandler);
+
+            return createHandler;
         }
 
         private static void CheckModeValidation(string[] args, string fullParameterValid, string customParametrs, string fullParameterStor, string abbreviatedParameterStor, string fileParameters, string abbreviatedParameterValid)
