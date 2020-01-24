@@ -34,6 +34,8 @@ namespace FileCabinetApp
 
         private static IFileCabinetService fileCabinetService;
 
+        private static int countRemovedRecord = 0;
+
         private static bool isRunning = true;
         private static bool isModeCustom = false;
         private static bool isStorageFile = false;
@@ -236,7 +238,16 @@ namespace FileCabinetApp
         {
             int recordsCount = fileCabinetService.GetStat();
 
-            Console.WriteLine($"{recordsCount} record(s).");
+            if (isStorageFile)
+            {
+                Console.WriteLine($"{recordsCount} record(s).");
+                Console.WriteLine($"{countRemovedRecord} records was deleted.");
+            }
+            else
+            {
+                Console.WriteLine($"{recordsCount} record(s).");
+                Console.WriteLine("0 records was deleted.");
+            }
         }
 
         private static void Create(string parameters)
@@ -855,6 +866,8 @@ namespace FileCabinetApp
             if (isStorageFile)
             {
                 countRemovedRecords = fileCabinetService.PurgeRecords();
+
+                countRemovedRecord += countRemovedRecords;
 
                 Console.WriteLine($"Data file procesing is completed: {countRemovedRecords} of {countRecords} records were purged.");
             }
