@@ -31,6 +31,8 @@ namespace FileCabinetApp
         private static IFileCabinetService fileCabinetService;
         private static IRecordValidator validator = new DefaultValidator();
 
+        private static bool isRunning = true;
+
         /// <summary>
         /// Gets or sets it is count removed records.
         /// </summary>
@@ -56,12 +58,6 @@ namespace FileCabinetApp
         public static bool IsStorageFile { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the program is running or not.
-        /// </summary>
-        /// <value>Whether the program is running or not.</value>
-        public static bool IsRunning { get; set; }
-
-        /// <summary>
         /// This is the main method in which all kinds of user interaction is performed.
         /// </summary>
         /// <param name="args">Parameters command-line.</param>
@@ -71,8 +67,6 @@ namespace FileCabinetApp
             {
                 CheckModeValidation(args, FullParameterValid, CustomParametrs, FullParameterStor, AbbreviatedParameterStor, FileParameters, AbbreviatedParameterValid);
             }
-
-            IsRunning = true;
 
             var commandHandler = CreateCommandHandlers();
 
@@ -95,7 +89,12 @@ namespace FileCabinetApp
                 var parameters = inputs.Length > 1 ? inputs[parametersIndex] : string.Empty;
                 commandHandler.Handle(new AppCommandRequest(command, parameters));
             }
-            while (IsRunning);
+            while (isRunning);
+        }
+
+        private static void ChangeState(bool value)
+        {
+            isRunning = value;
         }
 
         private static ICommandHandler CreateCommandHandlers()
@@ -110,7 +109,7 @@ namespace FileCabinetApp
             var removeHandler = new RemoveCommandHandler(fileCabinetService);
             var purgeHandler = new PurgeCommandHandler(fileCabinetService);
             var helpHandler = new HelpCommandHandler();
-            var exitHandler = new ExitCommandHandler();
+            var exitHandler = new ExitCommandHandler(ChangeState);
 
             createHandler.SetNext(editHandler)
                          .SetNext(removeHandler)

@@ -112,6 +112,12 @@
             Handler for 'exit' command.
             </summary>
         </member>
+        <member name="M:FileCabinetApp.Handlers.ExitCommandHandler.#ctor(System.Action{System.Boolean})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.ExitCommandHandler"/> class.
+            </summary>
+            <param name="state">Action to change the running state.</param>
+        </member>
         <member name="M:FileCabinetApp.Handlers.ExitCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
             <summary>
             Handles the request.
@@ -717,12 +723,6 @@
             <value>
             A value indicating whether gets or sets.
             </value>
-        </member>
-        <member name="P:FileCabinetApp.Program.IsRunning">
-            <summary>
-            Gets or sets a value indicating whether the program is running or not.
-            </summary>
-            <value>Whether the program is running or not.</value>
         </member>
         <member name="M:FileCabinetApp.Program.Main(System.String[])">
             <summary>

@@ -74,7 +74,5 @@ namespace FileCabinetApp
 
             return commandHandler;
         }
-
-
     }
 }
