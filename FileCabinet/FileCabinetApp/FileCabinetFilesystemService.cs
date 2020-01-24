@@ -32,7 +32,17 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(parametrs));
             }
 
+            int id;
             BinaryWriter binaryWriter;
+
+            if (parametrs.Id == 0)
+            {
+                id = this.GetRecords().Count + 1;
+            }
+            else
+            {
+                id = parametrs.Id;
+            }
 
             if (!this.fileStream.CanWrite)
             {
@@ -44,10 +54,9 @@ namespace FileCabinetApp
                 binaryWriter = new BinaryWriter(this.fileStream);
             }
 
-            int id = parametrs.Id;
-            short status = 0;
-
             this.fileStream.Seek(0, SeekOrigin.End);
+
+            short status = 0;
 
             var byteStatus = BitConverter.GetBytes(status);
 
@@ -181,7 +190,7 @@ namespace FileCabinetApp
 
                 if (id.Equals(parametrs.Id))
                 {
-                    this.fileStream.Seek(position - 2, SeekOrigin.Begin);
+                    this.fileStream.Seek(position, SeekOrigin.Begin);
                     short status = 0;
                     byte[] statusByte = BitConverter.GetBytes(status);
 
@@ -615,6 +624,8 @@ namespace FileCabinetApp
 
             var list = new List<FileCabinetRecord>();
 
+            this.fileStream.Seek(0, SeekOrigin.Begin);
+
             while (this.fileStream.Position < this.fileStream.Length)
             {
                 this.fileStream.Seek(2, SeekOrigin.Current);
@@ -714,14 +725,25 @@ namespace FileCabinetApp
             }
             else
             {
+                var recordList = this.GetRecords();
+
+                var newList = new List<FileCabinetRecord>();
+                foreach (var item in recordList)
+                {
+                    newList.Add(item);
+                }
+
                 foreach (var recordImport in records)
                 {
-                    foreach (var record in this.GetRecords())
+                    var recordbyId = newList.Find(x => x.Id == recordImport.Id);
+
+                    if (recordbyId != null)
                     {
-                        if (recordImport.Id == record.Id)
-                        {
-                            this.EditRecord(recordImport);
-                        }
+                        this.EditRecord(recordImport);
+                    }
+                    else
+                    {
+                        this.CreateRecord(recordImport);
                     }
                 }
             }
@@ -782,6 +804,73 @@ namespace FileCabinetApp
             binaryWriter.Dispose();
 
             return id;
+        }
+
+        /// <summary>
+        /// This Method flush marks records.
+        /// </summary>
+        /// <returns>Count removed records.</returns>
+        public int PurgeRecords()
+        {
+            BinaryReader binaryReader;
+            BinaryWriter binaryWriter;
+
+            int countRemovedRecords = 0;
+
+            if (!this.fileStream.CanRead || this.fileStream.CanWrite)
+            {
+                this.fileStream = File.Open(this.fileStream.Name, FileMode.Open);
+                binaryReader = new BinaryReader(this.fileStream);
+                binaryWriter = new BinaryWriter(this.fileStream);
+            }
+            else
+            {
+                binaryReader = new BinaryReader(this.fileStream);
+                binaryWriter = new BinaryWriter(this.fileStream);
+            }
+
+            int positionDeleteRecords = 0;
+
+            while (this.fileStream.Position < this.fileStream.Length)
+            {
+                this.fileStream.Seek(positionDeleteRecords, SeekOrigin.Begin);
+
+                var status = binaryReader.ReadBytes(sizeof(short));
+                if (status.Length == 0)
+                {
+                    break;
+                }
+
+                var bitsStatus = new BitArray(status);
+                if (bitsStatus[2])
+                {
+                    countRemovedRecords++;
+
+                    this.fileStream.Seek(positionDeleteRecords + this.GetSizeRecords(), SeekOrigin.Begin);
+                    var buffer = binaryReader.ReadBytes((int)this.fileStream.Length - positionDeleteRecords);
+
+                    this.fileStream.Seek(positionDeleteRecords, SeekOrigin.Begin);
+                    binaryWriter.Write(buffer);
+
+                    this.fileStream.SetLength(this.fileStream.Length - this.GetSizeRecords());
+                    positionDeleteRecords += this.GetSizeRecords();
+                }
+                else
+                {
+                    positionDeleteRecords += this.GetSizeRecords();
+                }
+
+                if (this.fileStream.Position == this.fileStream.Length)
+                {
+                    positionDeleteRecords = 0;
+                    this.fileStream.Seek(positionDeleteRecords, SeekOrigin.Begin);
+                }
+            }
+
+            binaryReader.Dispose();
+            binaryWriter.Dispose();
+
+            return countRemovedRecords;
         }
 
         private int GetSizeRecords()

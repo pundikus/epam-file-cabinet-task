@@ -71,6 +71,12 @@
             <param name="removedId">It is Id removed record.</param>
             <returns>Id marks record.</returns>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.PurgeRecords">
+            <summary>
+            This Method flush marks records.
+            </summary>
+            <returns>Count removed records.</returns>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>
             This is intended for service. It has all the necessary methods for creating, modifying, deleting records.
@@ -146,6 +152,9 @@
             </summary>
             <param name="id">It is Id record.</param>
             <returns>Removed record.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.PurgeRecords">
+            <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -353,6 +362,12 @@
             <summary>
             This Interface describes the service.
             </summary>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.PurgeRecords">
+            <summary>
+            This Method flush marks record.
+            </summary>
+            <returns>Count removed records.</returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.RemoveRecord(System.Int32)">
             <summary>

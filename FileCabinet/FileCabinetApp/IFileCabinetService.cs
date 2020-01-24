@@ -8,6 +8,12 @@ namespace FileCabinetApp
     public interface IFileCabinetService
     {
         /// <summary>
+        /// This Method flush marks record.
+        /// </summary>
+        /// <returns>Count removed records.</returns>
+        int PurgeRecords();
+
+        /// <summary>
         /// This Method remove record.
         /// </summary>
         /// <param name="id">Id record.</param>
