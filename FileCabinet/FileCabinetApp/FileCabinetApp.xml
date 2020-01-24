@@ -4,6 +4,61 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.AppCommandRequest">
+            <summary>
+            This class inizialize request.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.AppCommandRequest.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.AppCommandRequest"/> class.
+            </summary>
+            <param name="command">The name of the command.</param>
+            <param name="parameters">The command's parameters.</param>
+        </member>
+        <member name="P:FileCabinetApp.AppCommandRequest.Command">
+            <summary>
+            Gets command for call.
+            </summary>
+            <value>
+            Commands.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.AppCommandRequest.Parameters">
+            <summary>
+            Gets Parameters commands.
+            </summary>
+            <value>
+            Parameters of commands.
+            </value>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandler">
+            <summary>
+            This class for handler.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlerBase">
+            <summary>
+            This class initialize Handler.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlerBase.Handle(FileCabinetApp.AppCommandRequest)">
+            <summary>
+            Handler the request.
+            </summary>
+            <param name="request">Request to handle.</param>
+            <returns>The object back or null.</returns>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlerBase.SetNext(FileCabinetApp.ICommandHandler)">
+            <summary>
+            Set the next handler.
+            </summary>
+            <param name="commandHandler">Handler to set.</param>
+            <returns>Handler back.</returns>
+        </member>
         <member name="T:FileCabinetApp.CustomValidator">
             <summary>
             This class implements the custom method for checking parameters.
@@ -358,6 +413,25 @@
             <param name="streamReader">Represents characters read.</param>
             <returns>List records.</returns>
         </member>
+        <member name="T:FileCabinetApp.ICommandHandler">
+            <summary>
+            This interface sets behavor.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.ICommandHandler.SetNext(FileCabinetApp.ICommandHandler)">
+            <summary>
+            Set the next handler.
+            </summary>
+            <param name="commandHandler">Handler to set.</param>
+            <returns>Handler back.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ICommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
+            <summary>
+            Handler the request.
+            </summary>
+            <param name="request">Request to handle.</param>
+            <returns>The object back or null.</returns>
+        </member>
         <member name="T:FileCabinetApp.IFileCabinetService">
             <summary>
             This Interface describes the service.
@@ -449,6 +523,34 @@
             <summary>
             This class is needed for user interaction.
             </summary>
+        </member>
+        <member name="P:FileCabinetApp.Program.IsModeCustom">
+            <summary>
+            Gets or sets a value indicating whether gets or sets.
+            </summary>
+            <value>
+            A value indicating whether gets or sets.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Program.IsStorageFile">
+            <summary>
+            Gets or sets a value indicating whether gets or sets.
+            </summary>
+            <value>
+            A value indicating whether gets or sets.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.Program.FileCabinetService">
+            <summary>
+            Gets the instance of service.
+            </summary>
+            <value>The instance of service.</value>
+        </member>
+        <member name="P:FileCabinetApp.Program.IsRunning">
+            <summary>
+            Gets or sets a value indicating whether the program is running or not.
+            </summary>
+            <value>Whether the program is running or not.</value>
         </member>
         <member name="M:FileCabinetApp.Program.Main(System.String[])">
             <summary>
