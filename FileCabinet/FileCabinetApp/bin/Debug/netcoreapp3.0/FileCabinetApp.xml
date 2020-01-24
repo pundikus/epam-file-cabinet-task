@@ -71,7 +71,209 @@
             <param name="commandHandler">Handler to set.</param>
             <returns>Handler back.</returns>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlerBase.ReadInput``1(System.Func{System.String,System.Tuple{System.Boolean,System.String,``0}},System.Func{``0,System.Tuple{System.Boolean,System.String}})">
+        <member name="T:FileCabinetApp.Handlers.CreateCommandHandler">
+            <summary>
+            Handler for 'create' command.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Handlers.CreateCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.CreateCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService">Service to create record in.</param>
+        </member>
+        <member name="M:FileCabinetApp.Handlers.CreateCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
+            <summary>
+            Handles the request.
+            </summary>
+            <param name="request">Request to handle.</param>
+            <returns>The object back, or null otherwise.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Handlers.EditCommandHandler">
+            <summary>
+            Handler for 'edit' command.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Handlers.EditCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.EditCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService">Service to edit record.</param>
+        </member>
+        <member name="M:FileCabinetApp.Handlers.EditCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
+            <summary>
+            Handles the request.
+            </summary>
+            <param name="request">Request to handle.</param>
+            <returns>The object back, or null otherwise.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Handlers.ExitCommandHandler">
+            <summary>
+            Handler for 'exit' command.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Handlers.ExitCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
+            <summary>
+            Handles the request.
+            </summary>
+            <param name="request">Request to handle.</param>
+            <returns>The object back, or null otherwise.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Handlers.ExportCommandHandler">
+            <summary>
+            Handler for 'export' command.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Handlers.ExportCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.ExportCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService">Service to export records.</param>
+        </member>
+        <member name="M:FileCabinetApp.Handlers.ExportCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
+            <summary>
+            Handles the request.
+            </summary>
+            <param name="request">Request to handle.</param>
+            <returns>The object back, or null otherwise.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Handlers.FindCommandHandler">
+            <summary>
+            Handler for 'find' command.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Handlers.FindCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.FindCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService">Service to find record.</param>
+        </member>
+        <member name="M:FileCabinetApp.Handlers.FindCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
+            <summary>
+            Handles the request.
+            </summary>
+            <param name="request">Request to handle.</param>
+            <returns>The object back, or null otherwise.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Handlers.HelpCommandHandler">
+            <summary>
+            Handler for 'help' command.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Handlers.HelpCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
+            <summary>
+            Handles the request.
+            </summary>
+            <param name="request">Request to handle.</param>
+            <returns>The object back, or null otherwise.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Handlers.HelpCommandHandler.PrintHelp(System.String)">
+            <summary>
+            Prints help message.
+            </summary>
+            <param name="parameters">Parameters.</param>
+        </member>
+        <member name="T:FileCabinetApp.Handlers.ImportCommandHandler">
+            <summary>
+            Handler for 'import' command.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Handlers.ImportCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.ImportCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService">Service to import records.</param>
+        </member>
+        <member name="M:FileCabinetApp.Handlers.ImportCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
+            <summary>
+            Handles the request.
+            </summary>
+            <param name="request">Request to handle.</param>
+            <returns>The object back, or null otherwise.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Handlers.ListCommandHandler">
+            <summary>
+            Handler for 'list' command.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Handlers.ListCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.ListCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService">Service to show records.</param>
+        </member>
+        <member name="M:FileCabinetApp.Handlers.ListCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
+            <summary>
+            Handles the request.
+            </summary>
+            <param name="request">Request to handle.</param>
+            <returns>The object back, or null otherwise.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Handlers.PurgeCommandHandler">
+            <summary>
+            Handler for 'purge' command.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Handlers.PurgeCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.PurgeCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService">Service to purge.</param>
+        </member>
+        <member name="M:FileCabinetApp.Handlers.PurgeCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
+            <summary>
+            Handles the request.
+            </summary>
+            <param name="request">Request to handle.</param>
+            <returns>The object back, or null otherwise.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Handlers.RemoveCommandHandler">
+            <summary>
+            Handler for 'remove' command.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Handlers.RemoveCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.RemoveCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService">Service to remove record.</param>
+        </member>
+        <member name="M:FileCabinetApp.Handlers.RemoveCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
+            <summary>
+            Handles the request.
+            </summary>
+            <param name="request">Request to handle.</param>
+            <returns>The object back, or null otherwise.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Handlers.StatCommandHandler">
+            <summary>
+            Handler for 'stat' command.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Handlers.StatCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.StatCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService">Service to get stats.</param>
+        </member>
+        <member name="M:FileCabinetApp.Handlers.StatCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
+            <summary>
+            Handles the request.
+            </summary>
+            <param name="request">Request to handle.</param>
+            <returns>The object back, or null otherwise.</returns>
+        </member>
+        <member name="T:FileCabinetApp.ServiceCommandHandlerBase">
+            <summary>
+            Handler for commands which relate to the service.
+            </summary>
+        </member>
+        <member name="F:FileCabinetApp.ServiceCommandHandlerBase.service">
+            <summary>
+            The service to get information and modify.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.ReadInput``1(System.Func{System.String,System.Tuple{System.Boolean,System.String,``0}},System.Func{``0,System.Tuple{System.Boolean,System.String}})">
             <summary>
             Parses and validates the user's input.
             </summary>
@@ -80,77 +282,77 @@
             <param name="validator">Validator for the converted input.</param>
             <returns>Converted and validated value.</returns>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlerBase.StringConverter(System.String)">
+        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.StringConverter(System.String)">
             <summary>
             This Method convert value to String.
             </summary>
             <param name="arg">input value.</param>
             <returns>convert value.</returns>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlerBase.DateTimeConverter(System.String)">
+        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.DateTimeConverter(System.String)">
             <summary>
             This Method convert value to DateTime.
             </summary>
             <param name="arg">input value.</param>
             <returns>convert value.</returns>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlerBase.ShortConverter(System.String)">
+        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.ShortConverter(System.String)">
             <summary>
             This Method convert value to Short.
             </summary>
             <param name="arg">input value.</param>
             <returns>convert value.</returns>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlerBase.DecimalConverter(System.String)">
+        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.DecimalConverter(System.String)">
             <summary>
             This Method convert value to Decimal.
             </summary>
             <param name="arg">input value.</param>
             <returns>convert value.</returns>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlerBase.CharConverter(System.String)">
+        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.CharConverter(System.String)">
             <summary>
             This Method convert value to Char.
             </summary>
             <param name="arg">input value.</param>
             <returns>convert value.</returns>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlerBase.FirstNameValidator(System.String)">
+        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.FirstNameValidator(System.String)">
             <summary>
             This Method validate First Name.
             </summary>
             <param name="arg">input value.</param>
             <returns>check valid.</returns>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlerBase.LastNameValidator(System.String)">
+        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.LastNameValidator(System.String)">
             <summary>
             This Method validate Last Name.
             </summary>
             <param name="arg">input value.</param>
             <returns>check valid.</returns>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlerBase.DateOfBirthValidator(System.DateTime)">
+        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.DateOfBirthValidator(System.DateTime)">
             <summary>
             This Method validate Date Of Birth.
             </summary>
             <param name="arg">input value.</param>
             <returns>check valid.</returns>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlerBase.CabinetNumberValidator(System.Int16)">
+        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.CabinetNumberValidator(System.Int16)">
             <summary>
             This Method validate Cabinet Number.
             </summary>
             <param name="arg">input value.</param>
             <returns>check valid.</returns>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlerBase.SalaryValidator(System.Decimal)">
+        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.SalaryValidator(System.Decimal)">
             <summary>
             This Method validate Salary.
             </summary>
             <param name="arg">input value.</param>
             <returns>check valid.</returns>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlerBase.CategoryValidator(System.Char)">
+        <member name="M:FileCabinetApp.ServiceCommandHandlerBase.CategoryValidator(System.Char)">
             <summary>
             This Method validate Category.
             </summary>
@@ -380,198 +582,6 @@
             </summary>
             <param name="streamReader">Represents characters read.</param>
             <returns>List records.</returns>
-        </member>
-        <member name="T:FileCabinetApp.Handlers.CreateCommandHandler">
-            <summary>
-            Handler for 'create' command.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.CreateCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.CreateCommandHandler"/> class.
-            </summary>
-            <param name="fileCabinetService">Service to create record in.</param>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.CreateCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
-            <summary>
-            Handles the request.
-            </summary>
-            <param name="request">Request to handle.</param>
-            <returns>The object back, or null otherwise.</returns>
-        </member>
-        <member name="T:FileCabinetApp.Handlers.EditCommandHandler">
-            <summary>
-            Handler for 'edit' command.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.EditCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.EditCommandHandler"/> class.
-            </summary>
-            <param name="fileCabinetService">Service to edit record.</param>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.EditCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
-            <summary>
-            Handles the request.
-            </summary>
-            <param name="request">Request to handle.</param>
-            <returns>The object back, or null otherwise.</returns>
-        </member>
-        <member name="T:FileCabinetApp.Handlers.ExitCommandHandler">
-            <summary>
-            Handler for 'exit' command.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.ExitCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
-            <summary>
-            Handles the request.
-            </summary>
-            <param name="request">Request to handle.</param>
-            <returns>The object back, or null otherwise.</returns>
-        </member>
-        <member name="T:FileCabinetApp.Handlers.ExportCommandHandler">
-            <summary>
-            Handler for 'export' command.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.ExportCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.ExportCommandHandler"/> class.
-            </summary>
-            <param name="fileCabinetService">Service to export records.</param>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.ExportCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
-            <summary>
-            Handles the request.
-            </summary>
-            <param name="request">Request to handle.</param>
-            <returns>The object back, or null otherwise.</returns>
-        </member>
-        <member name="T:FileCabinetApp.Handlers.FindCommandHandler">
-            <summary>
-            Handler for 'find' command.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.FindCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.FindCommandHandler"/> class.
-            </summary>
-            <param name="fileCabinetService">Service to find record.</param>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.FindCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
-            <summary>
-            Handles the request.
-            </summary>
-            <param name="request">Request to handle.</param>
-            <returns>The object back, or null otherwise.</returns>
-        </member>
-        <member name="T:FileCabinetApp.Handlers.HelpCommandHandler">
-            <summary>
-            Handler for 'help' command.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.HelpCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
-            <summary>
-            Handles the request.
-            </summary>
-            <param name="request">Request to handle.</param>
-            <returns>The object back, or null otherwise.</returns>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.HelpCommandHandler.PrintHelp(System.String)">
-            <summary>
-            Prints help message.
-            </summary>
-            <param name="parameters">Parameters.</param>
-        </member>
-        <member name="T:FileCabinetApp.Handlers.ImportCommandHandler">
-            <summary>
-            Handler for 'import' command.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.ImportCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.ImportCommandHandler"/> class.
-            </summary>
-            <param name="fileCabinetService">Service to import records.</param>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.ImportCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
-            <summary>
-            Handles the request.
-            </summary>
-            <param name="request">Request to handle.</param>
-            <returns>The object back, or null otherwise.</returns>
-        </member>
-        <member name="T:FileCabinetApp.Handlers.ListCommandHandler">
-            <summary>
-            Handler for 'list' command.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.ListCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.ListCommandHandler"/> class.
-            </summary>
-            <param name="fileCabinetService">Service to show records.</param>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.ListCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
-            <summary>
-            Handles the request.
-            </summary>
-            <param name="request">Request to handle.</param>
-            <returns>The object back, or null otherwise.</returns>
-        </member>
-        <member name="T:FileCabinetApp.Handlers.PurgeCommandHandler">
-            <summary>
-            Handler for 'purge' command.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.PurgeCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.PurgeCommandHandler"/> class.
-            </summary>
-            <param name="fileCabinetService">Service to purge.</param>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.PurgeCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
-            <summary>
-            Handles the request.
-            </summary>
-            <param name="request">Request to handle.</param>
-            <returns>The object back, or null otherwise.</returns>
-        </member>
-        <member name="T:FileCabinetApp.Handlers.RemoveCommandHandler">
-            <summary>
-            Handler for 'remove' command.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.RemoveCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.RemoveCommandHandler"/> class.
-            </summary>
-            <param name="fileCabinetService">Service to remove record.</param>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.RemoveCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
-            <summary>
-            Handles the request.
-            </summary>
-            <param name="request">Request to handle.</param>
-            <returns>The object back, or null otherwise.</returns>
-        </member>
-        <member name="T:FileCabinetApp.Handlers.StatCommandHandler">
-            <summary>
-            Handler for 'stat' command.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.StatCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.StatCommandHandler"/> class.
-            </summary>
-            <param name="fileCabinetService">Service to get stats.</param>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.StatCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
-            <summary>
-            Handles the request.
-            </summary>
-            <param name="request">Request to handle.</param>
-            <returns>The object back, or null otherwise.</returns>
         </member>
         <member name="T:FileCabinetApp.ICommandHandler">
             <summary>

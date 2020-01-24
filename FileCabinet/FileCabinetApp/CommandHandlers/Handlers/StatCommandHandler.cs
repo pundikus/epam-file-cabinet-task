@@ -8,11 +8,9 @@ namespace FileCabinetApp.Handlers
     /// <summary>
     /// Handler for 'stat' command.
     /// </summary>
-    public class StatCommandHandler : CommandHandlerBase
+    public class StatCommandHandler : ServiceCommandHandlerBase
     {
         private static int countRemovedRecord = 0;
-
-        private readonly IFileCabinetService fileCabinetService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StatCommandHandler"/> class.
@@ -20,7 +18,7 @@ namespace FileCabinetApp.Handlers
         /// <param name="fileCabinetService">Service to get stats.</param>
         public StatCommandHandler(IFileCabinetService fileCabinetService)
         {
-            this.fileCabinetService = fileCabinetService;
+            this.service = fileCabinetService;
         }
 
         /// <summary>
@@ -48,7 +46,7 @@ namespace FileCabinetApp.Handlers
 
         private void Stat()
         {
-            int recordsCount = this.fileCabinetService.GetStat();
+            int recordsCount = this.service.GetStat();
 
             if (IsStorageFile)
             {

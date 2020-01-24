@@ -6,17 +6,15 @@ namespace FileCabinetApp.Handlers
     /// <summary>
     /// Handler for 'purge' command.
     /// </summary>
-    public class PurgeCommandHandler : CommandHandlerBase
+    public class PurgeCommandHandler : ServiceCommandHandlerBase
     {
-        private readonly IFileCabinetService fileCabinetService;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PurgeCommandHandler"/> class.
         /// </summary>
         /// <param name="fileCabinetService">Service to purge.</param>
         public PurgeCommandHandler(IFileCabinetService fileCabinetService)
         {
-            this.fileCabinetService = fileCabinetService;
+            this.service = fileCabinetService;
         }
 
         /// <summary>
@@ -44,12 +42,12 @@ namespace FileCabinetApp.Handlers
 
         private void Purge()
         {
-            int countRecords = this.fileCabinetService.GetRecords().Count;
+            int countRecords = this.service.GetRecords().Count;
             int countRemovedRecords;
 
             if (IsStorageFile)
             {
-                countRemovedRecords = this.fileCabinetService.PurgeRecords();
+                countRemovedRecords = this.service.PurgeRecords();
 
                 CountRemovedRecord += countRemovedRecords;
 

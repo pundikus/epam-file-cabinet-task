@@ -7,17 +7,15 @@ namespace FileCabinetApp.Handlers
     /// <summary>
     /// Handler for 'list' command.
     /// </summary>
-    public class ListCommandHandler : CommandHandlerBase
+    public class ListCommandHandler : ServiceCommandHandlerBase
     {
-        private readonly IFileCabinetService fileCabinetService;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
         /// </summary>
         /// <param name="fileCabinetService">Service to show records.</param>
         public ListCommandHandler(IFileCabinetService fileCabinetService)
         {
-            this.fileCabinetService = fileCabinetService;
+            this.service = fileCabinetService;
         }
 
         /// <summary>
@@ -47,7 +45,7 @@ namespace FileCabinetApp.Handlers
         {
             try
             {
-                var listRecords = this.fileCabinetService.GetRecords();
+                var listRecords = this.service.GetRecords();
 
                 if (listRecords.Count == 0)
                 {

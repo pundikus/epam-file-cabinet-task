@@ -6,17 +6,15 @@ namespace FileCabinetApp.Handlers
     /// <summary>
     /// Handler for 'edit' command.
     /// </summary>
-    public class EditCommandHandler : CommandHandlerBase
+    public class EditCommandHandler : ServiceCommandHandlerBase
     {
-        private readonly IFileCabinetService fileCabinetService;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="EditCommandHandler"/> class.
         /// </summary>
         /// <param name="fileCabinetService">Service to edit record.</param>
         public EditCommandHandler(IFileCabinetService fileCabinetService)
         {
-            this.fileCabinetService = fileCabinetService;
+            this.service = fileCabinetService;
         }
 
         /// <summary>
@@ -50,7 +48,7 @@ namespace FileCabinetApp.Handlers
                 Console.WriteLine("Invalid Id");
             }
 
-            var listRecords = this.fileCabinetService.GetRecords();
+            var listRecords = this.service.GetRecords();
 
             if (!listRecords.Any(x => x.Id == id))
             {
@@ -80,7 +78,7 @@ namespace FileCabinetApp.Handlers
             {
                 FileCabinetRecord parametrs = new FileCabinetRecord(id, firstName, lastName, dateofBirth, cabinetNumber, salary, category);
 
-                this.fileCabinetService.EditRecord(parametrs);
+                this.service.EditRecord(parametrs);
             }
             catch (ArgumentException ex)
             {

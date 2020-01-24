@@ -9,17 +9,15 @@ namespace FileCabinetApp.Handlers
     /// <summary>
     /// Handler for 'find' command.
     /// </summary>
-    public class FindCommandHandler : CommandHandlerBase
+    public class FindCommandHandler : ServiceCommandHandlerBase
     {
-        private readonly IFileCabinetService fileCabinetService;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FindCommandHandler"/> class.
         /// </summary>
         /// <param name="fileCabinetService">Service to find record.</param>
         public FindCommandHandler(IFileCabinetService fileCabinetService)
         {
-            this.fileCabinetService = fileCabinetService;
+            this.service = fileCabinetService;
         }
 
         /// <summary>
@@ -75,14 +73,14 @@ namespace FileCabinetApp.Handlers
             {
                 string firstName = inputValue.Trim('"').ToUpperInvariant();
 
-                result = this.fileCabinetService.FindByFirstName(firstName);
+                result = this.service.FindByFirstName(firstName);
             }
 
             if (criterion.Equals(CriterionLastName, StringComparison.InvariantCultureIgnoreCase))
             {
                 string lastName = inputValue.Trim('"').ToUpperInvariant();
 
-                result = this.fileCabinetService.FindByLastName(lastName);
+                result = this.service.FindByLastName(lastName);
             }
 
             if (criterion.Equals(CriterionDateOfBirth, StringComparison.InvariantCultureIgnoreCase))
@@ -96,7 +94,7 @@ namespace FileCabinetApp.Handlers
 
                 string dateOfBirthString = dateofBirth.ToString(CultureInfo.InvariantCulture);
 
-                result = this.fileCabinetService.FindByDateOfBirth(dateOfBirthString);
+                result = this.service.FindByDateOfBirth(dateOfBirthString);
             }
 
             foreach (var item in result)

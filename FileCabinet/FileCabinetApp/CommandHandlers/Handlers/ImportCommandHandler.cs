@@ -7,17 +7,15 @@ namespace FileCabinetApp.Handlers
     /// <summary>
     /// Handler for 'import' command.
     /// </summary>
-    public class ImportCommandHandler : CommandHandlerBase
+    public class ImportCommandHandler : ServiceCommandHandlerBase
     {
-        private readonly IFileCabinetService fileCabinetService;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ImportCommandHandler"/> class.
         /// </summary>
         /// <param name="fileCabinetService">Service to import records.</param>
         public ImportCommandHandler(IFileCabinetService fileCabinetService)
         {
-            this.fileCabinetService = fileCabinetService;
+            this.service = fileCabinetService;
         }
 
         /// <summary>
@@ -51,7 +49,7 @@ namespace FileCabinetApp.Handlers
             string[] parameters = parametrs.Split(' ', 2);
             string path = parameters[1];
 
-            var snapshot = new FileCabinetServiceSnapshot(this.fileCabinetService.GetRecords());
+            var snapshot = new FileCabinetServiceSnapshot(this.service.GetRecords());
 
             if (File.Exists(path))
             {
@@ -67,7 +65,7 @@ namespace FileCabinetApp.Handlers
 
                         snapshot = new FileCabinetServiceSnapshot(records);
 
-                        this.fileCabinetService.Restore(snapshot);
+                        this.service.Restore(snapshot);
                     }
                     else if (parameters[0].Equals(formatXml, StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -75,7 +73,7 @@ namespace FileCabinetApp.Handlers
 
                         snapshot = new FileCabinetServiceSnapshot(records);
 
-                        this.fileCabinetService.Restore(snapshot);
+                        this.service.Restore(snapshot);
                     }
 
                     Console.WriteLine(snapshot.Records.Count + " records were imported from " + path);

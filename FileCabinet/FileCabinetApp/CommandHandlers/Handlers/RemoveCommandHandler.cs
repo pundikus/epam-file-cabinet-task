@@ -8,17 +8,15 @@ namespace FileCabinetApp.Handlers
     /// <summary>
     /// Handler for 'remove' command.
     /// </summary>
-    public class RemoveCommandHandler : CommandHandlerBase
+    public class RemoveCommandHandler : ServiceCommandHandlerBase
     {
-        private readonly IFileCabinetService fileCabinetService;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoveCommandHandler"/> class.
         /// </summary>
         /// <param name="fileCabinetService">Service to remove record.</param>
         public RemoveCommandHandler(IFileCabinetService fileCabinetService)
         {
-            this.fileCabinetService = fileCabinetService;
+            this.service = fileCabinetService;
         }
 
         /// <summary>
@@ -49,12 +47,12 @@ namespace FileCabinetApp.Handlers
             var parsedId = int.TryParse(parameters, NumberStyles.Integer, CultureInfo.InvariantCulture, out int id);
             if (!parsedId)
             {
-                Console.WriteLine("Record #" + this.fileCabinetService.RemoveRecord(id) + " doesn't exists");
+                Console.WriteLine("Record #" + this.service.RemoveRecord(id) + " doesn't exists");
 
                 return;
             }
 
-            var listRecords = this.fileCabinetService.GetRecords();
+            var listRecords = this.service.GetRecords();
 
             if (!listRecords.Any(x => x.Id == id))
             {
@@ -62,7 +60,7 @@ namespace FileCabinetApp.Handlers
                 return;
             }
 
-            int removedId = this.fileCabinetService.RemoveRecord(id);
+            int removedId = this.service.RemoveRecord(id);
 
             if (IsStorageFile)
             {
