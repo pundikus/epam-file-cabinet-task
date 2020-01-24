@@ -11,6 +11,17 @@ namespace FileCabinetApp.Handlers
     /// </summary>
     public class FindCommandHandler : CommandHandlerBase
     {
+        private readonly IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FindCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">Service to find record.</param>
+        public FindCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService;
+        }
+
         /// <summary>
         /// Handles the request.
         /// </summary>
@@ -25,7 +36,7 @@ namespace FileCabinetApp.Handlers
 
             if (request.Command.ToUpperInvariant() == "FIND")
             {
-                Find(request.Parameters);
+                this.Find(request.Parameters);
                 return true;
             }
             else
@@ -34,7 +45,7 @@ namespace FileCabinetApp.Handlers
             }
         }
 
-        private static void Find(string parametrs)
+        private void Find(string parametrs)
         {
             const int CriterionIndex = 0;
             const int InputValueIndex = 1;
@@ -64,14 +75,14 @@ namespace FileCabinetApp.Handlers
             {
                 string firstName = inputValue.Trim('"').ToUpperInvariant();
 
-                result = Program.FileCabinetService.FindByFirstName(firstName);
+                result = this.fileCabinetService.FindByFirstName(firstName);
             }
 
             if (criterion.Equals(CriterionLastName, StringComparison.InvariantCultureIgnoreCase))
             {
                 string lastName = inputValue.Trim('"').ToUpperInvariant();
 
-                result = Program.FileCabinetService.FindByLastName(lastName);
+                result = this.fileCabinetService.FindByLastName(lastName);
             }
 
             if (criterion.Equals(CriterionDateOfBirth, StringComparison.InvariantCultureIgnoreCase))
@@ -85,7 +96,7 @@ namespace FileCabinetApp.Handlers
 
                 string dateOfBirthString = dateofBirth.ToString(CultureInfo.InvariantCulture);
 
-                result = Program.FileCabinetService.FindByDateOfBirth(dateOfBirthString);
+                result = this.fileCabinetService.FindByDateOfBirth(dateOfBirthString);
             }
 
             foreach (var item in result)

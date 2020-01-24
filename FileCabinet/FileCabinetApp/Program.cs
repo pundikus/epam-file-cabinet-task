@@ -28,6 +28,7 @@ namespace FileCabinetApp
         private const int ModeParameterValue = 1;
         private const int StorageParameterIndex = 2;
 
+        private static IFileCabinetService fileCabinetService;
         private static IRecordValidator validator = new DefaultValidator();
 
         /// <summary>
@@ -55,12 +56,6 @@ namespace FileCabinetApp
         public static bool IsStorageFile { get; set; }
 
         /// <summary>
-        /// Gets the instance of service.
-        /// </summary>
-        /// <value>The instance of service.</value>
-        public static IFileCabinetService FileCabinetService { get; private set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether the program is running or not.
         /// </summary>
         /// <value>Whether the program is running or not.</value>
@@ -72,14 +67,14 @@ namespace FileCabinetApp
         /// <param name="args">Parameters command-line.</param>
         public static void Main(string[] args)
         {
-            var commandHandler = CreateCommandHandlers();
-
-            IsRunning = true;
-
             if (args != null && args.Length > 0)
             {
                 CheckModeValidation(args, FullParameterValid, CustomParametrs, FullParameterStor, AbbreviatedParameterStor, FileParameters, AbbreviatedParameterValid);
             }
+
+            IsRunning = true;
+
+            var commandHandler = CreateCommandHandlers();
 
             WriteMessageSettings();
 
@@ -105,15 +100,15 @@ namespace FileCabinetApp
 
         private static ICommandHandler CreateCommandHandlers()
         {
-            var createHandler = new CreateCommandHandler();
-            var editHandler = new EditCommandHandler();
-            var findHandler = new FindCommandHandler();
-            var listHandler = new ListCommandHandler();
-            var statHandler = new StatCommandHandler();
-            var exportHandler = new ExportCommandHandler();
-            var importHandler = new ImportCommandHandler();
-            var removeHandler = new RemoveCommandHandler();
-            var purgeHandler = new PurgeCommandHandler();
+            var createHandler = new CreateCommandHandler(fileCabinetService);
+            var editHandler = new EditCommandHandler(fileCabinetService);
+            var findHandler = new FindCommandHandler(fileCabinetService);
+            var listHandler = new ListCommandHandler(fileCabinetService);
+            var statHandler = new StatCommandHandler(fileCabinetService);
+            var exportHandler = new ExportCommandHandler(fileCabinetService);
+            var importHandler = new ImportCommandHandler(fileCabinetService);
+            var removeHandler = new RemoveCommandHandler(fileCabinetService);
+            var purgeHandler = new PurgeCommandHandler(fileCabinetService);
             var helpHandler = new HelpCommandHandler();
             var exitHandler = new ExitCommandHandler();
 
@@ -199,11 +194,11 @@ namespace FileCabinetApp
                             fileStream = File.Open(FileName, FileMode.Open);
                         }
 
-                        Program.FileCabinetService = new FileCabinetFilesystemService(fileStream);
+                        fileCabinetService = new FileCabinetFilesystemService(fileStream);
                     }
                     else
                     {
-                        Program.FileCabinetService = new FileCabinetMemoryService(validator);
+                        fileCabinetService = new FileCabinetMemoryService(validator);
                     }
                 }
                 else if (inputsArrayParamsStorage[2].Equals(abbreviatedParameterStor, StringComparison.InvariantCulture))
@@ -228,21 +223,21 @@ namespace FileCabinetApp
                             fileStream = File.Create(FileName);
                         }
 
-                        Program.FileCabinetService = new FileCabinetFilesystemService(fileStream);
+                        fileCabinetService = new FileCabinetFilesystemService(fileStream);
                     }
                     else
                     {
-                        Program.FileCabinetService = new FileCabinetMemoryService(validator);
+                        fileCabinetService = new FileCabinetMemoryService(validator);
                     }
                 }
                 else
                 {
-                    Program.FileCabinetService = new FileCabinetMemoryService(validator);
+                    fileCabinetService = new FileCabinetMemoryService(validator);
                 }
             }
             catch (IndexOutOfRangeException)
             {
-                Program.FileCabinetService = new FileCabinetMemoryService(validator);
+                fileCabinetService = new FileCabinetMemoryService(validator);
             }
         }
 

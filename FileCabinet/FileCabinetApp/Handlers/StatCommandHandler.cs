@@ -12,6 +12,17 @@ namespace FileCabinetApp.Handlers
     {
         private static int countRemovedRecord = 0;
 
+        private readonly IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StatCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">Service to get stats.</param>
+        public StatCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService;
+        }
+
         /// <summary>
         /// Handles the request.
         /// </summary>
@@ -26,7 +37,7 @@ namespace FileCabinetApp.Handlers
 
             if (request.Command.ToUpperInvariant() == "STAT")
             {
-                Stat();
+                this.Stat();
                 return true;
             }
             else
@@ -35,9 +46,9 @@ namespace FileCabinetApp.Handlers
             }
         }
 
-        private static void Stat()
+        private void Stat()
         {
-            int recordsCount = Program.FileCabinetService.GetStat();
+            int recordsCount = this.fileCabinetService.GetStat();
 
             if (IsStorageFile)
             {

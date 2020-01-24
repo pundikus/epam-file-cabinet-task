@@ -1,5 +1,4 @@
 ﻿using System;
-using static FileCabinetApp.Program;
 
 namespace FileCabinetApp.Handlers
 {
@@ -8,6 +7,17 @@ namespace FileCabinetApp.Handlers
     /// </summary>
     public class CreateCommandHandler : CommandHandlerBase
     {
+        private readonly IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CreateCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">Service to create record in.</param>
+        public CreateCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService;
+        }
+
         /// <summary>
         /// Handles the request.
         /// </summary>
@@ -22,7 +32,7 @@ namespace FileCabinetApp.Handlers
 
             if (request.Command.ToUpperInvariant() == "CREATE")
             {
-                Create();
+                this.Create();
                 return true;
             }
             else
@@ -31,7 +41,7 @@ namespace FileCabinetApp.Handlers
             }
         }
 
-        private static void Create()
+        private void Create()
         {
             do
             {
@@ -57,7 +67,7 @@ namespace FileCabinetApp.Handlers
 
                     FileCabinetRecord parametrs = new FileCabinetRecord(firstName, lastName, dateofBirth, cabinetNumber, salary, category);
 
-                    int record = FileCabinetService.CreateRecord(parametrs);
+                    int record = this.fileCabinetService.CreateRecord(parametrs);
 
                     Console.WriteLine("Record #" + record + " is created.");
                     break;

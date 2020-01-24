@@ -10,6 +10,17 @@ namespace FileCabinetApp.Handlers
     /// </summary>
     public class RemoveCommandHandler : CommandHandlerBase
     {
+        private readonly IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RemoveCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">Service to remove record.</param>
+        public RemoveCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService;
+        }
+
         /// <summary>
         /// Handles the request.
         /// </summary>
@@ -24,7 +35,7 @@ namespace FileCabinetApp.Handlers
 
             if (request.Command.ToUpperInvariant() == "REMOVE")
             {
-                Remove(request.Parameters);
+                this.Remove(request.Parameters);
                 return true;
             }
             else
@@ -33,17 +44,17 @@ namespace FileCabinetApp.Handlers
             }
         }
 
-        private static void Remove(string parameters)
+        private void Remove(string parameters)
         {
             var parsedId = int.TryParse(parameters, NumberStyles.Integer, CultureInfo.InvariantCulture, out int id);
             if (!parsedId)
             {
-                Console.WriteLine("Record #" + Program.FileCabinetService.RemoveRecord(id) + " doesn't exists");
+                Console.WriteLine("Record #" + this.fileCabinetService.RemoveRecord(id) + " doesn't exists");
 
                 return;
             }
 
-            var listRecords = Program.FileCabinetService.GetRecords();
+            var listRecords = this.fileCabinetService.GetRecords();
 
             if (!listRecords.Any(x => x.Id == id))
             {
@@ -51,7 +62,7 @@ namespace FileCabinetApp.Handlers
                 return;
             }
 
-            int removedId = Program.FileCabinetService.RemoveRecord(id);
+            int removedId = this.fileCabinetService.RemoveRecord(id);
 
             if (IsStorageFile)
             {

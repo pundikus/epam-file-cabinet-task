@@ -9,6 +9,17 @@ namespace FileCabinetApp.Handlers
     /// </summary>
     public class ListCommandHandler : CommandHandlerBase
     {
+        private readonly IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">Service to show records.</param>
+        public ListCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService;
+        }
+
         /// <summary>
         /// Handles the request.
         /// </summary>
@@ -23,7 +34,7 @@ namespace FileCabinetApp.Handlers
 
             if (request.Command.ToUpperInvariant() == "LIST")
             {
-                List();
+                this.List();
                 return true;
             }
             else
@@ -32,11 +43,11 @@ namespace FileCabinetApp.Handlers
             }
         }
 
-        private static void List()
+        private void List()
         {
             try
             {
-                var listRecords = Program.FileCabinetService.GetRecords();
+                var listRecords = this.fileCabinetService.GetRecords();
 
                 if (listRecords.Count == 0)
                 {
