@@ -148,11 +148,12 @@
             Handler for 'find' command.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Handlers.FindCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+        <member name="M:FileCabinetApp.Handlers.FindCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,FileCabinetApp.IRecordPrinter)">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.FindCommandHandler"/> class.
             </summary>
             <param name="fileCabinetService">Service to find record.</param>
+            /// <param name="printer">Printer for records.</param>
         </member>
         <member name="M:FileCabinetApp.Handlers.FindCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
             <summary>
@@ -202,11 +203,12 @@
             Handler for 'list' command.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Handlers.ListCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+        <member name="M:FileCabinetApp.Handlers.ListCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,FileCabinetApp.IRecordPrinter)">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.ListCommandHandler"/> class.
             </summary>
             <param name="fileCabinetService">Service to show records.</param>
+            <param name="printer">Printer for records.</param>
         </member>
         <member name="M:FileCabinetApp.Handlers.ListCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
             <summary>
@@ -225,6 +227,14 @@
             Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.PurgeCommandHandler"/> class.
             </summary>
             <param name="fileCabinetService">Service to purge.</param>
+        </member>
+        <member name="P:FileCabinetApp.Handlers.PurgeCommandHandler.CountRemovedRecord">
+            <summary>
+            Gets or sets it is count removed records.
+            </summary>
+            <value>
+            It is count removed records.
+            </value>
         </member>
         <member name="M:FileCabinetApp.Handlers.PurgeCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
             <summary>
@@ -375,6 +385,23 @@
             This Method check parametrs.
             </summary>
             <param name="parametrs">It is user input parametrs.</param>
+        </member>
+        <member name="T:FileCabinetApp.DefaultRecordPrinter">
+            <summary>
+            Default printer for the records.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.DefaultRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord})">
+            <summary>
+            Prints the list of records to the user.
+            </summary>
+            <param name="records">Records to print.</param>
+        </member>
+        <member name="M:FileCabinetApp.DefaultRecordPrinter.PrintRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Prints single record.
+            </summary>
+            <param name="record">Record to print.</param>
         </member>
         <member name="T:FileCabinetApp.DefaultValidator">
             <summary>
@@ -684,6 +711,17 @@
             </summary>
             <returns>count records.</returns>
         </member>
+        <member name="T:FileCabinetApp.IRecordPrinter">
+            <summary>
+            This interface sets the behavior to the method 'Print'.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.IRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord})">
+            <summary>
+            Prints the list of records to the user.
+            </summary>
+            <param name="records">Records to print.</param>
+        </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>
             This Interface sets a method for checking parameters.
@@ -699,14 +737,6 @@
             <summary>
             This class is needed for user interaction.
             </summary>
-        </member>
-        <member name="P:FileCabinetApp.Program.CountRemovedRecord">
-            <summary>
-            Gets or sets it is count removed records.
-            </summary>
-            <value>
-            It is count removed records.
-            </value>
         </member>
         <member name="P:FileCabinetApp.Program.IsModeCustom">
             <summary>

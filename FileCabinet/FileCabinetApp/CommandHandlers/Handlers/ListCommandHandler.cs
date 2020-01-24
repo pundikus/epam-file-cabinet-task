@@ -9,13 +9,17 @@ namespace FileCabinetApp.Handlers
     /// </summary>
     public class ListCommandHandler : ServiceCommandHandlerBase
     {
+        private readonly IRecordPrinter printer;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
         /// </summary>
         /// <param name="fileCabinetService">Service to show records.</param>
-        public ListCommandHandler(IFileCabinetService fileCabinetService)
+        /// <param name="printer">Printer for records.</param>
+        public ListCommandHandler(IFileCabinetService fileCabinetService, IRecordPrinter printer)
         {
             this.service = fileCabinetService;
+            this.printer = printer;
         }
 
         /// <summary>
@@ -52,20 +56,7 @@ namespace FileCabinetApp.Handlers
                     Console.WriteLine("List records is Empty.");
                 }
 
-                foreach (var item in listRecords)
-                {
-                    var recordString = new StringBuilder();
-
-                    recordString.Append($"#{item.Id}, ");
-                    recordString.Append($"{item.FirstName}, ");
-                    recordString.Append($"{item.LastName}, ");
-                    recordString.Append($"{item.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}, ");
-                    recordString.Append($"{item.CabinetNumber}, ");
-                    recordString.Append($"{item.Salary}y.e, ");
-                    recordString.Append($"{item.Category}");
-
-                    Console.WriteLine(recordString);
-                }
+                this.printer.Print(listRecords);
             }
             catch (ArgumentNullException)
             {

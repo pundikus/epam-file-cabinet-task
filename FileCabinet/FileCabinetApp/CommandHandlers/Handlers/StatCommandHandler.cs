@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using static FileCabinetApp.Program;
 
 namespace FileCabinetApp.Handlers
 {
@@ -48,16 +47,8 @@ namespace FileCabinetApp.Handlers
         {
             int recordsCount = this.service.GetStat();
 
-            if (IsStorageFile)
-            {
-                Console.WriteLine($"{recordsCount} record(s).");
-                Console.WriteLine($"{countRemovedRecord} records was deleted.");
-            }
-            else
-            {
-                Console.WriteLine($"{recordsCount} record(s).");
-                Console.WriteLine("0 records was deleted.");
-            }
+            Console.WriteLine($"{recordsCount} record(s).");
+            Console.WriteLine($"{countRemovedRecord} records was deleted.");
         }
     }
 }

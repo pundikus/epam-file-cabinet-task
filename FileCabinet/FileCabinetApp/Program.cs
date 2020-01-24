@@ -34,14 +34,6 @@ namespace FileCabinetApp
         private static bool isRunning = true;
 
         /// <summary>
-        /// Gets or sets it is count removed records.
-        /// </summary>
-        /// <value>
-        /// It is count removed records.
-        /// </value>
-        public static int CountRemovedRecord { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether gets or sets.
         /// </summary>
         /// <value>
@@ -99,10 +91,11 @@ namespace FileCabinetApp
 
         private static ICommandHandler CreateCommandHandlers()
         {
+            var recordPrinter = new DefaultRecordPrinter();
             var createHandler = new CreateCommandHandler(fileCabinetService);
             var editHandler = new EditCommandHandler(fileCabinetService);
-            var findHandler = new FindCommandHandler(fileCabinetService);
-            var listHandler = new ListCommandHandler(fileCabinetService);
+            var findHandler = new FindCommandHandler(fileCabinetService, recordPrinter);
+            var listHandler = new ListCommandHandler(fileCabinetService, recordPrinter);
             var statHandler = new StatCommandHandler(fileCabinetService);
             var exportHandler = new ExportCommandHandler(fileCabinetService);
             var importHandler = new ImportCommandHandler(fileCabinetService);

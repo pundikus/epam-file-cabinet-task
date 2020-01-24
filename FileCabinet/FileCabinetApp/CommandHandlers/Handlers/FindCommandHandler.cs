@@ -11,13 +11,17 @@ namespace FileCabinetApp.Handlers
     /// </summary>
     public class FindCommandHandler : ServiceCommandHandlerBase
     {
+        private readonly IRecordPrinter printer;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FindCommandHandler"/> class.
         /// </summary>
         /// <param name="fileCabinetService">Service to find record.</param>
-        public FindCommandHandler(IFileCabinetService fileCabinetService)
+        /// /// <param name="printer">Printer for records.</param>
+        public FindCommandHandler(IFileCabinetService fileCabinetService, IRecordPrinter printer)
         {
             this.service = fileCabinetService;
+            this.printer = printer;
         }
 
         /// <summary>
@@ -97,17 +101,7 @@ namespace FileCabinetApp.Handlers
                 result = this.service.FindByDateOfBirth(dateOfBirthString);
             }
 
-            foreach (var item in result)
-            {
-                var recordString = new StringBuilder();
-
-                recordString.Append($"#{item.Id}, ");
-                recordString.Append($"{item.FirstName}, ");
-                recordString.Append($"{item.LastName}, ");
-                recordString.Append($"{item.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}, ");
-
-                Console.WriteLine(recordString);
-            }
+            this.printer.Print(result);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-using static FileCabinetApp.Program;
 
 namespace FileCabinetApp.Handlers
 {
@@ -62,14 +61,7 @@ namespace FileCabinetApp.Handlers
 
             int removedId = this.service.RemoveRecord(id);
 
-            if (IsStorageFile)
-            {
-                Console.WriteLine("Record #" + removedId + " marked as deleted.");
-            }
-            else
-            {
-                Console.WriteLine("Record #" + removedId + " is removed.");
-            }
+            Console.WriteLine("Record #" + removedId + " is removed.");
         }
     }
 }

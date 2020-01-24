@@ -1,5 +1,4 @@
 ﻿using System;
-using static FileCabinetApp.Program;
 
 namespace FileCabinetApp.Handlers
 {
@@ -16,6 +15,14 @@ namespace FileCabinetApp.Handlers
         {
             this.service = fileCabinetService;
         }
+
+        /// <summary>
+        /// Gets or sets it is count removed records.
+        /// </summary>
+        /// <value>
+        /// It is count removed records.
+        /// </value>
+        public static int CountRemovedRecord { get; set; }
 
         /// <summary>
         /// Handles the request.
@@ -45,19 +52,11 @@ namespace FileCabinetApp.Handlers
             int countRecords = this.service.GetRecords().Count;
             int countRemovedRecords;
 
-            if (IsStorageFile)
-            {
-                countRemovedRecords = this.service.PurgeRecords();
+            countRemovedRecords = this.service.PurgeRecords();
 
-                CountRemovedRecord += countRemovedRecords;
+            CountRemovedRecord += countRemovedRecords;
 
-                Console.WriteLine($"Data file procesing is completed: {countRemovedRecords} of {countRecords} records were purged.");
-            }
-            else
-            {
-                Console.WriteLine("FileCabinetMemoryService does not support this command.");
-                return;
-            }
+            Console.WriteLine($"Data file procesing is completed: {countRemovedRecords} of {countRecords} records were purged.");
         }
     }
 }
