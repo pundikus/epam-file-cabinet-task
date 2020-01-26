@@ -759,14 +759,6 @@
             A value indicating whether gets or sets.
             </value>
         </member>
-        <member name="F:FileCabinetApp.Program.isStorageFile">
-            <summary>
-            Gets or sets a value indicating whether gets or sets.
-            </summary>
-            <value>
-            A value indicating whether gets or sets.
-            </value>
-        </member>
         <member name="M:FileCabinetApp.Program.Main(System.String[])">
             <summary>
             This is the main method in which all kinds of user interaction is performed.
@@ -960,6 +952,25 @@
             Create validator.
             </summary>
             <returns>validator.</returns>
+        </member>
+        <member name="T:FileCabinetApp.ValidatorExtensions">
+            <summary>
+            Extends ValidatorBuilder class.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorExtensions.CreateDefault(FileCabinetApp.ValidatorBuilder)">
+            <summary>
+            Creates default validator.
+            </summary>
+            <param name="validatorBuilder">The instance of ValidatorBuilder class.</param>
+            <returns>The instance of IRecordValidator class.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ValidatorExtensions.CreateСustom(FileCabinetApp.ValidatorBuilder)">
+            <summary>
+            Creates custom validator.
+            </summary>
+            <param name="validatorBuilder">The instance of ValidatorBuilder class.</param>
+            <returns>The instance of IRecordValidator class.</returns>
         </member>
         <member name="T:FileCabinetApp.Validators.CabinetNumberValidator">
             <summary>

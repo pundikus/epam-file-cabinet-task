@@ -1,6 +1,6 @@
-﻿using FileCabinetApp.Interfaces.Validators;
+﻿using System.Collections.Generic;
+using FileCabinetApp.Interfaces.Validators;
 using FileCabinetApp.Validators;
-using System.Collections.Generic;
 
 namespace FileCabinetApp
 {

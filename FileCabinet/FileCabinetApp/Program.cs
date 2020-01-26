@@ -30,9 +30,10 @@ namespace FileCabinetApp
         private const int StorageParameterIndex = 2;
 
         private static IFileCabinetService fileCabinetService;
-        private static IRecordValidator validator = new DefaultValidator();
+        private static IRecordValidator validator = ValidatorExtensions.CreateDefault(new ValidatorBuilder());
 
         private static bool isRunning = true;
+        private static bool isStorageFile;
 
         /// <summary>
         /// Gets or sets a value indicating whether gets or sets.
@@ -41,14 +42,6 @@ namespace FileCabinetApp
         /// A value indicating whether gets or sets.
         /// </value>
         public static bool IsModeCustom { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether gets or sets.
-        /// </summary>
-        /// <value>
-        /// A value indicating whether gets or sets.
-        /// </value>
-        private static bool isStorageFile;
 
         /// <summary>
         /// This is the main method in which all kinds of user interaction is performed.
@@ -132,7 +125,7 @@ namespace FileCabinetApp
                 if (inputsArrayParamsMode[modeIndex].Equals(customParametrs, StringComparison.InvariantCultureIgnoreCase))
                 {
                     IsModeCustom = true;
-                    validator = new CustomValidator();
+                    validator = ValidatorExtensions.CreateСustom(new ValidatorBuilder());
 
                     CheckStorageInput(fullParameterStor, abbreviatedParameterStor, args, fileParameters);
                 }
@@ -146,7 +139,7 @@ namespace FileCabinetApp
                 if (args[ModeParameterValue].Equals(customParametrs, StringComparison.InvariantCultureIgnoreCase))
                 {
                     IsModeCustom = true;
-                    validator = new CustomValidator();
+                    validator = ValidatorExtensions.CreateСustom(new ValidatorBuilder());
 
                     CheckStorageInput(fullParameterStor, abbreviatedParameterStor, args, fileParameters);
                 }

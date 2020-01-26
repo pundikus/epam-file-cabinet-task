@@ -17,8 +17,8 @@ namespace FileCabinetApp
         public CustomValidator()
             : base(new List<IRecordValidator>
             {
-                new FirstNameValidator(2, 15),
-                new LastNameValidator(2, 15),
+                new FirstNameValidator(2, 20),
+                new LastNameValidator(2, 20),
                 new DateOfBirthValidator(18, 65),
                 new CabinetNumberValidator(500, 1000),
                 new CategoryValidator(66, 67),
