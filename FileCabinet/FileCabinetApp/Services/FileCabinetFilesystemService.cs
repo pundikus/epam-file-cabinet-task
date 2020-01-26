@@ -67,7 +67,7 @@ namespace FileCabinetApp.Helpers
         }
 
         /// <inheritdoc/>
-        public void EditRecord(FileCabinetRecord parametrs)
+        public int EditRecord(FileCabinetRecord parametrs)
         {
             if (parametrs == null)
             {
@@ -90,7 +90,7 @@ namespace FileCabinetApp.Helpers
             }
 
             int position = 0;
-
+            int id = 0;
             while (this.fileStream.Position < this.fileStream.Length)
             {
                 this.fileStream.Seek(position, SeekOrigin.Begin);
@@ -104,7 +104,7 @@ namespace FileCabinetApp.Helpers
                 }
 
                 var idinByte = binaryReader.ReadBytes(sizeof(int));
-                int id = BitConverter.ToInt32(idinByte);
+                id = BitConverter.ToInt32(idinByte);
 
                 if (id.Equals(parametrs.Id))
                 {
@@ -124,6 +124,8 @@ namespace FileCabinetApp.Helpers
 
             binaryReader.Dispose();
             binaryWriter.Dispose();
+
+            return id;
         }
 
         /// <inheritdoc/>

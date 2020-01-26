@@ -10,3 +10,16 @@ F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\obj\Debug\netcoreapp3.0\Fil
 F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\obj\Debug\netcoreapp3.0\FileCabinetApp.dll
 F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\obj\Debug\netcoreapp3.0\FileCabinetApp.pdb
 F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\bin\Debug\netcoreapp3.0\FileCabinetApp.xml
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\bin\Debug\netcoreapp3.0\Microsoft.Extensions.Configuration.dll
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\bin\Debug\netcoreapp3.0\Microsoft.Extensions.Configuration.Abstractions.dll
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\bin\Debug\netcoreapp3.0\Microsoft.Extensions.Primitives.dll
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\bin\Debug\netcoreapp3.0\System.Runtime.CompilerServices.Unsafe.dll
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\obj\Debug\netcoreapp3.0\FileCabinetApp.csproj.CopyComplete
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\bin\Debug\netcoreapp3.0\Microsoft.Extensions.Configuration.Binder.dll
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\bin\Debug\netcoreapp3.0\Microsoft.Extensions.Configuration.FileExtensions.dll
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\bin\Debug\netcoreapp3.0\Microsoft.Extensions.FileProviders.Abstractions.dll
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\bin\Debug\netcoreapp3.0\Microsoft.Extensions.FileProviders.Physical.dll
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\bin\Debug\netcoreapp3.0\Microsoft.Extensions.FileSystemGlobbing.dll
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\bin\Debug\netcoreapp3.0\Microsoft.Extensions.Configuration.Json.dll
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\bin\Debug\netcoreapp3.0\System.Text.Encodings.Web.dll
+F:\epam-file-cabinet-task\FileCabinet\FileCabinetApp\bin\Debug\netcoreapp3.0\System.Text.Json.dll

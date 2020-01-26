@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using FileCabinetApp.Interfaces.Validators;
 using FileCabinetApp.Validators;
+using Microsoft.Extensions.Configuration;
 
 namespace FileCabinetApp
 {
@@ -18,14 +20,18 @@ namespace FileCabinetApp
         /// <returns>The instance of IRecordValidator class.</returns>
         public static IRecordValidator CreateDefault(this ValidatorBuilder validatorBuilder)
         {
+            var rulesets = GetRulesets();
+
+            ValidationRuleset ruleset = rulesets.Default;
+
             return new CompositeValidator(new List<IRecordValidator>
             {
-                new FirstNameValidator(2, 60),
-                new LastNameValidator(2, 60),
-                new DateOfBirthValidator(0, 100),
-                new CabinetNumberValidator(0, 1000),
-                new CategoryValidator(65, 67),
-                new SalaryValidator(0),
+                new FirstNameValidator(ruleset.FirstName.MinLength, ruleset.FirstName.MaxLength),
+                new LastNameValidator(ruleset.LastName.MinLength, ruleset.LastName.MaxLength),
+                new DateOfBirthValidator(ruleset.DateOfBirth.From, ruleset.DateOfBirth.To),
+                new CabinetNumberValidator(ruleset.CabinetNumber.MinValue, ruleset.CabinetNumber.MaxValue),
+                new CategoryValidator(ruleset.Category.MinValue, ruleset.Category.MaxValue),
+                new SalaryValidator(ruleset.Salary.MinValue),
             });
         }
 
@@ -36,15 +42,30 @@ namespace FileCabinetApp
         /// <returns>The instance of IRecordValidator class.</returns>
         public static IRecordValidator CreateСustom(this ValidatorBuilder validatorBuilder)
         {
+            var rulesets = GetRulesets();
+
+            ValidationRuleset ruleset = rulesets.Custom;
+
             return new CompositeValidator(new List<IRecordValidator>
             {
-                new FirstNameValidator(2, 20),
-                new LastNameValidator(2, 20),
-                new DateOfBirthValidator(18, 65),
-                new CabinetNumberValidator(500, 1000),
-                new CategoryValidator(66, 67),
-                new SalaryValidator(10000),
+                new FirstNameValidator(ruleset.FirstName.MinLength, ruleset.FirstName.MaxLength),
+                new LastNameValidator(ruleset.LastName.MinLength, ruleset.LastName.MaxLength),
+                new DateOfBirthValidator(ruleset.DateOfBirth.From, ruleset.DateOfBirth.To),
+                new CabinetNumberValidator(ruleset.CabinetNumber.MinValue, ruleset.CabinetNumber.MaxValue),
+                new CategoryValidator(ruleset.Category.MinValue, ruleset.Category.MaxValue),
+                new SalaryValidator(ruleset.Salary.MinValue),
             });
+        }
+
+        private static AppConfiguration GetRulesets()
+        {
+            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("validation-rules.json");
+
+            IConfiguration config = builder.Build();
+
+            var rulesets = ConfigurationBinder.Get<AppConfiguration>(config);
+
+            return rulesets;
         }
     }
 }

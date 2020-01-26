@@ -4,6 +4,60 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.AppConfiguration">
+            <summary>
+            Class for complex Json deserialization.
+            Custom and default rulesets.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.AppConfiguration.Default">
+            <summary>
+            Gets or sets default validation ruleset.
+            </summary>
+            <value>Default validation ruleset.</value>
+        </member>
+        <member name="P:FileCabinetApp.AppConfiguration.Custom">
+            <summary>
+            Gets or sets custom validation ruleset.
+            </summary>
+            <value>Custom validation ruleset.</value>
+        </member>
+        <member name="T:FileCabinetApp.CabinetNumberConstraints">
+            <summary>
+            Class for complex Json deserialization.
+            Contains cabinet number constraints.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.CabinetNumberConstraints.MinValue">
+            <summary>
+            Gets or sets minimum possible value.
+            </summary>
+            <value>Minimum possible value.</value>
+        </member>
+        <member name="P:FileCabinetApp.CabinetNumberConstraints.MaxValue">
+            <summary>
+            Gets or sets maximum possible value.
+            </summary>
+            <value>Maximum possible value.</value>
+        </member>
+        <member name="T:FileCabinetApp.CategoryConstraints">
+            <summary>
+            Class for complex Json deserialization.
+            Contains category constraints.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.CategoryConstraints.MinValue">
+            <summary>
+            Gets or sets minimum possible value.
+            </summary>
+            <value>Minimum possible value.</value>
+        </member>
+        <member name="P:FileCabinetApp.CategoryConstraints.MaxValue">
+            <summary>
+            Gets or sets maximum possible value.
+            </summary>
+            <value>Maximum possible value.</value>
+        </member>
         <member name="T:FileCabinetApp.AppCommandRequest">
             <summary>
             This class inizialize request.
@@ -483,6 +537,24 @@
             Is a Category for each user.
             </value>
         </member>
+        <member name="T:FileCabinetApp.DateOfBirthConstraints">
+            <summary>
+            Class for complex Json deserialization.
+            Contains age constraints.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.DateOfBirthConstraints.From">
+            <summary>
+            Gets or sets minimum possible age.
+            </summary>
+            <value>Minimum possible age.</value>
+        </member>
+        <member name="P:FileCabinetApp.DateOfBirthConstraints.To">
+            <summary>
+            Gets or sets maximum possible age.
+            </summary>
+            <value>Maximum possible age.</value>
+        </member>
         <member name="T:FileCabinetApp.FileHelper">
             <summary>
             Class for FileCabinetFileSystemService.
@@ -646,12 +718,14 @@
             This method is for changes records.
             </summary>
             <param name="parametrs">It is object parametrs.</param>
+            <returns>id edit record.</returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
             This method load records from file.
             </summary>
             <param name="snapshot">It is copy data.</param>
+            <returns>restore record.</returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.FindByDateOfBirth(System.String)">
             <summary>
@@ -708,6 +782,18 @@
             </summary>
             <param name="record">Record to validate.</param>
             <returns>Result of validation.</returns>
+        </member>
+        <member name="T:FileCabinetApp.SalaryConstraints">
+            <summary>
+            Class for complex Json deserialization.
+            Contains salary constraints.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.SalaryConstraints.MinValue">
+            <summary>
+            Gets or sets minimum possible value.
+            </summary>
+            <value>Minimum possible value.</value>
         </member>
         <member name="T:FileCabinetApp.DefaultRecordPrinter">
             <summary>
@@ -818,6 +904,7 @@
             This method is for changes records.
             </summary>
             <param name="parametrs">It is object parametrs.</param>
+            <returns>id record.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.FindByFirstName(System.String)">
             <summary>
@@ -900,6 +987,65 @@
             </summary>
             <param name="streamReader">Represents characters read.</param>
             <returns>List records.</returns>
+        </member>
+        <member name="T:FileCabinetApp.StringConstraints">
+            <summary>
+            Class for complex Json deserialization.
+            String constraints.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.StringConstraints.MinLength">
+            <summary>
+            Gets or sets minimum length of the name.
+            </summary>
+            <value>Minimum length of the name.</value>
+        </member>
+        <member name="P:FileCabinetApp.StringConstraints.MaxLength">
+            <summary>
+            Gets or sets maximum length of the name.
+            </summary>
+            <value>Maximum length of the name.</value>
+        </member>
+        <member name="T:FileCabinetApp.ValidationRuleset">
+            <summary>
+            Class for complex Json deserialization. Validation ruleset records properties.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.ValidationRuleset.FirstName">
+            <summary>
+            Gets or sets first name validation ruleset.
+            </summary>
+            <value>First name validation ruleset.</value>
+        </member>
+        <member name="P:FileCabinetApp.ValidationRuleset.LastName">
+            <summary>
+            Gets or sets last name validation ruleset.
+            </summary>
+            <value>Last name validation ruleset.</value>
+        </member>
+        <member name="P:FileCabinetApp.ValidationRuleset.DateOfBirth">
+            <summary>
+            Gets or sets date of birth validation ruleset.
+            </summary>
+            <value>Date of birth validation ruleset.</value>
+        </member>
+        <member name="P:FileCabinetApp.ValidationRuleset.CabinetNumber">
+            <summary>
+            Gets or sets cabinet number validation ruleset.
+            </summary>
+            <value>Cabinet number validation ruleset.</value>
+        </member>
+        <member name="P:FileCabinetApp.ValidationRuleset.Category">
+            <summary>
+            Gets or sets category validation ruleset.
+            </summary>
+            <value>Category validation ruleset.</value>
+        </member>
+        <member name="P:FileCabinetApp.ValidationRuleset.Salary">
+            <summary>
+            Gets or sets salary validation ruleset.
+            </summary>
+            <value>Salary validation ruleset.</value>
         </member>
         <member name="T:FileCabinetApp.Validators.CabinetNumberValidator">
             <summary>

@@ -95,7 +95,8 @@ namespace FileCabinetApp
         /// This method is for changes records.
         /// </summary>
         /// <param name="parametrs">It is object parametrs.</param>
-        public void EditRecord(FileCabinetRecord parametrs)
+        /// <returns>id record.</returns>
+        public int EditRecord(FileCabinetRecord parametrs)
         {
             if (parametrs == null)
             {
@@ -124,6 +125,8 @@ namespace FileCabinetApp
 
             this.DeleteRecordFromAllDictionary(recordById);
             this.AddRecordInAllDictionary(newrecordById);
+
+            return recordById.Id;
         }
 
         /// <summary>

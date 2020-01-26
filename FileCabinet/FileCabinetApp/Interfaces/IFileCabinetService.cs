@@ -37,12 +37,14 @@ namespace FileCabinetApp
         /// This method is for changes records.
         /// </summary>
         /// <param name="parametrs">It is object parametrs.</param>
-        void EditRecord(FileCabinetRecord parametrs);
+        /// <returns>id edit record.</returns>
+        int EditRecord(FileCabinetRecord parametrs);
 
         /// <summary>
         /// This method load records from file.
         /// </summary>
         /// <param name="snapshot">It is copy data.</param>
+        /// <returns>restore record.</returns>
         void Restore(FileCabinetServiceSnapshot snapshot);
 
         /// <summary>
