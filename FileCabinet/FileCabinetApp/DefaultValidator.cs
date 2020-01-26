@@ -16,44 +16,50 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="record">Record to validate.</param>
         /// <returns>Exception message.</returns>
-        public string ValidateParameters(FileCabinetRecord record)
+        public bool Validate(FileCabinetRecord record)
         {
             if (record == null)
             {
-                return $"{record} object is invalid.";
+                throw new ArgumentNullException(nameof(record));
             }
 
-            if (!new DefaultFirstNameValidator().Validate(record.FirstName))
+            if (!new FirstNameValidator(2, 60).Validate(record))
             {
-                return "First name is invalid.";
+                // return "First name is invalid.";
+                return false;
             }
 
-            if (!new DefaultLastNameValidator().Validate(record.LastName))
+            if (!new LastNameValidator(2, 60).Validate(record))
             {
-                return "Last name is invalid.";
+                // return "Last name is invalid.";
+                return false;
             }
 
-            if (!new DefaultDateOfBirthValidator().Validate(record.DateOfBirth))
+            if (!new DateOfBirthValidator(0, 100).Validate(record))
             {
-                return "Date of birth is invalid.";
+                // return "Date of birth is invalid.";
+                return false;
             }
 
-            if (!new DefaultCabinetNumberValidator().Validate(record.CabinetNumber))
+            if (!new CabinetNumberValidator(0, 1000).Validate(record))
             {
-                return "Cabinet Number is invalid.";
+                // return "Cabinet Number is invalid.";
+                return false;
             }
 
-            if (!new DefaultCategoryValidator().Validate(record.Category))
+            if (!new CategoryValidator(65, 67).Validate(record))
             {
-                return "Category is invalid.";
+                // return "Category is invalid.";
+                return false;
             }
 
-            if (!new DefaultSalaryValidator().Validate(record.Salary))
+            if (!new SalaryValidator(0).Validate(record))
             {
-                return "Salary are invalid.";
+                // return "Salary are invalid.";
+                return false;
             }
 
-            return null;
+            return true;
         }
     }
 }

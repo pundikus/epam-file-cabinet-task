@@ -51,7 +51,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(parametrs));
             }
 
-            this.validator.ValidateParameters(parametrs);
+            this.validator.Validate(parametrs);
 
             var record = new FileCabinetRecord
             {
@@ -102,7 +102,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(parametrs));
             }
 
-            this.validator.ValidateParameters(parametrs);
+            this.validator.Validate(parametrs);
 
             var record = new FileCabinetRecord
             {
@@ -207,7 +207,7 @@ namespace FileCabinetApp
                 {
                     try
                     {
-                        this.validator.ValidateParameters(recordImport);
+                        this.validator.Validate(recordImport);
 
                         this.list.Add(recordImport);
                         this.AddRecordInAllDictionary(recordImport);
@@ -222,7 +222,7 @@ namespace FileCabinetApp
             {
                 foreach (var recordImport in records)
                 {
-                    this.validator.ValidateParameters(recordImport);
+                    this.validator.Validate(recordImport);
 
                     var recordById = this.list.Find(x => x.Id == recordImport.Id);
 

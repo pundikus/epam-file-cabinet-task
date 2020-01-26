@@ -10,48 +10,54 @@ namespace FileCabinetApp
     public class CustomValidator : IRecordValidator
     {
         /// <summary>
-        /// Validates the input.
+        /// Validates the user's input.
         /// </summary>
         /// <param name="record">Record to validate.</param>
-        /// <returns>Exception message.</returns>
-        public string ValidateParameters(FileCabinetRecord record)
+        /// <returns>Whether record is valid.</returns>
+        public bool Validate(FileCabinetRecord record)
         {
             if (record == null)
             {
-                throw new ArgumentNullException($"{record} object is invalid.");
+                throw new ArgumentNullException(nameof(record));
             }
 
-            if (!new CustomFirstNameValidator().Validate(record.FirstName))
+            if (!new FirstNameValidator(2, 15).Validate(record))
             {
-                return "First name is invalid.";
+                // return "First name is invalid.";
+                return false;
             }
 
-            if (!new CustomLastNameValidator().Validate(record.LastName))
+            if (!new LastNameValidator(2, 15).Validate(record))
             {
-                return "Last name is invalid.";
+                // return "Last name is invalid.";
+                return false;
             }
 
-            if (!new CustomDateOfBirthValidator().Validate(record.DateOfBirth))
+            if (!new DateOfBirthValidator(15, 70).Validate(record))
             {
-                return "Date of birth is invalid.";
+                // return "Date of birth is invalid.";
+                return false;
             }
 
-            if (!new CustomCabinetNumberValidator().Validate(record.CabinetNumber))
+            if (!new CabinetNumberValidator(500, 1000).Validate(record))
             {
-                return "Cabinet Number is invalid.";
+                // return "Cabinet Number is invalid.";
+                return false;
             }
 
-            if (!new CustomCategoryValidator().Validate(record.Category))
+            if (!new CategoryValidator(66, 67).Validate(record))
             {
-                return "Category is invalid.";
+                // return "Category is invalid.";
+                return false;
             }
 
-            if (!new CustomSalaryValidator().Validate(record.Salary))
+            if (!new SalaryValidator(10000).Validate(record))
             {
-                return "Salary invalid.";
+                // return "Salary are invalid.";
+                return false;
             }
 
-            return null;
+            return true;
         }
     }
 }
