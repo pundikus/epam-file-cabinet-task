@@ -10,18 +10,18 @@ namespace FileCabinetApp.Validators
     /// </summary>
     public class CategoryValidator : IRecordValidator
     {
-        private readonly int from;
-        private readonly int to;
+        private readonly int minValue;
+        private readonly int maxValue;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CategoryValidator"/> class.
         /// </summary>
-        /// <param name="from">Minimum possible category.</param>
-        /// <param name="to">Maximum possible category.</param>
-        public CategoryValidator(int from, int to)
+        /// <param name="minValue">Minimum possible category.</param>
+        /// <param name="maxValue">Maximum possible category.</param>
+        public CategoryValidator(int minValue, int maxValue)
         {
-            this.from = from;
-            this.to = to;
+            this.minValue = minValue;
+            this.maxValue = maxValue;
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace FileCabinetApp.Validators
                 return false;
             }
 
-            if (record.Category < this.from || record.Category > this.to)
+            if (record.Category < this.minValue || record.Category > this.maxValue)
             {
                 return false;
             }

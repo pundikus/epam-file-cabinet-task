@@ -10,18 +10,18 @@ namespace FileCabinetApp.Validators
     /// </summary>
     public class CabinetNumberValidator : IRecordValidator
     {
-        private readonly int from;
-        private readonly int to;
+        private readonly short minValue;
+        private readonly short maxValue;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CabinetNumberValidator"/> class.
         /// </summary>
-        /// <param name="from">Minimum possible CabinetNumber.</param>
-        /// <param name="to">Maximum possible CabinetNumber.</param>
-        public CabinetNumberValidator(int from, int to)
+        /// <param name="minValue">Minimum possible CabinetNumber.</param>
+        /// <param name="maxValue">Maximum possible CabinetNumber.</param>
+        public CabinetNumberValidator(short minValue, short maxValue)
         {
-            this.from = from;
-            this.to = to;
+            this.minValue = minValue;
+            this.maxValue = maxValue;
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace FileCabinetApp.Validators
                 return false;
             }
 
-            if (record.Category < this.from || record.Category > this.to)
+            if (record.Category < this.minValue || record.Category > this.maxValue)
             {
                 return false;
             }

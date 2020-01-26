@@ -375,17 +375,28 @@
             <param name="arg">input value.</param>
             <returns>convert value.</returns>
         </member>
+        <member name="T:FileCabinetApp.CompositeValidator">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.CompositeValidator.#ctor(System.Collections.Generic.IEnumerable{FileCabinetApp.Interfaces.Validators.IRecordValidator})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CompositeValidator"/> class.
+            </summary>
+            <param name="validators">validator input.</param>
+        </member>
+        <member name="M:FileCabinetApp.CompositeValidator.Validate(FileCabinetApp.FileCabinetRecord)">
+            <inheritdoc/>
+        </member>
         <member name="T:FileCabinetApp.CustomValidator">
             <summary>
             Custom validator input.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CustomValidator.Validate(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.CustomValidator.#ctor">
             <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CustomValidator"/> class.
             Validates the user's input.
             </summary>
-            <param name="record">Record to validate.</param>
-            <returns>Whether record is valid.</returns>
         </member>
         <member name="T:FileCabinetApp.DefaultRecordPrinter">
             <summary>
@@ -409,12 +420,11 @@
             Default validator for user's input.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.DefaultValidator.Validate(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.DefaultValidator.#ctor">
             <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.DefaultValidator"/> class.
             Validates the user's input.
             </summary>
-            <param name="record">Record to validate.</param>
-            <returns>Exception message.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -659,12 +669,12 @@
             Cabinet Number validator.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Validators.CabinetNumberValidator.#ctor(System.Int32,System.Int32)">
+        <member name="M:FileCabinetApp.Validators.CabinetNumberValidator.#ctor(System.Int16,System.Int16)">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.CabinetNumberValidator"/> class.
             </summary>
-            <param name="from">Minimum possible CabinetNumber.</param>
-            <param name="to">Maximum possible CabinetNumber.</param>
+            <param name="minValue">Minimum possible CabinetNumber.</param>
+            <param name="maxValue">Maximum possible CabinetNumber.</param>
         </member>
         <member name="M:FileCabinetApp.Validators.CabinetNumberValidator.Validate(FileCabinetApp.FileCabinetRecord)">
             <summary>
@@ -682,8 +692,8 @@
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.CategoryValidator"/> class.
             </summary>
-            <param name="from">Minimum possible category.</param>
-            <param name="to">Maximum possible category.</param>
+            <param name="minValue">Minimum possible category.</param>
+            <param name="maxValue">Maximum possible category.</param>
         </member>
         <member name="M:FileCabinetApp.Validators.CategoryValidator.Validate(FileCabinetApp.FileCabinetRecord)">
             <summary>
@@ -934,7 +944,7 @@
             A value indicating whether gets or sets.
             </value>
         </member>
-        <member name="P:FileCabinetApp.Program.IsStorageFile">
+        <member name="F:FileCabinetApp.Program.isStorageFile">
             <summary>
             Gets or sets a value indicating whether gets or sets.
             </summary>

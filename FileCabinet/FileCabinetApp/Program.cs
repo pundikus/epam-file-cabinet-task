@@ -48,7 +48,7 @@ namespace FileCabinetApp
         /// <value>
         /// A value indicating whether gets or sets.
         /// </value>
-        public static bool IsStorageFile { get; set; }
+        private static bool isStorageFile;
 
         /// <summary>
         /// This is the main method in which all kinds of user interaction is performed.
@@ -170,10 +170,10 @@ namespace FileCabinetApp
                     var inputsArray = inputsArrayParamsStorage[StorageParameterIndex - 1].Split('=', 2);
                     if (inputsArray[1].Equals(fileParameters, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        IsStorageFile = true;
+                        isStorageFile = true;
                         FileStream fileStream;
 
-                        if (IsStorageFile)
+                        if (isStorageFile)
                         {
                             File.Delete(FileName);
                         }
@@ -198,9 +198,9 @@ namespace FileCabinetApp
                 {
                     if (inputsArrayParamsStorage[3].Equals(fileParameters, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        IsStorageFile = true;
+                        isStorageFile = true;
 
-                        if (IsStorageFile)
+                        if (isStorageFile)
                         {
                             File.Delete(FileName);
                         }
@@ -247,7 +247,7 @@ namespace FileCabinetApp
                 Console.WriteLine(DefaultMessage);
             }
 
-            if (IsStorageFile)
+            if (isStorageFile)
             {
                 Console.WriteLine(FileMessage);
             }
