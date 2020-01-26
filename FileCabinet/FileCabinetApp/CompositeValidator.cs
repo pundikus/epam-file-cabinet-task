@@ -6,7 +6,7 @@ using FileCabinetApp.Interfaces.Validators;
 namespace FileCabinetApp
 {
     /// <inheritdoc/>
-    public abstract class CompositeValidator : IRecordValidator
+    public class CompositeValidator : IRecordValidator
     {
         private readonly List<IRecordValidator> validators;
 
@@ -14,7 +14,7 @@ namespace FileCabinetApp
         /// Initializes a new instance of the <see cref="CompositeValidator"/> class.
         /// </summary>
         /// <param name="validators">validator input.</param>
-        protected CompositeValidator(IEnumerable<IRecordValidator> validators)
+        public CompositeValidator(IEnumerable<IRecordValidator> validators)
         {
             this.validators = (List<IRecordValidator>)validators;
         }
