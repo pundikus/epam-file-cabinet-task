@@ -338,10 +338,13 @@
             Handler for commands which relate to the service.
             </summary>
         </member>
-        <member name="F:FileCabinetApp.ServiceCommandHandlerBase.service">
+        <member name="P:FileCabinetApp.ServiceCommandHandlerBase.Service">
             <summary>
-            The service to get information and modify.
+            Gets or sets the service to get information and modify.
             </summary>
+            <value>
+            The service to get information and modify.
+            </value>
         </member>
         <member name="M:FileCabinetApp.ServiceCommandHandlerBase.FirstNameValidator(System.String)">
             <summary>

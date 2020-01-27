@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
-using System.Text;
-using FileCabinetApp.Helpers;
+using System.Linq;
 
 namespace FileCabinetApp.Helpers
 {
@@ -36,9 +35,16 @@ namespace FileCabinetApp.Helpers
             int id;
             BinaryWriter binaryWriter;
 
+            var list = new List<FileCabinetRecord>();
+
+            foreach (var item in this.GetRecords())
+            {
+                list.Add(item);
+            }
+
             if (parametrs.Id == 0)
             {
-                id = this.GetRecords().Count + 1;
+                id = list.Max(record => record.Id) + 1;
             }
             else
             {
@@ -151,6 +157,10 @@ namespace FileCabinetApp.Helpers
             while (this.fileStream.Position < this.fileStream.Length)
             {
                 this.fileStream.Seek(positionDeleteRecords, SeekOrigin.Begin);
+                if (this.fileStream.Position == this.fileStream.Length)
+                {
+                    break;
+                }
 
                 var status = binaryReader.ReadBytes(sizeof(short));
                 var bitsStatus = new BitArray(status);
@@ -214,6 +224,10 @@ namespace FileCabinetApp.Helpers
             while (this.fileStream.Position < this.fileStream.Length)
             {
                 this.fileStream.Seek(positionDeleteRecords, SeekOrigin.Begin);
+                if (this.fileStream.Position == this.fileStream.Length)
+                {
+                    break;
+                }
 
                 var status = binaryReader.ReadBytes(sizeof(short));
                 var bitsStatus = new BitArray(status);
@@ -270,6 +284,10 @@ namespace FileCabinetApp.Helpers
             while (this.fileStream.Position < this.fileStream.Length)
             {
                 this.fileStream.Seek(positionDeleteRecords, SeekOrigin.Begin);
+                if (this.fileStream.Position == this.fileStream.Length)
+                {
+                    break;
+                }
 
                 var status = binaryReader.ReadBytes(sizeof(short));
                 var bitsStatus = new BitArray(status);
@@ -325,7 +343,12 @@ namespace FileCabinetApp.Helpers
 
             while (this.fileStream.Position < this.fileStream.Length)
             {
-                this.fileStream.Seek(2, SeekOrigin.Current);
+                var status = binaryReader.ReadBytes(sizeof(short));
+                var bitsStatus = new BitArray(status);
+                if (bitsStatus[2])
+                {
+                    this.fileStream.Position += FileHelper.GetSizeRecords();
+                }
 
                 var record = FileHelper.ReadRecords(binaryReader);
 
@@ -385,6 +408,11 @@ namespace FileCabinetApp.Helpers
                 var newList = new List<FileCabinetRecord>();
                 foreach (var item in recordList)
                 {
+                    if (item == null)
+                    {
+                        break;
+                    }
+
                     newList.Add(item);
                 }
 
@@ -431,6 +459,11 @@ namespace FileCabinetApp.Helpers
 
             while (this.fileStream.Position < this.fileStream.Length)
             {
+                if (this.fileStream.Position > this.fileStream.Length)
+                {
+                    this.fileStream.Seek(this.fileStream.Position - 2, SeekOrigin.Begin);
+                }
+
                 this.fileStream.Seek(position, SeekOrigin.Begin);
                 var idinByte = binaryReader.ReadBytes(sizeof(int));
                 id = BitConverter.ToInt32(idinByte);

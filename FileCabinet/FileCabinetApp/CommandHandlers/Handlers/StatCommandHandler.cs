@@ -17,7 +17,7 @@ namespace FileCabinetApp.Handlers
         /// <param name="fileCabinetService">Service to get stats.</param>
         public StatCommandHandler(IFileCabinetService fileCabinetService)
         {
-            this.service = fileCabinetService;
+            this.Service = fileCabinetService;
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace FileCabinetApp.Handlers
 
         private void Stat()
         {
-            int recordsCount = this.service.GetStat();
+            int recordsCount = this.Service.GetStat();
 
             Console.WriteLine($"{recordsCount} record(s).");
             Console.WriteLine($"{countRemovedRecord} records was deleted.");
