@@ -795,6 +795,89 @@
             </summary>
             <value>Minimum possible value.</value>
         </member>
+        <member name="T:FileCabinetApp.ServiceMeter">
+            <summary>
+            Class for measuring timings of service's methods.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.ServiceMeter"/> class.
+            </summary>
+            <param name="service">Service for measuring.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.CreateRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Adds timing count for create method.
+            </summary>
+            <param name="record">Record to create.</param>
+            <returns>Record's id.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.EditRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Adds timing count for edit method.
+            </summary>
+            <param name="record">Record to edit.</param>
+            <returns>Whether operation succeeded.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.FindByDateOfBirth(System.String)">
+            <summary>
+            Adds timing count for FindByDateOfBirth method.
+            </summary>
+            <param name="dateOfBirth">Given date of birth.</param>
+            <returns>The array of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.FindByFirstName(System.String)">
+            <summary>
+            Adds timing count for FindByFirstName method.
+            </summary>
+            <param name="firstName">Given first name.</param>
+            <returns>The array of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.FindByLastName(System.String)">
+            <summary>
+            Adds timing count for FindByLastName method.
+            </summary>
+            <param name="lastName">Given last name.</param>
+            <returns>The array of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.GetRecords">
+            <summary>
+            Adds timing count for GetRecords method.
+            </summary>
+            <returns>The array of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.GetStat">
+            <summary>
+            Adds timing count for GetStat method.
+            </summary>
+            <returns>The number of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.MakeSnapshot">
+            <summary>
+            Adds timing count for MakeSnapshot method.
+            </summary>
+            <returns>>An instance of the IFileCabinetServiceSnapshot class.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.PurgeRecords">
+            <summary>
+            Adds timing count for Purge method.
+            </summary>
+            <returns>count removed elements.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.RemoveRecord(System.Int32)">
+            <summary>
+            Adds timing count for RemoveRecord method.
+            </summary>
+            <param name="id">Id of record to remove.</param>
+            <returns>Id of removed record if succeeded, -1 otherwise.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>
+            Adds timing count for Restore method.
+            </summary>
+            <param name="snapshot">A snapshot of records to restore.</param>
+        </member>
         <member name="T:FileCabinetApp.DefaultRecordPrinter">
             <summary>
             Default printer for the records.

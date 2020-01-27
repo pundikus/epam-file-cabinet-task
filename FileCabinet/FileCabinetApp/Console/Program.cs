@@ -35,6 +35,7 @@ namespace FileCabinetApp
 
         private static bool isRunning = true;
         private static bool isStorageFile;
+        private static bool stopwatchAdded;
 
         /// <summary>
         /// Gets or sets a value indicating whether gets or sets.
@@ -58,6 +59,8 @@ namespace FileCabinetApp
             var commandHandler = CreateCommandHandlers();
 
             WriteMessageSettings();
+
+
 
             do
             {
@@ -86,6 +89,11 @@ namespace FileCabinetApp
 
         private static ICommandHandler CreateCommandHandlers()
         {
+            if (stopwatchAdded)
+            {
+                fileCabinetService = new ServiceMeter(fileCabinetService);
+            }
+
             var recordPrinter = new DefaultRecordPrinter();
             var createHandler = new CreateCommandHandler(fileCabinetService);
             var editHandler = new EditCommandHandler(fileCabinetService);
@@ -129,10 +137,12 @@ namespace FileCabinetApp
                     validator = ValidatorExtensions.CreateСustom(new ValidatorBuilder());
 
                     CheckStorageInput(fullParameterStor, abbreviatedParameterStor, args, fileParameters);
+                    CheckStopWatch(args);
                 }
                 else
                 {
                     CheckStorageInput(fullParameterStor, abbreviatedParameterStor, args, fileParameters);
+                    CheckStopWatch(args);
                 }
             }
             else if (args[ModeParameterIndex].Contains(abbreviatedParameterValid, StringComparison.InvariantCulture))
@@ -143,15 +153,18 @@ namespace FileCabinetApp
                     validator = ValidatorExtensions.CreateСustom(new ValidatorBuilder());
 
                     CheckStorageInput(fullParameterStor, abbreviatedParameterStor, args, fileParameters);
+                    CheckStopWatch(args);
                 }
                 else
                 {
                     CheckStorageInput(fullParameterStor, abbreviatedParameterStor, args, fileParameters);
+                    CheckStopWatch(args);
                 }
             }
             else
             {
                 CheckStorageInput(fullParameterStor, abbreviatedParameterStor, args, fileParameters);
+                CheckStopWatch(args);
             }
         }
 
@@ -228,6 +241,14 @@ namespace FileCabinetApp
             }
         }
 
+        private static void CheckStopWatch(string[] args)
+        {
+            if (args[2] == "--use-stopwatch")
+            {
+                stopwatchAdded = true;
+            }
+        }
+
         private static void WriteMessageSettings()
         {
             Console.WriteLine($"File Cabinet Application, developed by {DeveloperName}");
@@ -252,6 +273,11 @@ namespace FileCabinetApp
 
             Console.WriteLine(HintMessage);
             Console.WriteLine();
+        }
+
+        private static void AddStopwatch(string args)
+        {
+            stopwatchAdded = true;
         }
     }
 }
