@@ -4,6 +4,60 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.AppConfiguration">
+            <summary>
+            Class for complex Json deserialization.
+            Custom and default rulesets.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.AppConfiguration.Default">
+            <summary>
+            Gets or sets default validation ruleset.
+            </summary>
+            <value>Default validation ruleset.</value>
+        </member>
+        <member name="P:FileCabinetApp.AppConfiguration.Custom">
+            <summary>
+            Gets or sets custom validation ruleset.
+            </summary>
+            <value>Custom validation ruleset.</value>
+        </member>
+        <member name="T:FileCabinetApp.CabinetNumberConstraints">
+            <summary>
+            Class for complex Json deserialization.
+            Contains cabinet number constraints.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.CabinetNumberConstraints.MinValue">
+            <summary>
+            Gets or sets minimum possible value.
+            </summary>
+            <value>Minimum possible value.</value>
+        </member>
+        <member name="P:FileCabinetApp.CabinetNumberConstraints.MaxValue">
+            <summary>
+            Gets or sets maximum possible value.
+            </summary>
+            <value>Maximum possible value.</value>
+        </member>
+        <member name="T:FileCabinetApp.CategoryConstraints">
+            <summary>
+            Class for complex Json deserialization.
+            Contains category constraints.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.CategoryConstraints.MinValue">
+            <summary>
+            Gets or sets minimum possible value.
+            </summary>
+            <value>Minimum possible value.</value>
+        </member>
+        <member name="P:FileCabinetApp.CategoryConstraints.MaxValue">
+            <summary>
+            Gets or sets maximum possible value.
+            </summary>
+            <value>Maximum possible value.</value>
+        </member>
         <member name="T:FileCabinetApp.AppCommandRequest">
             <summary>
             This class inizialize request.
@@ -483,6 +537,24 @@
             Is a Category for each user.
             </value>
         </member>
+        <member name="T:FileCabinetApp.DateOfBirthConstraints">
+            <summary>
+            Class for complex Json deserialization.
+            Contains age constraints.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.DateOfBirthConstraints.From">
+            <summary>
+            Gets or sets minimum possible age.
+            </summary>
+            <value>Minimum possible age.</value>
+        </member>
+        <member name="P:FileCabinetApp.DateOfBirthConstraints.To">
+            <summary>
+            Gets or sets maximum possible age.
+            </summary>
+            <value>Maximum possible age.</value>
+        </member>
         <member name="T:FileCabinetApp.FileHelper">
             <summary>
             Class for FileCabinetFileSystemService.
@@ -646,6 +718,7 @@
             This method is for changes records.
             </summary>
             <param name="parametrs">It is object parametrs.</param>
+            <returns>id edit record.</returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>
@@ -708,6 +781,185 @@
             </summary>
             <param name="record">Record to validate.</param>
             <returns>Result of validation.</returns>
+        </member>
+        <member name="T:FileCabinetApp.SalaryConstraints">
+            <summary>
+            Class for complex Json deserialization.
+            Contains salary constraints.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.SalaryConstraints.MinValue">
+            <summary>
+            Gets or sets minimum possible value.
+            </summary>
+            <value>Minimum possible value.</value>
+        </member>
+        <member name="T:FileCabinetApp.ServiceLogger">
+            <summary>
+            Class for adding loggs to the file.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.#ctor(FileCabinetApp.IFileCabinetService,System.IO.StreamWriter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.ServiceLogger"/> class.
+            </summary>
+            <param name="service">Service to decorate.</param>
+            <param name="writer">Writer to write to.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.CreateRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Adds logs about CreateRecord method in the textfile.
+            </summary>
+            <param name="record">Record to create.</param>
+            <returns>Record's id.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.EditRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Adds logs about EditRecord method in the textfile.
+            </summary>
+            <param name="record">Record to edit.</param>
+            <returns>Whether operation succeeded.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.FindByDateOfBirth(System.String)">
+            <summary>
+            Adds logs about FindByDateOfBirth method in the textfile.
+            </summary>
+            <param name="dateOfBirth">Date of birth to find by.</param>
+            <returns>List of found records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.FindByFirstName(System.String)">
+            <summary>
+            Adds logs about FindByFirstName method in the textfile.
+            </summary>
+            <param name="firstName">First name to find by.</param>
+            <returns>List of found records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.FindByLastName(System.String)">
+            <summary>
+            Adds logs about FindByLastName method in the textfile.
+            </summary>
+            <param name="lastName">Last name to find by.</param>
+            <returns>List of found records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.GetRecords">
+            <summary>
+            Adds logs about GetRecords method in the textfile.
+            </summary>
+            <returns>The list of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.GetStat">
+            <summary>
+            Adds logs about GetStat method in the textfile.
+            </summary>
+            <returns>The number of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.MakeSnapshot">
+            <summary>
+            Adds logs about MakeSnapshot method in the textfile.
+            </summary>
+            <returns>An instance of the IFileCabinetServiceSnapshot class.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.PurgeRecords">
+            <summary>
+            Add logs about Purge method in the textfile.
+            </summary>
+            <returns>count removed records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.RemoveRecord(System.Int32)">
+            <summary>
+            Adds logs about Remove method in the textfile.
+            </summary>
+            <param name="id">Id to remove by.</param>
+            <returns>Id of removed record.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>
+            Adds logs about Restore method in the textfile.
+            </summary>
+            <param name="snapshot">Snapshot to restore by.</param>
+        </member>
+        <member name="T:FileCabinetApp.ServiceMeter">
+            <summary>
+            Class for measuring timings of service's methods.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.ServiceMeter"/> class.
+            </summary>
+            <param name="service">Service for measuring.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.CreateRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Adds timing count for create method.
+            </summary>
+            <param name="record">Record to create.</param>
+            <returns>Record's id.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.EditRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Adds timing count for edit method.
+            </summary>
+            <param name="record">Record to edit.</param>
+            <returns>Whether operation succeeded.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.FindByDateOfBirth(System.String)">
+            <summary>
+            Adds timing count for FindByDateOfBirth method.
+            </summary>
+            <param name="dateOfBirth">Given date of birth.</param>
+            <returns>The array of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.FindByFirstName(System.String)">
+            <summary>
+            Adds timing count for FindByFirstName method.
+            </summary>
+            <param name="firstName">Given first name.</param>
+            <returns>The array of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.FindByLastName(System.String)">
+            <summary>
+            Adds timing count for FindByLastName method.
+            </summary>
+            <param name="lastName">Given last name.</param>
+            <returns>The array of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.GetRecords">
+            <summary>
+            Adds timing count for GetRecords method.
+            </summary>
+            <returns>The array of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.GetStat">
+            <summary>
+            Adds timing count for GetStat method.
+            </summary>
+            <returns>The number of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.MakeSnapshot">
+            <summary>
+            Adds timing count for MakeSnapshot method.
+            </summary>
+            <returns>>An instance of the IFileCabinetServiceSnapshot class.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.PurgeRecords">
+            <summary>
+            Adds timing count for Purge method.
+            </summary>
+            <returns>count removed elements.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.RemoveRecord(System.Int32)">
+            <summary>
+            Adds timing count for RemoveRecord method.
+            </summary>
+            <param name="id">Id of record to remove.</param>
+            <returns>Id of removed record if succeeded, -1 otherwise.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>
+            Adds timing count for Restore method.
+            </summary>
+            <param name="snapshot">A snapshot of records to restore.</param>
         </member>
         <member name="T:FileCabinetApp.DefaultRecordPrinter">
             <summary>
@@ -818,6 +1070,7 @@
             This method is for changes records.
             </summary>
             <param name="parametrs">It is object parametrs.</param>
+            <returns>id record.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.FindByFirstName(System.String)">
             <summary>
@@ -900,6 +1153,65 @@
             </summary>
             <param name="streamReader">Represents characters read.</param>
             <returns>List records.</returns>
+        </member>
+        <member name="T:FileCabinetApp.StringConstraints">
+            <summary>
+            Class for complex Json deserialization.
+            String constraints.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.StringConstraints.MinLength">
+            <summary>
+            Gets or sets minimum length of the name.
+            </summary>
+            <value>Minimum length of the name.</value>
+        </member>
+        <member name="P:FileCabinetApp.StringConstraints.MaxLength">
+            <summary>
+            Gets or sets maximum length of the name.
+            </summary>
+            <value>Maximum length of the name.</value>
+        </member>
+        <member name="T:FileCabinetApp.ValidationRuleset">
+            <summary>
+            Class for complex Json deserialization. Validation ruleset records properties.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.ValidationRuleset.FirstName">
+            <summary>
+            Gets or sets first name validation ruleset.
+            </summary>
+            <value>First name validation ruleset.</value>
+        </member>
+        <member name="P:FileCabinetApp.ValidationRuleset.LastName">
+            <summary>
+            Gets or sets last name validation ruleset.
+            </summary>
+            <value>Last name validation ruleset.</value>
+        </member>
+        <member name="P:FileCabinetApp.ValidationRuleset.DateOfBirth">
+            <summary>
+            Gets or sets date of birth validation ruleset.
+            </summary>
+            <value>Date of birth validation ruleset.</value>
+        </member>
+        <member name="P:FileCabinetApp.ValidationRuleset.CabinetNumber">
+            <summary>
+            Gets or sets cabinet number validation ruleset.
+            </summary>
+            <value>Cabinet number validation ruleset.</value>
+        </member>
+        <member name="P:FileCabinetApp.ValidationRuleset.Category">
+            <summary>
+            Gets or sets category validation ruleset.
+            </summary>
+            <value>Category validation ruleset.</value>
+        </member>
+        <member name="P:FileCabinetApp.ValidationRuleset.Salary">
+            <summary>
+            Gets or sets salary validation ruleset.
+            </summary>
+            <value>Salary validation ruleset.</value>
         </member>
         <member name="T:FileCabinetApp.Validators.CabinetNumberValidator">
             <summary>

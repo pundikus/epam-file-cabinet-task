@@ -40,7 +40,7 @@ namespace FileCabinetApp.Handlers
             }
         }
 
-        private void Edit(string parameters)
+        private int Edit(string parameters)
         {
             var parsedId = int.TryParse(parameters, out int id);
             if (!parsedId)
@@ -53,7 +53,7 @@ namespace FileCabinetApp.Handlers
             if (!listRecords.Any(x => x.Id == id))
             {
                 Console.WriteLine($"#{id} record is not found.");
-                return;
+                return id;
             }
 
             Console.Write("First name: ");
@@ -83,10 +83,12 @@ namespace FileCabinetApp.Handlers
             catch (ArgumentException ex)
             {
                 Console.WriteLine(ex.Message);
-                return;
+                return id;
             }
 
             Console.WriteLine($"Record #{id} is updated.");
+
+            return id;
         }
     }
 }

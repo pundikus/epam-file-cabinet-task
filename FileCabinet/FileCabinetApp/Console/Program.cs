@@ -35,6 +35,8 @@ namespace FileCabinetApp
 
         private static bool isRunning = true;
         private static bool isStorageFile;
+        private static bool stopwatchAdded;
+        private static bool loggerAdded;
 
         /// <summary>
         /// Gets or sets a value indicating whether gets or sets.
@@ -53,6 +55,19 @@ namespace FileCabinetApp
             if (args != null && args.Length > 0)
             {
                 CheckModeValidation(args, FullParameterValid, CustomParametrs, FullParameterStor, AbbreviatedParameterStor, FileParameters, AbbreviatedParameterValid);
+            }
+
+            StreamWriter logWriter = null;
+
+            if (stopwatchAdded)
+            {
+                fileCabinetService = new ServiceMeter(fileCabinetService);
+            }
+
+            if (loggerAdded)
+            {
+                logWriter = new StreamWriter("logs.txt", true, System.Text.Encoding.UTF8);
+                fileCabinetService = new ServiceLogger(fileCabinetService, logWriter);
             }
 
             var commandHandler = CreateCommandHandlers();
@@ -77,6 +92,11 @@ namespace FileCabinetApp
                 commandHandler.Handle(new AppCommandRequest(command, parameters));
             }
             while (isRunning);
+
+            if (loggerAdded == true)
+            {
+                logWriter.Close();
+            }
         }
 
         private static void ChangeState(bool value)
@@ -129,10 +149,12 @@ namespace FileCabinetApp
                     validator = ValidatorExtensions.CreateСustom(new ValidatorBuilder());
 
                     CheckStorageInput(fullParameterStor, abbreviatedParameterStor, args, fileParameters);
+                    CheckStopWatchAndLogger(args);
                 }
                 else
                 {
                     CheckStorageInput(fullParameterStor, abbreviatedParameterStor, args, fileParameters);
+                    CheckStopWatchAndLogger(args);
                 }
             }
             else if (args[ModeParameterIndex].Contains(abbreviatedParameterValid, StringComparison.InvariantCulture))
@@ -143,15 +165,18 @@ namespace FileCabinetApp
                     validator = ValidatorExtensions.CreateСustom(new ValidatorBuilder());
 
                     CheckStorageInput(fullParameterStor, abbreviatedParameterStor, args, fileParameters);
+                    CheckStopWatchAndLogger(args);
                 }
                 else
                 {
                     CheckStorageInput(fullParameterStor, abbreviatedParameterStor, args, fileParameters);
+                    CheckStopWatchAndLogger(args);
                 }
             }
             else
             {
                 CheckStorageInput(fullParameterStor, abbreviatedParameterStor, args, fileParameters);
+                CheckStopWatchAndLogger(args);
             }
         }
 
@@ -225,6 +250,18 @@ namespace FileCabinetApp
             catch (IndexOutOfRangeException)
             {
                 fileCabinetService = new FileCabinetMemoryService(validator);
+            }
+        }
+
+        private static void CheckStopWatchAndLogger(string[] args)
+        {
+            if (args[2] == "--use-stopwatch")
+            {
+                stopwatchAdded = true;
+            }
+            else if (args[2] == "--use-logger")
+            {
+                loggerAdded = true;
             }
         }
 
