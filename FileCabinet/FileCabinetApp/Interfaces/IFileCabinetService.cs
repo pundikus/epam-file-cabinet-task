@@ -44,7 +44,6 @@ namespace FileCabinetApp
         /// This method load records from file.
         /// </summary>
         /// <param name="snapshot">It is copy data.</param>
-        /// <returns>restore record.</returns>
         void Restore(FileCabinetServiceSnapshot snapshot);
 
         /// <summary>

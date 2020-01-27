@@ -36,6 +36,7 @@ namespace FileCabinetApp
         private static bool isRunning = true;
         private static bool isStorageFile;
         private static bool stopwatchAdded;
+        private static bool loggerAdded;
 
         /// <summary>
         /// Gets or sets a value indicating whether gets or sets.
@@ -56,11 +57,22 @@ namespace FileCabinetApp
                 CheckModeValidation(args, FullParameterValid, CustomParametrs, FullParameterStor, AbbreviatedParameterStor, FileParameters, AbbreviatedParameterValid);
             }
 
+            StreamWriter logWriter = null;
+
+            if (stopwatchAdded)
+            {
+                fileCabinetService = new ServiceMeter(fileCabinetService);
+            }
+
+            if (loggerAdded)
+            {
+                logWriter = new StreamWriter("logs.txt", true, System.Text.Encoding.UTF8);
+                fileCabinetService = new ServiceLogger(fileCabinetService, logWriter);
+            }
+
             var commandHandler = CreateCommandHandlers();
 
             WriteMessageSettings();
-
-
 
             do
             {
@@ -80,6 +92,11 @@ namespace FileCabinetApp
                 commandHandler.Handle(new AppCommandRequest(command, parameters));
             }
             while (isRunning);
+
+            if (loggerAdded == true)
+            {
+                logWriter.Close();
+            }
         }
 
         private static void ChangeState(bool value)
@@ -89,11 +106,6 @@ namespace FileCabinetApp
 
         private static ICommandHandler CreateCommandHandlers()
         {
-            if (stopwatchAdded)
-            {
-                fileCabinetService = new ServiceMeter(fileCabinetService);
-            }
-
             var recordPrinter = new DefaultRecordPrinter();
             var createHandler = new CreateCommandHandler(fileCabinetService);
             var editHandler = new EditCommandHandler(fileCabinetService);
@@ -137,12 +149,12 @@ namespace FileCabinetApp
                     validator = ValidatorExtensions.CreateСustom(new ValidatorBuilder());
 
                     CheckStorageInput(fullParameterStor, abbreviatedParameterStor, args, fileParameters);
-                    CheckStopWatch(args);
+                    CheckStopWatchAndLogger(args);
                 }
                 else
                 {
                     CheckStorageInput(fullParameterStor, abbreviatedParameterStor, args, fileParameters);
-                    CheckStopWatch(args);
+                    CheckStopWatchAndLogger(args);
                 }
             }
             else if (args[ModeParameterIndex].Contains(abbreviatedParameterValid, StringComparison.InvariantCulture))
@@ -153,18 +165,18 @@ namespace FileCabinetApp
                     validator = ValidatorExtensions.CreateСustom(new ValidatorBuilder());
 
                     CheckStorageInput(fullParameterStor, abbreviatedParameterStor, args, fileParameters);
-                    CheckStopWatch(args);
+                    CheckStopWatchAndLogger(args);
                 }
                 else
                 {
                     CheckStorageInput(fullParameterStor, abbreviatedParameterStor, args, fileParameters);
-                    CheckStopWatch(args);
+                    CheckStopWatchAndLogger(args);
                 }
             }
             else
             {
                 CheckStorageInput(fullParameterStor, abbreviatedParameterStor, args, fileParameters);
-                CheckStopWatch(args);
+                CheckStopWatchAndLogger(args);
             }
         }
 
@@ -241,11 +253,15 @@ namespace FileCabinetApp
             }
         }
 
-        private static void CheckStopWatch(string[] args)
+        private static void CheckStopWatchAndLogger(string[] args)
         {
             if (args[2] == "--use-stopwatch")
             {
                 stopwatchAdded = true;
+            }
+            else if (args[2] == "--use-logger")
+            {
+                loggerAdded = true;
             }
         }
 
@@ -273,11 +289,6 @@ namespace FileCabinetApp
 
             Console.WriteLine(HintMessage);
             Console.WriteLine();
-        }
-
-        private static void AddStopwatch(string args)
-        {
-            stopwatchAdded = true;
         }
     }
 }
