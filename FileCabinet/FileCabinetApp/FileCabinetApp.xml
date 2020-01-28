@@ -558,6 +558,243 @@
             </summary>
             <value>Maximum possible age.</value>
         </member>
+        <member name="T:FileCabinetApp.DeleteCommandHandler">
+            <summary>
+            Handler for the user's 'delete' command.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.DeleteCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.DeleteCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService">Service to create record in.</param>
+        </member>
+        <member name="M:FileCabinetApp.DeleteCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
+            <summary>
+            Handles the request.
+            </summary>
+            <param name="request">Request to handle.</param>
+            <returns>The object back, or null otherwise.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Helpers.BytesHelper">
+            <summary>
+            Class for helping working with bytes.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.BytesHelper.MakeStringOffset(System.String,System.Int32)">
+            <summary>
+            Makes an offset for the string.
+            </summary>
+            <param name="value">String to make offset to.</param>
+            <param name="offset">Overall number of bytes.</param>
+            <returns>String with offset in bytes.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.BytesHelper.RemoveOffset(System.String)">
+            <summary>
+            Removes the offset from the string.
+            </summary>
+            <param name="value">String to remove offset from.</param>
+            <returns>String without offset.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.BytesHelper.DecimalToBytes(System.Decimal)">
+            <summary>
+            Converts decimal value to array of bytes.
+            </summary>
+            <param name="value">Value to convert.</param>
+            <returns>Array of bytes.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.BytesHelper.BytesToDecimal(System.Byte[])">
+            <summary>
+            Converts array of bytes to decimal value.
+            </summary>
+            <param name="bytes">Bytes to convert.</param>
+            <returns>Decimal value.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Helpers.FileCabinetApp.FileSystemRecordEnumerator">
+            <summary>
+            Enumerator for iterating through records.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetApp.FileSystemRecordEnumerator.#ctor(FileCabinetApp.Helpers.FileCabinetFilesystemService,System.Collections.ObjectModel.ReadOnlyCollection{FileCabinetApp.FileCabinetRecord})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Helpers.FileCabinetApp.FileSystemRecordEnumerator"/> class.
+            </summary>
+            <param name="service">Service whose records to iterate through.</param>
+            <param name="records">Records to iterate through.</param>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetApp.FileSystemRecordEnumerator.GetEnumerator">
+            <summary>
+            Iterator to iterate through the records.
+            </summary>
+            <returns>Single record.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetApp.FileSystemRecordEnumerator.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Iterator to iterate through the records.
+            </summary>
+            <returns>Single record.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Helpers.FileCabinetFilesystemService">
+            <summary>
+            Class for working with list of users.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.#ctor(System.IO.FileStream,FileCabinetApp.Interfaces.Validators.IRecordValidator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Helpers.FileCabinetFilesystemService"/> class.
+            </summary>
+            <param name="fileStream">FileStream with opened binary file.</param>
+            <param name="validator">Specific validator.</param>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.Finalize">
+            <summary>
+            Finalizes an instance of the <see cref="T:FileCabinetApp.Helpers.FileCabinetFilesystemService"/> class.
+            Closes the stream.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Creates a new record.
+            </summary>
+            <param name="record">User's info.</param>
+            <returns>User's id in the users' list.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.AddRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Adds record to the list of records.
+            </summary>
+            <param name="record">Record to add.</param>
+            <returns>Record's id.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.EditRecord(FileCabinetApp.FileCabinetRecord)">
+            <summary>
+            Edits the existing record.
+            </summary>
+            <param name="record">Record to edit.</param>
+            <returns>Whether operation succeeded.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.RemoveRecord(System.Int32)">
+            <summary>
+            Removes a record from the list by given id.
+            </summary>
+            <param name="id">Id to remove record by.</param>
+            <returns>Id of removed record if succeeded, -1 otherwise.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.Purge">
+            <summary>
+            Purges the list of records.
+            </summary>
+            <returns>The number of purged records,
+            -1 if not all the records were purged.
+            </returns>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.FindByFirstName(System.String)">
+            <summary>
+            Searches the records by first name.
+            </summary>
+            <param name="firstName">Given first name.</param>
+            <returns>The array of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.FindByLastName(System.String)">
+            <summary>
+            Searches the records by last name.
+            </summary>
+            <param name="lastName">Given last name.</param>
+            <returns>The array of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.FindByDateOfBirth(System.String)">
+            <summary>
+            Searches the records by date of birth.
+            </summary>
+            <param name="dateOfBirth">Given date of birth.</param>
+            <returns>The array of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.GetRecords">
+            <summary>
+            Gets all the records.
+            </summary>
+            <returns>The array of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.GetStat">
+            <summary>
+            Returns the number of records in the list.
+            </summary>
+            <returns>The number of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.GetDeleted">
+            <summary>
+            Returns the number of deleted records in the list.
+            </summary>
+            <returns>The number of deleted records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.GetIds">
+            <summary>
+            Returns list of ids in the list.
+            </summary>
+            <returns>List of ids in the list.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.GetValidator">
+            <summary>
+            Gets the validator.
+            </summary>
+            <returns>Validator.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.MakeSnapshot">
+            <summary>
+            Makes a snapshot of records in the concrete moment.
+            </summary>
+            <returns>An instance of the IFileCabinetServiceSnapshot class.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>
+            Restores the records from the snapshot.
+            </summary>
+            <param name="snapshot">A snapshot to restore.</param>
+            <returns>Number of imported records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.ReadRecord(System.Int32)">
+            <summary>
+            Reads the record from the file.
+            </summary>
+            <param name="offset">Offset to read from.</param>
+            <returns></returns>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.WriteRecord(FileCabinetApp.FileCabinetRecord,System.Int32)">
+            <summary>
+            Writes a record to the file.
+            </summary>
+            <param name="record">A record to write.</param>
+            <param name="offset">Offset to start from.</param>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.PurgeIds">
+            <summary>
+            Removes duplicates from the ids list.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.UpdateDictionary``1(System.Collections.Generic.SortedList{``0,System.Collections.Generic.List{System.Int32}},``0,System.Int32)">
+            <summary>
+            Updates a single dictionary containing offset.
+            </summary>
+            <typeparam name="T">Specifies the type of property.</typeparam>
+            <param name="dictionary">Dictionary to update.</param>
+            <param name="value">Key to add or find by.</param>
+            <param name="offset">Offset to add.</param>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.UpdateOffsets(FileCabinetApp.FileCabinetRecord,System.Int32)">
+            <summary>
+            Updates all the dictionaries containing offsets.
+            </summary>
+            <param name="record">Record to add properties from.</param>
+            <param name="recordOffset">Record's offset in the file.</param>
+        </member>
+        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.DeleteOffsets(FileCabinetApp.FileCabinetRecord,System.Int32)">
+            <summary>
+            Deletes from all the dictionaries containing offsets.
+            </summary>
+            <param name="record">Record to delelte properties from.</param>
+            <param name="recordOffset">Record's offset in the file.</param>
+        </member>
         <member name="T:FileCabinetApp.FileHelper">
             <summary>
             Class for FileCabinetFileSystemService.
@@ -597,81 +834,6 @@
             </summary>
             <param name="binaryReader">inputs stream.</param>
             <returns>records in byte Array.</returns>
-        </member>
-        <member name="T:FileCabinetApp.Helpers.FileSystemRecordEnumeratorCollection">
-            <summary>
-            Enumerator for iterating through records.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Helpers.FileSystemRecordEnumeratorCollection.#ctor(FileCabinetApp.Helpers.FileCabinetFilesystemService,System.Collections.ObjectModel.ReadOnlyCollection{FileCabinetApp.FileCabinetRecord})">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.Helpers.FileSystemRecordEnumeratorCollection"/> class.
-            </summary>
-            <param name="service">Service whose records to iterate through.</param>
-            <param name="records">Records to iterate through.</param>
-        </member>
-        <member name="M:FileCabinetApp.Helpers.FileSystemRecordEnumeratorCollection.GetEnumerator">
-            <summary>
-            
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:FileCabinetApp.Helpers.FileSystemRecordEnumeratorCollection.System#Collections#IEnumerable#GetEnumerator">
-            <summary>
-            
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="T:FileCabinetApp.Helpers.FileCabinetFilesystemService">
-            <summary>
-            This class intended for file system service.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.#ctor(System.IO.FileStream)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.Helpers.FileCabinetFilesystemService"/> class.
-            </summary>
-            <param name="fileStream">Providers for file operation.</param>
-        </member>
-        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.CreateRecord(FileCabinetApp.FileCabinetRecord)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.EditRecord(FileCabinetApp.FileCabinetRecord)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.FindByDateOfBirth(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.FindByFirstName(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.FindByLastName(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.GetRecords">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.GetStat">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.MakeSnapshot">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.RemoveRecord(System.Int32)">
-            <summary>
-            This Method marks the entry as deleted.
-            </summary>
-            <param name="removedId">It is Id removed record.</param>
-            <returns>Id marks record.</returns>
-        </member>
-        <member name="M:FileCabinetApp.Helpers.FileCabinetFilesystemService.PurgeRecords">
-            <summary>
-            This Method flush marks records.
-            </summary>
-            <returns>Count removed records.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecordCsvReader">
             <summary>
@@ -741,6 +903,24 @@
             </summary>
             <param name="records">It is records from our list.</param>
         </member>
+        <member name="T:FileCabinetApp.InsertCommandHandler">
+            <summary>
+            Handler for the user's 'insert' command.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.InsertCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.InsertCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService">Service to get stats from.</param>
+        </member>
+        <member name="M:FileCabinetApp.InsertCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
+            <summary>
+            Handles the request.
+            </summary>
+            <param name="request">Request to handle.</param>
+            <returns>The object back, or null otherwise.</returns>
+        </member>
         <member name="T:FileCabinetApp.ICommandHandler">
             <summary>
             This interface sets behavor.
@@ -765,7 +945,7 @@
             This Interface describes the service.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.PurgeRecords">
+        <member name="M:FileCabinetApp.IFileCabinetService.Purge">
             <summary>
             This Method flush marks record.
             </summary>
@@ -937,7 +1117,7 @@
             </summary>
             <returns>An instance of the IFileCabinetServiceSnapshot class.</returns>
         </member>
-        <member name="M:FileCabinetApp.ServiceLogger.PurgeRecords">
+        <member name="M:FileCabinetApp.ServiceLogger.Purge">
             <summary>
             Add logs about Purge method in the textfile.
             </summary>
@@ -1020,7 +1200,7 @@
             </summary>
             <returns>>An instance of the IFileCabinetServiceSnapshot class.</returns>
         </member>
-        <member name="M:FileCabinetApp.ServiceMeter.PurgeRecords">
+        <member name="M:FileCabinetApp.ServiceMeter.Purge">
             <summary>
             Adds timing count for Purge method.
             </summary>
@@ -1133,7 +1313,10 @@
             <param name="id">It is Id record.</param>
             <returns>Removed record.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.PurgeRecords">
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.Purge">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.AddRecord(FileCabinetApp.FileCabinetRecord)">
             <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.FileCabinetServiceSnapshot">
@@ -1198,6 +1381,24 @@
             Gets or sets maximum length of the name.
             </summary>
             <value>Maximum length of the name.</value>
+        </member>
+        <member name="T:FileCabinetApp.UpdateCommandHandler">
+            <summary>
+            Handler for the user's 'update' command.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.UpdateCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.UpdateCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService">Service to create record in.</param>
+        </member>
+        <member name="M:FileCabinetApp.UpdateCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
+            <summary>
+            Handles the request.
+            </summary>
+            <param name="request">Request to handle.</param>
+            <returns>The object back, or null otherwise.</returns>
         </member>
         <member name="T:FileCabinetApp.ValidationRuleset">
             <summary>

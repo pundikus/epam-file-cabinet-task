@@ -77,14 +77,14 @@ namespace FileCabinetApp.Handlers
 
             if (criterion.Equals(CriterionFirstName, StringComparison.InvariantCultureIgnoreCase))
             {
-                string firstName = inputValue.Trim('"').ToUpperInvariant();
+                string firstName = inputValue.Trim('"');//.ToUpperInvariant();
 
                 result = this.Service.FindByFirstName(firstName);
             }
 
             if (criterion.Equals(CriterionLastName, StringComparison.InvariantCultureIgnoreCase))
             {
-                string lastName = inputValue.Trim('"').ToUpperInvariant();
+                string lastName = inputValue.Trim('"');//.ToUpperInvariant();
 
                 result = this.Service.FindByLastName(lastName);
             }

@@ -24,6 +24,11 @@ namespace FileCabinetApp
             this.service = service;
         }
 
+        public int AddRecord(FileCabinetRecord record)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Adds timing count for create method.
         /// </summary>
@@ -145,10 +150,10 @@ namespace FileCabinetApp
         /// Adds timing count for Purge method.
         /// </summary>
         /// <returns>count removed elements.</returns>
-        public int PurgeRecords()
+        public int Purge()
         {
             this.watch = Stopwatch.StartNew();
-            int count = this.service.PurgeRecords();
+            int count = this.service.Purge();
             this.watch.Stop();
             Console.WriteLine($"RemoveRecord method execution duration is " + this.watch.ElapsedTicks + " ticks.");
 
@@ -174,12 +179,14 @@ namespace FileCabinetApp
         /// Adds timing count for Restore method.
         /// </summary>
         /// <param name="snapshot">A snapshot of records to restore.</param>
-        public void Restore(FileCabinetServiceSnapshot snapshot)
+        public int Restore(FileCabinetServiceSnapshot snapshot)
         {
             this.watch = Stopwatch.StartNew();
             this.service.Restore(snapshot);
             this.watch.Stop();
             Console.WriteLine($"Restore method execution duration is " + this.watch.ElapsedTicks + " ticks.");
+
+            return snapshot.Records.Count;
         }
     }
 }
