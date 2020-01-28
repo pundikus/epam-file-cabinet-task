@@ -9,7 +9,7 @@ namespace FileCabinetApp
     /// This class storage parametrs.
     /// </summary>
     [Serializable]
-    public class FileCabinetRecord
+    public class FileCabinetRecord : ICloneable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetRecord"/> class.
@@ -120,5 +120,19 @@ namespace FileCabinetApp
         /// </value>
         [XmlElement]
         public char Category { get; set; }
+
+        public object Clone()
+        {
+            return new FileCabinetRecord
+            {
+                Id = this.Id,
+                FirstName = this.FirstName,
+                LastName = this.LastName,
+                DateOfBirth = this.DateOfBirth,
+                CabinetNumber = this.CabinetNumber,
+                Category = this.Category,
+                Salary = this.Salary,
+            };
+        }
     }
 }

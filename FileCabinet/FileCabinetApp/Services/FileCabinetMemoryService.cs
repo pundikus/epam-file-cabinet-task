@@ -18,6 +18,7 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
 
         private IRecordValidator validator;
+        private List<int> idList = new List<int>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetMemoryService"/> class.
@@ -196,7 +197,7 @@ namespace FileCabinetApp
         /// This method load records from file.
         /// </summary>
         /// <param name="snapshot">It is copy data.</param>
-        public void Restore(FileCabinetServiceSnapshot snapshot)
+        public int Restore(FileCabinetServiceSnapshot snapshot)
         {
             if (snapshot == null)
             {
@@ -240,6 +241,8 @@ namespace FileCabinetApp
                     }
                 }
             }
+
+            return this.list.Count;
         }
 
         /// <summary>
@@ -262,7 +265,7 @@ namespace FileCabinetApp
         }
 
         /// <inheritdoc/>
-        public int PurgeRecords()
+        public int Purge()
         {
             throw new NotImplementedException();
         }
@@ -344,6 +347,34 @@ namespace FileCabinetApp
             AddRecordInFirstNameDictionary(this.firstNameDictionary, record);
             AddRecordInLastNameDictionary(this.lastNameDictionary, record);
             AddRecordInDateofBirthDictionary(this.dateOfBirthDictionary, record);
+        }
+
+        /// <inheritdoc/>
+        public int AddRecord(FileCabinetRecord record)
+        {
+            if (record == null)
+            {
+                throw new ArgumentNullException($"Record object is invalid.");
+            }
+
+            if (this.idList.Contains(record.Id))
+            {
+                int indexOfPrev = this.list.FindIndex(rec => rec.Id.Equals(record.Id));
+
+                this.firstNameDictionary[this.list[indexOfPrev].FirstName.ToLower()].Remove(this.list[indexOfPrev]);
+                this.lastNameDictionary[this.list[indexOfPrev].LastName.ToLower()].Remove(this.list[indexOfPrev]);
+                this.dateOfBirthDictionary[this.list[indexOfPrev].DateOfBirth.ToString("yyyy-MMM-d", CultureInfo.InvariantCulture).ToLower()].Remove(this.list[indexOfPrev]);
+                this.list[indexOfPrev] = record;
+            }
+            else
+            {
+                this.list.Add(record);
+                this.idList.Add(record.Id);
+            }
+
+            this.AddRecordInAllDictionary(record);
+
+            return record.Id;
         }
     }
 }

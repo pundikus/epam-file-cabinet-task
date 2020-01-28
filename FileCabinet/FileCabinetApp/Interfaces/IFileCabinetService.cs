@@ -13,7 +13,7 @@ namespace FileCabinetApp
         /// This Method flush marks record.
         /// </summary>
         /// <returns>Count removed records.</returns>
-        public int PurgeRecords();
+        public int Purge();
 
         /// <summary>
         /// This Method remove record.
@@ -46,7 +46,7 @@ namespace FileCabinetApp
         /// This method load records from file.
         /// </summary>
         /// <param name="snapshot">It is copy data.</param>
-        public void Restore(FileCabinetServiceSnapshot snapshot);
+        public int Restore(FileCabinetServiceSnapshot snapshot);
 
         /// <summary>
         /// This Method find records by Date of Birth users.
@@ -80,5 +80,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <returns>count records.</returns>
         public int GetStat();
+
+        public int AddRecord(FileCabinetRecord record);
     }
 }

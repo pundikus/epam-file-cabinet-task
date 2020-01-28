@@ -27,6 +27,11 @@ namespace FileCabinetApp
             this.writer = writer;
         }
 
+        public int AddRecord(FileCabinetRecord record)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Adds logs about CreateRecord method in the textfile.
         /// </summary>
@@ -237,12 +242,12 @@ namespace FileCabinetApp
         /// Add logs about Purge method in the textfile.
         /// </summary>
         /// <returns>count removed records.</returns>
-        public int PurgeRecords()
+        public int Purge()
         {
             string toWrite = DateTime.Now.ToString("MM/dd/yyyy hh:mm", CultureInfo.InvariantCulture) + " Calling Remove()\n";
             this.writer.Write(toWrite);
 
-            int count = this.service.PurgeRecords();
+            int count = this.service.Purge();
 
             toWrite = DateTime.Now.ToString("MM/dd/yyyy hh:mm", CultureInfo.InvariantCulture) + " Remove() removed " + count + "records \n";
             this.writer.Write(toWrite);
@@ -272,7 +277,7 @@ namespace FileCabinetApp
         /// Adds logs about Restore method in the textfile.
         /// </summary>
         /// <param name="snapshot">Snapshot to restore by.</param>
-        public void Restore(FileCabinetServiceSnapshot snapshot)
+        public int Restore(FileCabinetServiceSnapshot snapshot)
         {
             if (snapshot == null)
             {
@@ -286,6 +291,8 @@ namespace FileCabinetApp
 
             toWrite = DateTime.Now.ToString("MM/dd/yyyy hh:mm", CultureInfo.InvariantCulture) + " Restore() imported " + snapshot.Records.Count + "records\n";
             this.writer.Write(toWrite);
+
+            return snapshot.Records.Count;
         }
     }
 }

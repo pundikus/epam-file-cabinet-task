@@ -52,7 +52,7 @@ namespace FileCabinetApp.Handlers
             int countRecords = this.Service.GetRecords().Count;
             int countRemovedRecords;
 
-            countRemovedRecords = this.Service.PurgeRecords();
+            countRemovedRecords = this.Service.Purge();
 
             CountRemovedRecord += countRemovedRecords;
 

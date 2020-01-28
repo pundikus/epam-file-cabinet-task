@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using FileCabinetApp.Handlers;
 using FileCabinetApp.Helpers;
 using FileCabinetApp.Interfaces.Validators;
@@ -30,6 +33,8 @@ namespace FileCabinetApp
         private const int ModeParameterValue = 1;
         private const int StorageParameterIndex = 2;
 
+        private static List<string> commandNames = new List<string>();
+
         private static IFileCabinetService fileCabinetService;
         private static IRecordValidator validator = ValidatorExtensions.CreateDefault(new ValidatorBuilder());
 
@@ -52,6 +57,16 @@ namespace FileCabinetApp
         /// <param name="args">Parameters command-line.</param>
         public static void Main(string[] args)
         {
+            var assemblyName = "FileCabinetApp";
+            var nameSpace = "FileCabinetApp.CommandHandlers";
+            var asm = Assembly.Load(assemblyName);
+            var handlers = asm.GetTypes().Where(p => p.Namespace == nameSpace && p.Name.EndsWith("CommandHandler") && !p.IsInterface).ToList();
+            foreach (var handler in handlers)
+            {
+                int indexOfCommandWord = handler.Name.IndexOf("CommandHandler");
+                commandNames.Add(handler.Name.Substring(0, indexOfCommandWord).ToLower());
+            }
+
             if (args != null && args.Length > 0)
             {
                 CheckModeValidation(args, FullParameterValid, CustomParametrs, FullParameterStor, AbbreviatedParameterStor, FileParameters, AbbreviatedParameterValid);
@@ -89,7 +104,27 @@ namespace FileCabinetApp
 
                 const int parametersIndex = 1;
                 var parameters = inputs.Length > 1 ? inputs[parametersIndex] : string.Empty;
-                commandHandler.Handle(new AppCommandRequest(command, parameters));
+                // commandHandler.Handle(new AppCommandRequest(command, parameters));
+
+                var wasSucceed = commandHandler.Handle(new AppCommandRequest(command, parameters));
+                if (wasSucceed == null)
+                {
+                    Console.WriteLine("\'" + command + "\' is not a valid command. See 'help'.");
+                    List<string> similarCommands = CommandHints(command);
+                    if (similarCommands.Count == 1)
+                    {
+                        Console.WriteLine("The most similar command is ");
+                        Console.WriteLine("\t\t" + similarCommands[0]);
+                    }
+                    else if (similarCommands.Count > 1)
+                    {
+                        Console.WriteLine("The most similar commands are ");
+                        foreach (var com in similarCommands)
+                        {
+                            Console.WriteLine("\t\t" + com);
+                        }
+                    }
+                }
             }
             while (isRunning);
 
@@ -114,6 +149,7 @@ namespace FileCabinetApp
             var statHandler = new StatCommandHandler(fileCabinetService);
             var exportHandler = new ExportCommandHandler(fileCabinetService);
             var importHandler = new ImportCommandHandler(fileCabinetService);
+            var insertHandler = new InsertCommandHandler(fileCabinetService);
             var removeHandler = new RemoveCommandHandler(fileCabinetService);
             var purgeHandler = new PurgeCommandHandler(fileCabinetService);
             var helpHandler = new HelpCommandHandler();
@@ -121,6 +157,7 @@ namespace FileCabinetApp
 
             createHandler.SetNext(editHandler)
                          .SetNext(removeHandler)
+                         .SetNext(insertHandler)
                          .SetNext(findHandler)
                          .SetNext(listHandler)
                          .SetNext(statHandler)
@@ -131,6 +168,76 @@ namespace FileCabinetApp
                          .SetNext(exitHandler);
 
             return createHandler;
+        }
+
+        private static List<string> CommandHints(string command)
+        {
+            List<string> similarCommands = new List<string>();
+            int averageLength = 5;
+
+            int toMatch = command.Length <= averageLength ? command.Length : command.Length / 2;
+
+            List<char> letters = new List<char>();
+            char[] startsWith = new char[toMatch];
+            for (int i = 0; i < toMatch; i++)
+            {
+                startsWith[i] = command[i];
+            }
+
+            for (int i = 0; i < commandNames.Count; i++)
+            {
+                int toCheck = toMatch < commandNames[i].Length ? toMatch : commandNames[i].Length;
+                if (new string(startsWith) == commandNames[i].Substring(0, toCheck))
+                {
+                    if (!similarCommands.Contains(commandNames[i]))
+                    {
+                        similarCommands.Add(commandNames[i]);
+                    }
+                }
+            }
+
+            foreach (char c in command)
+            {
+                if (!letters.Contains(c))
+                {
+                    letters.Add(c);
+                }
+            }
+
+            int matchedChars = 0;
+            List<char> tempLetters = new List<char>();
+            foreach (var com in commandNames)
+            {
+                foreach (char c in letters)
+                {
+                    tempLetters.Add(c);
+                }
+
+                foreach (char c in com)
+                {
+                    if (tempLetters.Contains(c))
+                    {
+                        matchedChars++;
+                        if (tempLetters.Contains(c))
+                        {
+                            tempLetters.Remove(c);
+                        }
+                    }
+                }
+
+                if (matchedChars >= toMatch)
+                {
+                    if (!similarCommands.Contains(com))
+                    {
+                        similarCommands.Add(com);
+                    }
+                }
+
+                matchedChars = 0;
+                tempLetters.Clear();
+            }
+
+            return similarCommands;
         }
 
         private static void CheckModeValidation(string[] args, string fullParameterValid, string customParametrs, string fullParameterStor, string abbreviatedParameterStor, string fileParameters, string abbreviatedParameterValid)
@@ -201,7 +308,7 @@ namespace FileCabinetApp
                             fileStream = File.Open(FileName, FileMode.Open);
                         }
 
-                        fileCabinetService = new FileCabinetFilesystemService(fileStream);
+                        fileCabinetService = new FileCabinetFilesystemService(fileStream, validator);
                     }
                     else
                     {
@@ -230,7 +337,7 @@ namespace FileCabinetApp
                             fileStream = File.Create(FileName);
                         }
 
-                        fileCabinetService = new FileCabinetFilesystemService(fileStream);
+                        fileCabinetService = new FileCabinetFilesystemService(fileStream, validator);
                     }
                     else
                     {
