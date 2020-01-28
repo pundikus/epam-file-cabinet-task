@@ -243,6 +243,7 @@ namespace FileCabinetApp.Helpers
             }
         }
 
+
         /// <summary>
         /// Searches the records by first name.
         /// </summary>

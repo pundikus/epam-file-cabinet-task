@@ -17,6 +17,10 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
 
+        private Dictionary<string, IEnumerable<FileCabinetRecord>> firstNameCache = new Dictionary<string, IEnumerable<FileCabinetRecord>>();
+        private Dictionary<string, IEnumerable<FileCabinetRecord>> lastNameCache = new Dictionary<string, IEnumerable<FileCabinetRecord>>();
+        private Dictionary<string, IEnumerable<FileCabinetRecord>> dateOfBirthCache = new Dictionary<string, IEnumerable<FileCabinetRecord>>();
+
         private IRecordValidator validator;
         private List<int> idList = new List<int>();
 
@@ -137,19 +141,19 @@ namespace FileCabinetApp
         /// <returns>an array with entries by Firstname.</returns>
         public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
         {
-            if (firstName == null)
+            IEnumerable<FileCabinetRecord> foundRecords;
+
+            if (this.firstNameCache.ContainsKey(firstName))
             {
-                throw new ArgumentNullException(nameof(firstName));
+                foundRecords = this.firstNameCache[firstName];
+            }
+            else
+            {
+                foundRecords = FindByKey(firstName, this.firstNameDictionary);
+                this.firstNameCache.Add(firstName, foundRecords);
             }
 
-            if (firstName.Length < 2 || firstName.Length > 60)
-            {
-                throw new ArgumentException($"{nameof(firstName)} not correct.");
-            }
-
-            IEnumerable<FileCabinetRecord> readOnlyList = new ReadOnlyCollection<FileCabinetRecord>(this.firstNameDictionary[firstName]);
-
-            return readOnlyList;
+            return foundRecords;
         }
 
         /// <summary>
@@ -159,19 +163,19 @@ namespace FileCabinetApp
         /// <returns>an array with entries by Lastname.</returns>
         public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
         {
-            if (lastName == null)
+            IEnumerable<FileCabinetRecord> foundRecords;
+
+            if (this.lastNameCache.ContainsKey(lastName))
             {
-                throw new ArgumentNullException(nameof(lastName));
+                foundRecords = this.lastNameCache[lastName];
+            }
+            else
+            {
+                foundRecords = FindByKey(lastName, this.lastNameDictionary);
+                this.lastNameCache.Add(lastName, foundRecords);
             }
 
-            if (lastName.Length < 2 || lastName.Length > 60)
-            {
-                throw new ArgumentException($"{nameof(lastName)} not correct.");
-            }
-
-            IEnumerable<FileCabinetRecord> readOnlyList = new ReadOnlyCollection<FileCabinetRecord>(this.lastNameDictionary[lastName]);
-
-            return readOnlyList;
+            return foundRecords;
         }
 
         /// <summary>
@@ -181,16 +185,19 @@ namespace FileCabinetApp
         /// <returns>an array with entries by Date of Birth.</returns>
         public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {
-            if (dateOfBirth == null)
+            IEnumerable<FileCabinetRecord> foundRecords;
+
+            if (this.dateOfBirthCache.ContainsKey(dateOfBirth))
             {
-                throw new ArgumentNullException(nameof(dateOfBirth));
+                foundRecords = this.dateOfBirthCache[dateOfBirth];
+            }
+            else
+            {
+                foundRecords = FindByKey(dateOfBirth, this.dateOfBirthDictionary);
+                this.dateOfBirthCache.Add(dateOfBirth, foundRecords);
             }
 
-            dateOfBirth.ToString(CultureInfo.InvariantCulture);
-
-            IEnumerable<FileCabinetRecord> readOnlyList = new ReadOnlyCollection<FileCabinetRecord>(this.dateOfBirthDictionary[dateOfBirth]);
-
-            return readOnlyList;
+            return foundRecords;
         }
 
         /// <summary>
@@ -335,6 +342,24 @@ namespace FileCabinetApp
             DeleteRecord(dictionary, key, record);
         }
 
+        private static IEnumerable<FileCabinetRecord> FindByKey(string key, Dictionary<string, List<FileCabinetRecord>> dictionary)
+        {
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("Key to find by is invalid");
+            }
+
+            if (dictionary.ContainsKey(key.ToLower()))
+            {
+                IEnumerable<FileCabinetRecord> foundRecords = dictionary[key.ToLower()];
+                return foundRecords;
+            }
+            else
+            {
+                throw new ArgumentException("No records found.");
+            }
+        }
+
         private void DeleteRecordFromAllDictionary(FileCabinetRecord record)
         {
             DeleteRecordFromFirstNameDictionary(this.firstNameDictionary, record);
@@ -348,6 +373,22 @@ namespace FileCabinetApp
             AddRecordInLastNameDictionary(this.lastNameDictionary, record);
             AddRecordInDateofBirthDictionary(this.dateOfBirthDictionary, record);
         }
+
+        private void PurgeCache(Dictionary<string, IEnumerable<FileCabinetRecord>> cache, string key)
+        {
+            if (cache.ContainsKey(key))
+            {
+                cache.Remove(key);
+            }
+        }
+
+        private void PurgeCache(FileCabinetRecord record)
+        {
+            this.PurgeCache(this.firstNameCache, record.FirstName);
+            this.PurgeCache(this.lastNameCache, record.LastName);
+            this.PurgeCache(this.dateOfBirthCache, record.DateOfBirth.ToString("yyyy-MMM-d", CultureInfo.InvariantCulture));
+        }
+
 
         /// <inheritdoc/>
         public int AddRecord(FileCabinetRecord record)

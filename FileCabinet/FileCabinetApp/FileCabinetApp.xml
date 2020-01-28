@@ -179,25 +179,6 @@
             <param name="request">Request to handle.</param>
             <returns>The object back, or null otherwise.</returns>
         </member>
-        <member name="T:FileCabinetApp.Handlers.FindCommandHandler">
-            <summary>
-            Handler for 'find' command.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.FindCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,FileCabinetApp.IRecordPrinter)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.FindCommandHandler"/> class.
-            </summary>
-            <param name="fileCabinetService">Service to find record.</param>
-            /// <param name="printer">Printer for records.</param>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.FindCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
-            <summary>
-            Handles the request.
-            </summary>
-            <param name="request">Request to handle.</param>
-            <returns>The object back, or null otherwise.</returns>
-        </member>
         <member name="T:FileCabinetApp.Handlers.HelpCommandHandler">
             <summary>
             Handler for 'help' command.
@@ -228,25 +209,6 @@
             <param name="fileCabinetService">Service to import records.</param>
         </member>
         <member name="M:FileCabinetApp.Handlers.ImportCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
-            <summary>
-            Handles the request.
-            </summary>
-            <param name="request">Request to handle.</param>
-            <returns>The object back, or null otherwise.</returns>
-        </member>
-        <member name="T:FileCabinetApp.Handlers.ListCommandHandler">
-            <summary>
-            Handler for 'list' command.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.ListCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,FileCabinetApp.IRecordPrinter)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.ListCommandHandler"/> class.
-            </summary>
-            <param name="fileCabinetService">Service to show records.</param>
-            <param name="printer">Printer for records.</param>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.ListCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
             <summary>
             Handles the request.
             </summary>
