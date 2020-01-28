@@ -143,24 +143,6 @@
             <param name="request">Request to handle.</param>
             <returns>The object back, or null otherwise.</returns>
         </member>
-        <member name="T:FileCabinetApp.Handlers.EditCommandHandler">
-            <summary>
-            Handler for 'edit' command.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.EditCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.EditCommandHandler"/> class.
-            </summary>
-            <param name="fileCabinetService">Service to edit record.</param>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.EditCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
-            <summary>
-            Handles the request.
-            </summary>
-            <param name="request">Request to handle.</param>
-            <returns>The object back, or null otherwise.</returns>
-        </member>
         <member name="T:FileCabinetApp.Handlers.ExitCommandHandler">
             <summary>
             Handler for 'exit' command.
@@ -197,25 +179,6 @@
             <param name="request">Request to handle.</param>
             <returns>The object back, or null otherwise.</returns>
         </member>
-        <member name="T:FileCabinetApp.Handlers.FindCommandHandler">
-            <summary>
-            Handler for 'find' command.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.FindCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,FileCabinetApp.IRecordPrinter)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.FindCommandHandler"/> class.
-            </summary>
-            <param name="fileCabinetService">Service to find record.</param>
-            /// <param name="printer">Printer for records.</param>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.FindCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
-            <summary>
-            Handles the request.
-            </summary>
-            <param name="request">Request to handle.</param>
-            <returns>The object back, or null otherwise.</returns>
-        </member>
         <member name="T:FileCabinetApp.Handlers.HelpCommandHandler">
             <summary>
             Handler for 'help' command.
@@ -246,25 +209,6 @@
             <param name="fileCabinetService">Service to import records.</param>
         </member>
         <member name="M:FileCabinetApp.Handlers.ImportCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
-            <summary>
-            Handles the request.
-            </summary>
-            <param name="request">Request to handle.</param>
-            <returns>The object back, or null otherwise.</returns>
-        </member>
-        <member name="T:FileCabinetApp.Handlers.ListCommandHandler">
-            <summary>
-            Handler for 'list' command.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.ListCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,FileCabinetApp.IRecordPrinter)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.ListCommandHandler"/> class.
-            </summary>
-            <param name="fileCabinetService">Service to show records.</param>
-            <param name="printer">Printer for records.</param>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.ListCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
             <summary>
             Handles the request.
             </summary>
@@ -1051,6 +995,24 @@
             Gets or sets minimum possible value.
             </summary>
             <value>Minimum possible value.</value>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.SelectCommandHandler">
+            <summary>
+            Handler for the user's 'select' command.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.SelectCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.SelectCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService">Service to create record in.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.SelectCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
+            <summary>
+            Handles the request.
+            </summary>
+            <param name="request">Request to handle.</param>
+            <returns>The object back, or null otherwise.</returns>
         </member>
         <member name="T:FileCabinetApp.ServiceLogger">
             <summary>
