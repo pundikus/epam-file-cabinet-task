@@ -558,6 +558,24 @@
             </summary>
             <value>Maximum possible age.</value>
         </member>
+        <member name="T:FileCabinetApp.DeleteCommandHandler">
+            <summary>
+            Handler for the user's 'delete' command.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.DeleteCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.DeleteCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService">Service to create record in.</param>
+        </member>
+        <member name="M:FileCabinetApp.DeleteCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
+            <summary>
+            Handles the request.
+            </summary>
+            <param name="request">Request to handle.</param>
+            <returns>The object back, or null otherwise.</returns>
+        </member>
         <member name="T:FileCabinetApp.Helpers.BytesHelper">
             <summary>
             Class for helping working with bytes.
