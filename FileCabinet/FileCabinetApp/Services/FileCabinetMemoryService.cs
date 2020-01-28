@@ -134,7 +134,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="firstName">Firstname users.</param>
         /// <returns>an array with entries by Firstname.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
         {
             if (firstName == null)
             {
@@ -146,7 +146,7 @@ namespace FileCabinetApp
                 throw new ArgumentException($"{nameof(firstName)} not correct.");
             }
 
-            ReadOnlyCollection<FileCabinetRecord> readOnlyList = new ReadOnlyCollection<FileCabinetRecord>(this.firstNameDictionary[firstName]);
+            IEnumerable<FileCabinetRecord> readOnlyList = new ReadOnlyCollection<FileCabinetRecord>(this.firstNameDictionary[firstName]);
 
             return readOnlyList;
         }
@@ -156,7 +156,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="lastName">Lastname users.</param>
         /// <returns>an array with entries by Lastname.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
         {
             if (lastName == null)
             {
@@ -168,7 +168,7 @@ namespace FileCabinetApp
                 throw new ArgumentException($"{nameof(lastName)} not correct.");
             }
 
-            ReadOnlyCollection<FileCabinetRecord> readOnlyList = new ReadOnlyCollection<FileCabinetRecord>(this.lastNameDictionary[lastName]);
+            IEnumerable<FileCabinetRecord> readOnlyList = new ReadOnlyCollection<FileCabinetRecord>(this.lastNameDictionary[lastName]);
 
             return readOnlyList;
         }
@@ -178,7 +178,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="dateOfBirth">Date of Birth users.</param>
         /// <returns>an array with entries by Date of Birth.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
+        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {
             if (dateOfBirth == null)
             {
@@ -187,7 +187,7 @@ namespace FileCabinetApp
 
             dateOfBirth.ToString(CultureInfo.InvariantCulture);
 
-            ReadOnlyCollection<FileCabinetRecord> readOnlyList = new ReadOnlyCollection<FileCabinetRecord>(this.dateOfBirthDictionary[dateOfBirth]);
+            IEnumerable<FileCabinetRecord> readOnlyList = new ReadOnlyCollection<FileCabinetRecord>(this.dateOfBirthDictionary[dateOfBirth]);
 
             return readOnlyList;
         }

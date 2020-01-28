@@ -261,6 +261,8 @@ namespace FileCabinetApp
                 Category = category,
             };
 
+            //binaryReader.Dispose();
+
             return record;
         }
 

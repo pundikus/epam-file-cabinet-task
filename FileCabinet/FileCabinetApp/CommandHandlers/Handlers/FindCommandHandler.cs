@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
@@ -56,7 +58,7 @@ namespace FileCabinetApp.Handlers
             const string CriterionLastName = "lastName";
             const string CriterionDateOfBirth = "dateofBirth";
 
-            ReadOnlyCollection<FileCabinetRecord> result = null;
+            IEnumerable<FileCabinetRecord> result = null;
 
             var paramArray = parametrs.Split(' ', 2);
             if (paramArray.Length != 2)
