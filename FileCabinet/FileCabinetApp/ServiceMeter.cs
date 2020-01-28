@@ -59,10 +59,10 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="dateOfBirth">Given date of birth.</param>
         /// <returns>The array of records.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
+        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {
             this.watch = Stopwatch.StartNew();
-            ReadOnlyCollection<FileCabinetRecord> foundRecords = this.service.FindByDateOfBirth(dateOfBirth);
+            IEnumerable<FileCabinetRecord> foundRecords = this.service.FindByDateOfBirth(dateOfBirth);
             this.watch.Stop();
             Console.WriteLine($"FindByDateOfBirth method execution duration is " + this.watch.ElapsedTicks + " ticks.");
 
@@ -74,10 +74,10 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="firstName">Given first name.</param>
         /// <returns>The array of records.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
         {
             this.watch = Stopwatch.StartNew();
-            ReadOnlyCollection<FileCabinetRecord> foundRecords = this.service.FindByFirstName(firstName);
+            IEnumerable<FileCabinetRecord> foundRecords = this.service.FindByFirstName(firstName);
             this.watch.Stop();
             Console.WriteLine($"FindByFirstName method execution duration is " + this.watch.ElapsedTicks + " ticks.");
 
@@ -89,10 +89,10 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="lastName">Given last name.</param>
         /// <returns>The array of records.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
         {
             this.watch = Stopwatch.StartNew();
-            ReadOnlyCollection<FileCabinetRecord> foundRecords = this.service.FindByLastName(lastName);
+            IEnumerable<FileCabinetRecord> foundRecords = this.service.FindByLastName(lastName);
             this.watch.Stop();
             Console.WriteLine($"FindByLastName method execution duration is " + this.watch.ElapsedTicks + " ticks.");
 

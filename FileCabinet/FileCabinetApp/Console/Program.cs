@@ -192,11 +192,6 @@ namespace FileCabinetApp
                         isStorageFile = true;
                         FileStream fileStream;
 
-                        if (isStorageFile)
-                        {
-                            File.Delete(FileName);
-                        }
-
                         if (!File.Exists(FileName))
                         {
                             fileStream = File.Create(FileName);
@@ -255,13 +250,16 @@ namespace FileCabinetApp
 
         private static void CheckStopWatchAndLogger(string[] args)
         {
-            if (args[2] == "--use-stopwatch")
+            foreach (var item in args)
             {
-                stopwatchAdded = true;
-            }
-            else if (args[2] == "--use-logger")
-            {
-                loggerAdded = true;
+                if (item == "--use-stopwatch")
+                {
+                    stopwatchAdded = true;
+                }
+                else if (item == "--use-logger")
+                {
+                    loggerAdded = true;
+                }
             }
         }
 

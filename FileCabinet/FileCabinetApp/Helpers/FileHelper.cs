@@ -204,6 +204,18 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(binaryReader));
             }
 
+            binaryReader.BaseStream.Seek(0, SeekOrigin.Current);
+
+            if (binaryReader.BaseStream.Position > binaryReader.BaseStream.Length)
+            {
+                binaryReader.BaseStream.Seek(binaryReader.BaseStream.Position - 2, SeekOrigin.Begin);
+            }
+
+            if (binaryReader.BaseStream.Position == binaryReader.BaseStream.Length)
+            {
+                return null;
+            }
+
             var idinByte = binaryReader.ReadBytes(sizeof(int));
             int id = BitConverter.ToInt32(idinByte);
 
@@ -248,6 +260,8 @@ namespace FileCabinetApp
                 Salary = salary,
                 Category = category,
             };
+
+            //binaryReader.Dispose();
 
             return record;
         }

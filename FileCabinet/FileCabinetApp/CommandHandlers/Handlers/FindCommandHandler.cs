@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
@@ -20,7 +22,7 @@ namespace FileCabinetApp.Handlers
         /// /// <param name="printer">Printer for records.</param>
         public FindCommandHandler(IFileCabinetService fileCabinetService, IRecordPrinter printer)
         {
-            this.service = fileCabinetService;
+            this.Service = fileCabinetService;
             this.printer = printer;
         }
 
@@ -56,7 +58,7 @@ namespace FileCabinetApp.Handlers
             const string CriterionLastName = "lastName";
             const string CriterionDateOfBirth = "dateofBirth";
 
-            ReadOnlyCollection<FileCabinetRecord> result = null;
+            IEnumerable<FileCabinetRecord> result = null;
 
             var paramArray = parametrs.Split(' ', 2);
             if (paramArray.Length != 2)
@@ -77,14 +79,14 @@ namespace FileCabinetApp.Handlers
             {
                 string firstName = inputValue.Trim('"').ToUpperInvariant();
 
-                result = this.service.FindByFirstName(firstName);
+                result = this.Service.FindByFirstName(firstName);
             }
 
             if (criterion.Equals(CriterionLastName, StringComparison.InvariantCultureIgnoreCase))
             {
                 string lastName = inputValue.Trim('"').ToUpperInvariant();
 
-                result = this.service.FindByLastName(lastName);
+                result = this.Service.FindByLastName(lastName);
             }
 
             if (criterion.Equals(CriterionDateOfBirth, StringComparison.InvariantCultureIgnoreCase))
@@ -98,7 +100,7 @@ namespace FileCabinetApp.Handlers
 
                 string dateOfBirthString = dateofBirth.ToString(CultureInfo.InvariantCulture);
 
-                result = this.service.FindByDateOfBirth(dateOfBirthString);
+                result = this.Service.FindByDateOfBirth(dateOfBirthString);
             }
 
             this.printer.Print(result);

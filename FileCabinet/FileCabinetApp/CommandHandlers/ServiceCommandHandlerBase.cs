@@ -10,9 +10,12 @@ namespace FileCabinetApp
     public abstract class ServiceCommandHandlerBase : CommandHandlerBase
     {
         /// <summary>
-        /// The service to get information and modify.
+        /// Gets or sets the service to get information and modify.
         /// </summary>
-        protected IFileCabinetService service;
+        /// <value>
+        /// The service to get information and modify.
+        /// </value>
+        protected IFileCabinetService Service { get; set; }
 
         /// <summary>
         /// This Method validate First Name.

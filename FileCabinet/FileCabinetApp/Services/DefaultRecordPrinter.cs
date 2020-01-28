@@ -22,9 +22,14 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(records));
             }
 
-            IEnumerable<FileCabinetRecord> orderedRecords = records.OrderBy(record => record.Id);
+            IEnumerable<FileCabinetRecord> orderedRecords = records;
             foreach (var record in orderedRecords)
             {
+                if (record == null)
+                {
+                    break;
+                }
+
                 this.PrintRecord(record);
             }
         }

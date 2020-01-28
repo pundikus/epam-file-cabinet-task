@@ -14,7 +14,7 @@ namespace FileCabinetApp.Handlers
         /// <param name="fileCabinetService">Service to export records.</param>
         public ExportCommandHandler(IFileCabinetService fileCabinetService)
         {
-            this.service = fileCabinetService;
+            this.Service = fileCabinetService;
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace FileCabinetApp.Handlers
                     streamWriter = new StreamWriter(path);
                 }
 
-                var snapshot = this.service.MakeSnapshot();
+                var snapshot = this.Service.MakeSnapshot();
 
                 if (format == formatCsv)
                 {

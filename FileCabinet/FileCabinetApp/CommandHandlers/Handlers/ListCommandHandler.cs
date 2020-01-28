@@ -18,7 +18,7 @@ namespace FileCabinetApp.Handlers
         /// <param name="printer">Printer for records.</param>
         public ListCommandHandler(IFileCabinetService fileCabinetService, IRecordPrinter printer)
         {
-            this.service = fileCabinetService;
+            this.Service = fileCabinetService;
             this.printer = printer;
         }
 
@@ -49,7 +49,7 @@ namespace FileCabinetApp.Handlers
         {
             try
             {
-                var listRecords = this.service.GetRecords();
+                var listRecords = this.Service.GetRecords();
 
                 if (listRecords.Count == 0)
                 {

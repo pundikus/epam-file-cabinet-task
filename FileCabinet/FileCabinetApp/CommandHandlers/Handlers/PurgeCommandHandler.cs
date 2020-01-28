@@ -13,7 +13,7 @@ namespace FileCabinetApp.Handlers
         /// <param name="fileCabinetService">Service to purge.</param>
         public PurgeCommandHandler(IFileCabinetService fileCabinetService)
         {
-            this.service = fileCabinetService;
+            this.Service = fileCabinetService;
         }
 
         /// <summary>
@@ -49,10 +49,10 @@ namespace FileCabinetApp.Handlers
 
         private void Purge()
         {
-            int countRecords = this.service.GetRecords().Count;
+            int countRecords = this.Service.GetRecords().Count;
             int countRemovedRecords;
 
-            countRemovedRecords = this.service.PurgeRecords();
+            countRemovedRecords = this.Service.PurgeRecords();
 
             CountRemovedRecord += countRemovedRecords;
 

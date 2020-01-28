@@ -15,7 +15,7 @@ namespace FileCabinetApp.Handlers
         /// <param name="fileCabinetService">Service to remove record.</param>
         public RemoveCommandHandler(IFileCabinetService fileCabinetService)
         {
-            this.service = fileCabinetService;
+            this.Service = fileCabinetService;
         }
 
         /// <summary>
@@ -46,12 +46,12 @@ namespace FileCabinetApp.Handlers
             var parsedId = int.TryParse(parameters, NumberStyles.Integer, CultureInfo.InvariantCulture, out int id);
             if (!parsedId)
             {
-                Console.WriteLine("Record #" + this.service.RemoveRecord(id) + " doesn't exists");
+                Console.WriteLine("Record #" + this.Service.RemoveRecord(id) + " doesn't exists");
 
                 return;
             }
 
-            var listRecords = this.service.GetRecords();
+            var listRecords = this.Service.GetRecords();
 
             if (!listRecords.Any(x => x.Id == id))
             {
@@ -59,7 +59,7 @@ namespace FileCabinetApp.Handlers
                 return;
             }
 
-            int removedId = this.service.RemoveRecord(id);
+            int removedId = this.Service.RemoveRecord(id);
 
             Console.WriteLine("Record #" + removedId + " is removed.");
         }
