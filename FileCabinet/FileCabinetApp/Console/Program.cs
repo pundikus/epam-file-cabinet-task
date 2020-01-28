@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using FileCabinetApp.CommandHandlers;
 using FileCabinetApp.Handlers;
 using FileCabinetApp.Helpers;
 using FileCabinetApp.Interfaces.Validators;
@@ -143,9 +144,9 @@ namespace FileCabinetApp
         {
             var recordPrinter = new DefaultRecordPrinter();
             var createHandler = new CreateCommandHandler(fileCabinetService);
-            var editHandler = new EditCommandHandler(fileCabinetService);
-            var findHandler = new FindCommandHandler(fileCabinetService, recordPrinter);
-            var listHandler = new ListCommandHandler(fileCabinetService, recordPrinter);
+            var selectHandler = new SelectCommandHandler(fileCabinetService);
+            //var findHandler = new FindCommandHandler(fileCabinetService, recordPrinter);
+           // var listHandler = new ListCommandHandler(fileCabinetService, recordPrinter);
             var statHandler = new StatCommandHandler(fileCabinetService);
             var exportHandler = new ExportCommandHandler(fileCabinetService);
             var importHandler = new ImportCommandHandler(fileCabinetService);
@@ -156,12 +157,12 @@ namespace FileCabinetApp
             var helpHandler = new HelpCommandHandler();
             var exitHandler = new ExitCommandHandler(ChangeState);
 
-            createHandler.SetNext(editHandler)
-                         .SetNext(insertHandler)
+            createHandler.SetNext(insertHandler)
+                         .SetNext(selectHandler)
                          .SetNext(deleteHandler)
                          .SetNext(updateHandler)
-                         .SetNext(findHandler)
-                         .SetNext(listHandler)
+                         //.SetNext(findHandler)
+                         //.SetNext(listHandler)
                          .SetNext(statHandler)
                          .SetNext(exportHandler)
                          .SetNext(importHandler)

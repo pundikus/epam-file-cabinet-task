@@ -143,24 +143,6 @@
             <param name="request">Request to handle.</param>
             <returns>The object back, or null otherwise.</returns>
         </member>
-        <member name="T:FileCabinetApp.Handlers.EditCommandHandler">
-            <summary>
-            Handler for 'edit' command.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.EditCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.Handlers.EditCommandHandler"/> class.
-            </summary>
-            <param name="fileCabinetService">Service to edit record.</param>
-        </member>
-        <member name="M:FileCabinetApp.Handlers.EditCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
-            <summary>
-            Handles the request.
-            </summary>
-            <param name="request">Request to handle.</param>
-            <returns>The object back, or null otherwise.</returns>
-        </member>
         <member name="T:FileCabinetApp.Handlers.ExitCommandHandler">
             <summary>
             Handler for 'exit' command.
@@ -1051,6 +1033,24 @@
             Gets or sets minimum possible value.
             </summary>
             <value>Minimum possible value.</value>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.SelectCommandHandler">
+            <summary>
+            Handler for the user's 'select' command.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.SelectCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.SelectCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService">Service to create record in.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.SelectCommandHandler.Handle(FileCabinetApp.AppCommandRequest)">
+            <summary>
+            Handles the request.
+            </summary>
+            <param name="request">Request to handle.</param>
+            <returns>The object back, or null otherwise.</returns>
         </member>
         <member name="T:FileCabinetApp.ServiceLogger">
             <summary>
