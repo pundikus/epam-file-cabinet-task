@@ -13,74 +13,114 @@ namespace FileCabinetApp
         /// This Method flush marks record.
         /// </summary>
         /// <returns>Count removed records.</returns>
-        public int Purge();
+        int Purge();
 
         /// <summary>
         /// This Method remove record.
         /// </summary>
         /// <param name="id">Id record.</param>
         /// <returns>Id removed record.</returns>
-        public int RemoveRecord(int id);
+        int RemoveRecord(int id);
 
         /// <summary>
         /// This Method make snapshot collection.
         /// </summary>
         /// <returns>snapshot collection.</returns>
-        public FileCabinetServiceSnapshot MakeSnapshot();
+        FileCabinetServiceSnapshot MakeSnapshot();
 
         /// <summary>
         /// This method is for creating records.
         /// </summary>
         /// <param name="parametrs">It is object parametrs.</param>
         /// <returns>unique identifier for user.</returns>
-        public int CreateRecord(FileCabinetRecord parametrs);
+        int CreateRecord(FileCabinetRecord parametrs);
 
         /// <summary>
         /// This method is for changes records.
         /// </summary>
         /// <param name="parametrs">It is object parametrs.</param>
         /// <returns>id edit record.</returns>
-        public int EditRecord(FileCabinetRecord parametrs);
+        int EditRecord(FileCabinetRecord parametrs);
 
         /// <summary>
         /// This method load records from file.
         /// </summary>
         /// <param name="snapshot">It is copy data.</param>
-        public int Restore(FileCabinetServiceSnapshot snapshot);
+        /// <returns>Return record.</returns>
+        int Restore(FileCabinetServiceSnapshot snapshot);
+
+        /// <summary>
+        /// Searches the records by id.
+        /// </summary>
+        /// <param name="id">Given id.</param>
+        /// <returns>The array of records.</returns>
+        IEnumerable<FileCabinetRecord> FindById(string id);
 
         /// <summary>
         /// This Method find records by Date of Birth users.
         /// </summary>
         /// <param name="dateOfBirth">Date of Birth users.</param>
         /// <returns>an array with entries by Date of Birth.</returns>
-        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth);
+        IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth);
 
         /// <summary>
         /// This Method find records by Firstname users.
         /// </summary>
         /// <param name="firstName">Firstname users.</param>
         /// <returns>an array with entries by Firstname.</returns>
-        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName);
+        IEnumerable<FileCabinetRecord> FindByFirstName(string firstName);
 
         /// <summary>
         /// This Method find records by Lastname users.
         /// </summary>
         /// <param name="lastName">Lastname users.</param>
         /// <returns>an array with entries by Lastname.</returns>
-        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName);
+        IEnumerable<FileCabinetRecord> FindByLastName(string lastName);
+
+        /// <summary>
+        /// Searches the records by Cabinet number.
+        /// </summary>
+        /// <param name="cabinetNumber">Given Cabinet number.</param>
+        /// <returns>The array of records.</returns>
+        IEnumerable<FileCabinetRecord> FindByCabinetNumber(string cabinetNumber);
+
+        /// <summary>
+        /// Searches the records by Category.
+        /// </summary>
+        /// <param name="category">Given Category.</param>
+        /// <returns>The array of records.</returns>
+        IEnumerable<FileCabinetRecord> FindByCategory(string category);
+
+        /// <summary>
+        /// Searches the records by Salary.
+        /// </summary>
+        /// <param name="salary">Given Salary.</param>
+        /// <returns>The array of records.</returns>
+        IEnumerable<FileCabinetRecord> FindBySalary(string salary);
 
         /// <summary>
         /// This Method gets all records as an array.
         /// </summary>
         /// <returns>array all records.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> GetRecords();
+        ReadOnlyCollection<FileCabinetRecord> GetRecords();
+
+        /// <summary>
+        /// Returns the number of deleted records in the list.
+        /// </summary>
+        /// <returns>The number of deleted records.</returns>
+        int GetDeleted();
 
         /// <summary>
         /// This Method returns count records.
         /// </summary>
         /// <returns>count records.</returns>
-        public int GetStat();
+        int GetStat();
 
-        public int AddRecord(FileCabinetRecord record);
+        /// <summary>
+        /// This Method returns record.
+        /// </summary>
+        /// <param name="record">record.</param>
+        /// <returns>Record.</returns>
+        int AddRecord(FileCabinetRecord record);
     }
 }

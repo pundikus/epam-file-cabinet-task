@@ -11,18 +11,28 @@ namespace FileCabinetApp
     /// </summary>
     public class FileCabinetMemoryService : IFileCabinetService
     {
+        private const int Deleted = 0;
+
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
 
-        private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
-        private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
-        private readonly Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private Dictionary<string, List<FileCabinetRecord>> idvDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private Dictionary<string, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private Dictionary<string, List<FileCabinetRecord>> cabinetNumberDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private Dictionary<string, List<FileCabinetRecord>> categoryDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private Dictionary<string, List<FileCabinetRecord>> salaryDictionary = new Dictionary<string, List<FileCabinetRecord>>();
 
+        private Dictionary<string, IEnumerable<FileCabinetRecord>> idvCache = new Dictionary<string, IEnumerable<FileCabinetRecord>>();
         private Dictionary<string, IEnumerable<FileCabinetRecord>> firstNameCache = new Dictionary<string, IEnumerable<FileCabinetRecord>>();
         private Dictionary<string, IEnumerable<FileCabinetRecord>> lastNameCache = new Dictionary<string, IEnumerable<FileCabinetRecord>>();
         private Dictionary<string, IEnumerable<FileCabinetRecord>> dateOfBirthCache = new Dictionary<string, IEnumerable<FileCabinetRecord>>();
+        private Dictionary<string, IEnumerable<FileCabinetRecord>> cabinetNumberCache = new Dictionary<string, IEnumerable<FileCabinetRecord>>();
+        private Dictionary<string, IEnumerable<FileCabinetRecord>> categoryCache = new Dictionary<string, IEnumerable<FileCabinetRecord>>();
+        private Dictionary<string, IEnumerable<FileCabinetRecord>> salaryCache = new Dictionary<string, IEnumerable<FileCabinetRecord>>();
 
         private IRecordValidator validator;
-        private List<int> idList = new List<int>();
+        private List<int> idlist = new List<int>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetMemoryService"/> class.
@@ -74,6 +84,48 @@ namespace FileCabinetApp
             this.AddRecordInAllDictionary(record);
 
             return record.Id;
+        }
+
+        /// <summary>
+        /// Adds record to the list of records.
+        /// </summary>
+        /// <param name="record">Record to add.</param>
+        /// <returns>Record's id.</returns>
+        public int AddRecord(FileCabinetRecord record)
+        {
+            if (record == null)
+            {
+                throw new ArgumentNullException($"Record object is invalid.");
+            }
+
+            this.validator.Validate(record);
+
+            if (this.idlist.Contains(record.Id))
+            {
+                int indexOfPrev = this.list.FindIndex(rec => rec.Id.Equals(record.Id));
+                this.firstNameDictionary[this.list[indexOfPrev].FirstName.ToLower(CultureInfo.InvariantCulture)].Remove(this.list[indexOfPrev]);
+                this.lastNameDictionary[this.list[indexOfPrev].LastName.ToLower(CultureInfo.InvariantCulture)].Remove(this.list[indexOfPrev]);
+                this.dateOfBirthDictionary[this.list[indexOfPrev].DateOfBirth.ToString("yyyy-MMM-d", CultureInfo.InvariantCulture).ToLower(CultureInfo.InvariantCulture)].Remove(this.list[indexOfPrev]);
+                this.list[indexOfPrev] = record;
+            }
+            else
+            {
+                this.list.Add(record);
+                this.idlist.Add(record.Id);
+            }
+
+            this.AddRecordInAllDictionary(record);
+            this.PurgeCache(record);
+            return record.Id;
+        }
+
+        /// <summary>
+        /// Returns the number of deleted records in the list.
+        /// </summary>
+        /// <returns>The number of deleted records.</returns>
+        public int GetDeleted()
+        {
+            return Deleted;
         }
 
         /// <summary>
@@ -135,25 +187,23 @@ namespace FileCabinetApp
         }
 
         /// <summary>
+        /// Searches the records by id.
+        /// </summary>
+        /// <param name="id">Given id.</param>
+        /// <returns>The array of records.</returns>
+        public IEnumerable<FileCabinetRecord> FindById(string id)
+        {
+            return FindInCache(this.idvDictionary, this.idvCache, id);
+        }
+
+        /// <summary>
         /// This Method find records by Firstname users.
         /// </summary>
         /// <param name="firstName">Firstname users.</param>
         /// <returns>an array with entries by Firstname.</returns>
         public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
         {
-            IEnumerable<FileCabinetRecord> foundRecords;
-
-            if (this.firstNameCache.ContainsKey(firstName))
-            {
-                foundRecords = this.firstNameCache[firstName];
-            }
-            else
-            {
-                foundRecords = FindByKey(firstName, this.firstNameDictionary);
-                this.firstNameCache.Add(firstName, foundRecords);
-            }
-
-            return foundRecords;
+            return FindInCache(this.firstNameDictionary, this.firstNameCache, firstName);
         }
 
         /// <summary>
@@ -163,19 +213,7 @@ namespace FileCabinetApp
         /// <returns>an array with entries by Lastname.</returns>
         public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
         {
-            IEnumerable<FileCabinetRecord> foundRecords;
-
-            if (this.lastNameCache.ContainsKey(lastName))
-            {
-                foundRecords = this.lastNameCache[lastName];
-            }
-            else
-            {
-                foundRecords = FindByKey(lastName, this.lastNameDictionary);
-                this.lastNameCache.Add(lastName, foundRecords);
-            }
-
-            return foundRecords;
+            return FindInCache(this.lastNameDictionary, this.lastNameCache, lastName);
         }
 
         /// <summary>
@@ -185,25 +223,44 @@ namespace FileCabinetApp
         /// <returns>an array with entries by Date of Birth.</returns>
         public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {
-            IEnumerable<FileCabinetRecord> foundRecords;
+            return FindInCache(this.dateOfBirthDictionary, this.dateOfBirthCache, dateOfBirth);
+        }
 
-            if (this.dateOfBirthCache.ContainsKey(dateOfBirth))
-            {
-                foundRecords = this.dateOfBirthCache[dateOfBirth];
-            }
-            else
-            {
-                foundRecords = FindByKey(dateOfBirth, this.dateOfBirthDictionary);
-                this.dateOfBirthCache.Add(dateOfBirth, foundRecords);
-            }
+        /// <summary>
+        /// Searches the records by cabinet number.
+        /// </summary>
+        /// <param name="cabinetNumber">Given cabinet number.</param>
+        /// <returns>The array of records.</returns>
+        public IEnumerable<FileCabinetRecord> FindByCabinetNumber(string cabinetNumber)
+        {
+            return FindInCache(this.cabinetNumberDictionary, this.cabinetNumberCache, cabinetNumber);
+        }
 
-            return foundRecords;
+        /// <summary>
+        /// Searches the records by category.
+        /// </summary>
+        /// <param name="category">Given category.</param>
+        /// <returns>The array of records.</returns>
+        public IEnumerable<FileCabinetRecord> FindByCategory(string category)
+        {
+            return FindInCache(this.categoryDictionary, this.categoryCache, category);
+        }
+
+        /// <summary>
+        /// Searches the records by salary.
+        /// </summary>
+        /// <param name="salary">Given salary.</param>
+        /// <returns>The array of records.</returns>
+        public IEnumerable<FileCabinetRecord> FindBySalary(string salary)
+        {
+            return FindInCache(this.salaryDictionary, this.salaryCache, salary);
         }
 
         /// <summary>
         /// This method load records from file.
         /// </summary>
         /// <param name="snapshot">It is copy data.</param>
+        /// <returns>records count.</returns>
         public int Restore(FileCabinetServiceSnapshot snapshot)
         {
             if (snapshot == null)
@@ -349,14 +406,39 @@ namespace FileCabinetApp
                 throw new ArgumentException("Key to find by is invalid");
             }
 
-            if (dictionary.ContainsKey(key.ToLower()))
+            if (dictionary.ContainsKey(key.ToLower(CultureInfo.InvariantCulture)))
             {
-                IEnumerable<FileCabinetRecord> foundRecords = dictionary[key.ToLower()];
+                IEnumerable<FileCabinetRecord> foundRecords = dictionary[key.ToLower(CultureInfo.InvariantCulture)];
                 return foundRecords;
             }
             else
             {
                 throw new ArgumentException("No records found.");
+            }
+        }
+
+        private static IEnumerable<FileCabinetRecord> FindInCache(Dictionary<string, List<FileCabinetRecord>> dictionary, Dictionary<string, IEnumerable<FileCabinetRecord>> cache, string key)
+        {
+            IEnumerable<FileCabinetRecord> foundRecords;
+
+            if (cache.ContainsKey(key))
+            {
+                foundRecords = cache[key];
+            }
+            else
+            {
+                foundRecords = FindByKey(key, dictionary);
+                cache.Add(key, foundRecords);
+            }
+
+            return foundRecords;
+        }
+
+        private static void PurgeCache(Dictionary<string, IEnumerable<FileCabinetRecord>> cache, string key)
+        {
+            if (cache.ContainsKey(key))
+            {
+                cache.Remove(key);
             }
         }
 
@@ -374,48 +456,11 @@ namespace FileCabinetApp
             AddRecordInDateofBirthDictionary(this.dateOfBirthDictionary, record);
         }
 
-        private void PurgeCache(Dictionary<string, IEnumerable<FileCabinetRecord>> cache, string key)
-        {
-            if (cache.ContainsKey(key))
-            {
-                cache.Remove(key);
-            }
-        }
-
         private void PurgeCache(FileCabinetRecord record)
         {
-            this.PurgeCache(this.firstNameCache, record.FirstName);
-            this.PurgeCache(this.lastNameCache, record.LastName);
-            this.PurgeCache(this.dateOfBirthCache, record.DateOfBirth.ToString("yyyy-MMM-d", CultureInfo.InvariantCulture));
-        }
-
-
-        /// <inheritdoc/>
-        public int AddRecord(FileCabinetRecord record)
-        {
-            if (record == null)
-            {
-                throw new ArgumentNullException($"Record object is invalid.");
-            }
-
-            if (this.idList.Contains(record.Id))
-            {
-                int indexOfPrev = this.list.FindIndex(rec => rec.Id.Equals(record.Id));
-
-                this.firstNameDictionary[this.list[indexOfPrev].FirstName.ToLower()].Remove(this.list[indexOfPrev]);
-                this.lastNameDictionary[this.list[indexOfPrev].LastName.ToLower()].Remove(this.list[indexOfPrev]);
-                this.dateOfBirthDictionary[this.list[indexOfPrev].DateOfBirth.ToString("yyyy-MMM-d", CultureInfo.InvariantCulture).ToLower()].Remove(this.list[indexOfPrev]);
-                this.list[indexOfPrev] = record;
-            }
-            else
-            {
-                this.list.Add(record);
-                this.idList.Add(record.Id);
-            }
-
-            this.AddRecordInAllDictionary(record);
-
-            return record.Id;
+            PurgeCache(this.firstNameCache, record.FirstName);
+            PurgeCache(this.lastNameCache, record.LastName);
+            PurgeCache(this.dateOfBirthCache, record.DateOfBirth.ToString("yyyy-MMM-d", CultureInfo.InvariantCulture));
         }
     }
 }

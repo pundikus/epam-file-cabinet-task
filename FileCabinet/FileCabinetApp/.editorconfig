@@ -2,3 +2,6 @@
 
 # SA1401: Fields should be private
 dotnet_diagnostic.SA1401.severity = none
+
+# CA1308: Нормализуйте строки до прописных букв
+dotnet_diagnostic.CA1308.severity = none

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Reflection;
 using FileCabinetApp.Helpers;
-using FileCabinetApp.Helpers.FileCabinetApp;
 using static FileCabinetApp.Program;
 
 namespace FileCabinetApp
@@ -317,12 +317,17 @@ namespace FileCabinetApp
             return new Tuple<bool, string, char>(parsedCategory, arg, category);
         }
 
+        /// <summary>
+        /// Parser property.
+        /// </summary>
+        /// <param name="args">inputs.</param>
+        /// <returns>new tuple.</returns>
         protected Tuple<string, string, int> ParsePropertyValuePair(string[] args)
         {
-            // tuple
-            // string property
-            // string value
-            // int size
+            if (args == null)
+            {
+                throw new ArgumentNullException(nameof(args));
+            }
 
             string property;
             string value;
@@ -347,7 +352,6 @@ namespace FileCabinetApp
 
             if (equalsIndex == 1)
             {
-                // id = '1'
                 if (args[1] == "=")
                 {
                     value = args[2];
@@ -355,7 +359,6 @@ namespace FileCabinetApp
                 }
                 else
                 {
-                    // id ='1'
                     if (args[1].StartsWith('='))
                     {
                         value = args[1].Substring(0);
@@ -371,14 +374,13 @@ namespace FileCabinetApp
             }
             else
             {
-                // id= '1'
                 if (args[0].EndsWith('='))
                 {
                     property = args[1].Substring(0, args[1].Length - 1);
                     value = args[2];
                     size = 2;
                 }
-                else // where id='1'
+                else
                 {
                     string[] subArgs = args[0].Split('=');
                     value = subArgs[1];
@@ -393,53 +395,95 @@ namespace FileCabinetApp
             }
             else
             {
-                value = value[(value.IndexOf('\'', StringComparison.InvariantCulture) + 1)..value.LastIndexOf('\'')];
+                value = value[(value.IndexOf('\'', StringComparison.InvariantCulture) + 1) ..value.LastIndexOf('\'')];
             }
 
             return new Tuple<string, string, int>(property, value, size);
         }
 
-        protected string[] SubArrString(string[] arr, int from)
+        /// <summary>
+        /// Analogy with SubString.
+        /// </summary>
+        /// <param name="array">array property.</param>
+        /// <param name="from">position.</param>
+        /// <returns>new array.</returns>
+        protected string[] SubArrString(string[] array, int from)
         {
-            // if from == 0 return arr
-            if (from == 0)
+            if (array == null)
             {
-                return arr;
+                throw new ArgumentNullException(nameof(array));
             }
 
-            string[] newArr = new string[arr.Length - from];
-            for (int i = from; i < arr.Length; i++)
+            if (from == 0)
             {
-                newArr[i - from] = arr[i];
+                return array;
+            }
+
+            string[] newArr = new string[array.Length - from];
+            for (int i = from; i < array.Length; i++)
+            {
+                newArr[i - from] = array[i];
             }
 
             return newArr;
         }
 
-        protected string[] SubArrString(string[] arr, int from, int to)
+        /// <summary>
+        /// Analogy with SubString.
+        /// </summary>
+        /// <param name="array">array property.</param>
+        /// <param name="from">position.</param>
+        /// <param name="to">position to.</param>
+        /// <returns>new array.</returns>
+        protected string[] SubArrString(string[] array, int from, int to)
         {
+            if (array == null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
             // if from == 0 return arr
             if (from == 0)
             {
-                return arr;
+                return array;
             }
 
-            string[] newArr = new string[arr.Length - from];
+            string[] newArr = new string[array.Length - from];
             for (int i = from; i < to; i++)
             {
-                newArr[i - from] = arr[i];
+                newArr[i - from] = array[i];
             }
 
             return newArr;
         }
 
-        protected List<FileCabinetRecord> WhereParser(string[] args)
+        /// <summary>
+        /// Parses the criterion after 'where'.
+        /// </summary>
+        /// <param name="args">Strings to parse.</param>
+        /// <returns>Collection of records.</returns>
+        protected ReadOnlyCollection<FileCabinetRecord> WhereParser(string[] args)
         {
+            if (args == null)
+            {
+                return null;
+            }
+
+            ReadOnlyCollection<FileCabinetRecord> result;
+            List<FileCabinetRecord> foundRecords = new List<FileCabinetRecord>();
+
+            if (string.IsNullOrWhiteSpace(args[0]) || string.IsNullOrEmpty(args[0]))
+            {
+                Console.WriteLine("No 'where' found. All the records:");
+                result = new ReadOnlyCollection<FileCabinetRecord>(this.Service.GetRecords());
+                return result;
+            }
+
             int numOfOr = 0;
 
             foreach (string s in args)
             {
-                if (s.ToLower().Contains("or", StringComparison.InvariantCulture))
+                if (s.ToLower(CultureInfo.InvariantCulture).Contains("or", StringComparison.InvariantCulture))
                 {
                     numOfOr++;
                 }
@@ -451,9 +495,6 @@ namespace FileCabinetApp
             // contains values (ray, archie, gray)
             string[] sets = new string[numOfSets * numOfProps];
 
-            // contains records found in different sets
-            List<FileCabinetRecord> foundRecords = new List<FileCabinetRecord>();
-
             // propertyName and its index in the dictionary
             Dictionary<string, int> propIndex = new Dictionary<string, int>();
 
@@ -461,7 +502,7 @@ namespace FileCabinetApp
             for (int i = 0; i < properties.Length; i++)
             {
                 // set the indexes
-                propIndex.Add(properties[i].Name.ToLower(), i);
+                propIndex.Add(properties[i].Name.ToLower(CultureInfo.InvariantCulture), i);
             }
 
             int currentSet = 0;
@@ -480,14 +521,14 @@ namespace FileCabinetApp
                 }
 
                 // we have string method string value
-                if (!propIndex.ContainsKey(propValue.Item1.ToLower()))
+                if (!propIndex.ContainsKey(propValue.Item1.ToLower(CultureInfo.InvariantCulture)))
                 {
-                    // incorrect property
+                    Console.WriteLine("Incorrect name of property.");
                     return null;
                 }
                 else
                 {
-                    sets[propIndex[propValue.Item1.ToLower()] + (numOfProps * currentSet)] = propValue.Item2;
+                    sets[propIndex[propValue.Item1.ToLower(CultureInfo.InvariantCulture)] + (numOfProps * currentSet)] = propValue.Item2;
                 }
 
                 // where all the conditions are read
@@ -507,32 +548,30 @@ namespace FileCabinetApp
                                 MethodInfo findMethod = this.Service.GetType().GetMethod("FindBy" + properties[y].Name);
                                 if (findMethod == null)
                                 {
-                                    // incorrect name of property
+                                    Console.WriteLine("Incorrect name of property.");
                                     return null;
                                 }
                                 else
                                 {
-                                    try
+                                    IEnumerable<FileCabinetRecord> records = (IEnumerable<FileCabinetRecord>)findMethod.Invoke(this.Service, new object[] { sets[x + y] });
+                                    if (records is FileSystemRecordEnumeratorCollection)
                                     {
-                                        if (this.Service is FileCabinetFilesystemService)
-                                        {
-                                            FileSystemRecordEnumerator enumeratedrecords = (FileSystemRecordEnumerator)findMethod.Invoke(this.Service, new object[] { sets[x + y] });
-                                            tempRecords = FileSystemRecordEnumerator.ToList(enumeratedrecords);
-                                        }
-                                        else
-                                        {
-                                            tempRecords = (List<FileCabinetRecord>)findMethod.Invoke(this.Service, new object[] { sets[x + y] });
-                                        }
-
-                                        if (tempRecords.Count != 0)
-                                        {
-                                            // conditions store foundRecords of the set -> one set of records + condition
-                                            conditions.Add(tempRecords, x + y);
-                                        }
+                                        tempRecords = FileSystemRecordEnumeratorCollection.ToList((FileSystemRecordEnumeratorCollection)records);
                                     }
-                                    catch (ArgumentException ex)
+                                    else
                                     {
-                                        Console.WriteLine(ex.Message);
+                                        tempRecords = (List<FileCabinetRecord>)records;
+                                    }
+
+                                    if (tempRecords == null)
+                                    {
+                                        Console.WriteLine("No records found.");
+                                        return null;
+                                    }
+
+                                    if (tempRecords.Count != 0)
+                                    {
+                                        conditions.Add(tempRecords, x + y);
                                     }
                                 }
                             }
@@ -584,7 +623,6 @@ namespace FileCabinetApp
                             }
                         }
                         else
-                        // we have single-condition set of records
                         {
                             if (conditions.Count != 0)
                             {
@@ -602,14 +640,14 @@ namespace FileCabinetApp
                         }
                     }
 
-                    return foundRecords;
+                    return new ReadOnlyCollection<FileCabinetRecord>(foundRecords);
                 }
 
-                if (args[propValue.Item3].Contains("or"))
+                if (args[propValue.Item3].Contains("or", StringComparison.InvariantCulture))
                 {
                     currentSet++;
                 }
-                else if (args[propValue.Item3].Contains("and"))
+                else if (args[propValue.Item3].Contains("and", StringComparison.InvariantCulture))
                 {
                 }
                 else
@@ -621,12 +659,22 @@ namespace FileCabinetApp
                 i += jump;
             }
 
-            return foundRecords;
+            return new ReadOnlyCollection<FileCabinetRecord>(foundRecords);
         }
 
+        /// <summary>
+        /// Makes set property.
+        /// </summary>
+        /// <param name="parameters">inputs property.</param>
+        /// <returns>new set prop.</returns>
         protected string[] MakeSet(string parameters)
         {
-            int indexOfWhere = parameters.IndexOf("where");
+            if (parameters == null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            int indexOfWhere = parameters.IndexOf("where", StringComparison.InvariantCulture);
             if (indexOfWhere == -1)
             {
                 return null;
@@ -645,27 +693,27 @@ namespace FileCabinetApp
             for (int i = 0; i < properties.Length; i++)
             {
                 // set the indexes
-                propIndex.Add(properties[i].Name.ToLower(), i);
+                propIndex.Add(properties[i].Name.ToLower(CultureInfo.InvariantCulture), i);
             }
 
             // if there is only one property
-            if (!itemsToSet.Contains(','))
+            if (!itemsToSet.Contains(',', StringComparison.InvariantCulture))
             {
-                propValue = ParsePropertyValuePair(itemsToSet.Substring(1).Split());
+                propValue = this.ParsePropertyValuePair(itemsToSet.Substring(1).Split());
                 if (propValue == null)
                 {
                     return null;
                 }
 
                 // check if such property exists
-                if (!propIndex.ContainsKey(propValue.Item1.ToLower()))
+                if (!propIndex.ContainsKey(propValue.Item1.ToLower(CultureInfo.InvariantCulture)))
                 {
                     // incorrect property
                     return null;
                 }
                 else
                 {
-                    sets[propIndex[propValue.Item1.ToLower()]] = propValue.Item2;
+                    sets[propIndex[propValue.Item1.ToLower(CultureInfo.InvariantCulture)]] = propValue.Item2;
                 }
 
                 return sets;
@@ -678,7 +726,7 @@ namespace FileCabinetApp
                 for (int i = 0; i < numOfConditions; i++)
                 {
                     string[] tempArgs = args[i].Substring(1).Split();
-                    propValue = ParsePropertyValuePair(tempArgs);
+                    propValue = this.ParsePropertyValuePair(tempArgs);
 
                     if (propValue == null)
                     {
@@ -686,14 +734,13 @@ namespace FileCabinetApp
                     }
 
                     // we have string method string value
-                    if (!propIndex.ContainsKey(propValue.Item1.ToLower()))
+                    if (!propIndex.ContainsKey(propValue.Item1.ToLower(CultureInfo.InvariantCulture)))
                     {
-                        // incorrect property
                         return null;
                     }
                     else
                     {
-                        sets[propIndex[propValue.Item1.ToLower()]] = propValue.Item2;
+                        sets[propIndex[propValue.Item1.ToLower(CultureInfo.InvariantCulture)]] = propValue.Item2;
                     }
                 }
 
@@ -701,13 +748,22 @@ namespace FileCabinetApp
             }
         }
 
+        /// <summary>
+        /// Parse property.
+        /// </summary>
+        /// <param name="parameters">inputs.</param>
+        /// <returns>property.</returns>
         protected List<PropertyInfo> ParseProperties(string parameters)
         {
+            if (parameters == null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
             List<PropertyInfo> propsToShow = new List<PropertyInfo>();
-            Tuple<string, string, int> propValue;
 
             // if there is only one property
-            if (!parameters.Contains(','))
+            if (!parameters.Contains(',', StringComparison.InvariantCulture))
             {
                 if (parameters.StartsWith(' '))
                 {

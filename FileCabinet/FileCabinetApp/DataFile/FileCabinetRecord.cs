@@ -121,6 +121,10 @@ namespace FileCabinetApp
         [XmlElement]
         public char Category { get; set; }
 
+        /// <summary>
+        /// Make Clone record.
+        /// </summary>
+        /// <returns>new record-clone.</returns>
         public object Clone()
         {
             return new FileCabinetRecord

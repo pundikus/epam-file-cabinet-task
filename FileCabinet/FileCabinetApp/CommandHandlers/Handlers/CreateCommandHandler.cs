@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace FileCabinetApp.Handlers
 {
@@ -28,7 +29,7 @@ namespace FileCabinetApp.Handlers
                 throw new ArgumentNullException(nameof(request));
             }
 
-            if (request.Command.ToUpperInvariant() == "CREATE")
+            if (request.Command.ToLower(CultureInfo.InvariantCulture) == "create")
             {
                 this.Create();
                 return true;
