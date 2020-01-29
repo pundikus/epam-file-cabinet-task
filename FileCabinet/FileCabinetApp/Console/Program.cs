@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -61,11 +62,11 @@ namespace FileCabinetApp
             var assemblyName = "FileCabinetApp";
             var nameSpace = "FileCabinetApp.CommandHandlers";
             var asm = Assembly.Load(assemblyName);
-            var handlers = asm.GetTypes().Where(p => p.Namespace == nameSpace && p.Name.EndsWith("CommandHandler") && !p.IsInterface).ToList();
+            var handlers = asm.GetTypes().Where(p => p.Namespace == nameSpace && p.Name.EndsWith("CommandHandler", StringComparison.InvariantCulture) && !p.IsInterface).ToList();
             foreach (var handler in handlers)
             {
-                int indexOfCommandWord = handler.Name.IndexOf("CommandHandler");
-                commandNames.Add(handler.Name.Substring(0, indexOfCommandWord).ToLower());
+                int indexOfCommandWord = handler.Name.IndexOf("CommandHandler", StringComparison.InvariantCulture);
+                commandNames.Add(handler.Name.Substring(0, indexOfCommandWord).ToLower(CultureInfo.InvariantCulture));
             }
 
             if (args != null && args.Length > 0)
@@ -105,7 +106,6 @@ namespace FileCabinetApp
 
                 const int parametersIndex = 1;
                 var parameters = inputs.Length > 1 ? inputs[parametersIndex] : string.Empty;
-                // commandHandler.Handle(new AppCommandRequest(command, parameters));
 
                 var wasSucceed = commandHandler.Handle(new AppCommandRequest(command, parameters));
                 if (wasSucceed == null)
@@ -145,8 +145,6 @@ namespace FileCabinetApp
             var recordPrinter = new DefaultRecordPrinter();
             var createHandler = new CreateCommandHandler(fileCabinetService);
             var selectHandler = new SelectCommandHandler(fileCabinetService);
-            //var findHandler = new FindCommandHandler(fileCabinetService, recordPrinter);
-           // var listHandler = new ListCommandHandler(fileCabinetService, recordPrinter);
             var statHandler = new StatCommandHandler(fileCabinetService);
             var exportHandler = new ExportCommandHandler(fileCabinetService);
             var importHandler = new ImportCommandHandler(fileCabinetService);
@@ -161,8 +159,6 @@ namespace FileCabinetApp
                          .SetNext(selectHandler)
                          .SetNext(deleteHandler)
                          .SetNext(updateHandler)
-                         //.SetNext(findHandler)
-                         //.SetNext(listHandler)
                          .SetNext(statHandler)
                          .SetNext(exportHandler)
                          .SetNext(importHandler)

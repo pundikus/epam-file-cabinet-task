@@ -9,8 +9,6 @@ namespace FileCabinetApp.Handlers
     /// </summary>
     public class StatCommandHandler : ServiceCommandHandlerBase
     {
-        private static int countRemovedRecord = 0;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="StatCommandHandler"/> class.
         /// </summary>
@@ -48,7 +46,7 @@ namespace FileCabinetApp.Handlers
             int recordsCount = this.Service.GetStat();
 
             Console.WriteLine($"{recordsCount} record(s).");
-            Console.WriteLine($"{countRemovedRecord} records was deleted.");
+            Console.WriteLine($"{this.Service.GetDeleted()} records are ready to be purged.");
         }
     }
 }

@@ -1,13 +1,11 @@
-﻿using FileCabinetApp.Helpers.FileCabinetApp;
-using FileCabinetApp.Interfaces.Validators;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using FileCabinetApp.Interfaces.Validators;
 
 namespace FileCabinetApp.Helpers
 {
@@ -16,6 +14,9 @@ namespace FileCabinetApp.Helpers
     /// </summary>
     public class FileCabinetFilesystemService : IFileCabinetService
     {
+        /// <summary>
+        /// The size of the record in bytes.
+        /// </summary>
         public const int RecordSize = 280;
 
         private const int StringSize = 120;
@@ -28,6 +29,9 @@ namespace FileCabinetApp.Helpers
         private SortedList<string, List<int>> recordFirstNameOffset = new SortedList<string, List<int>>();
         private SortedList<string, List<int>> recordLastNameOffset = new SortedList<string, List<int>>();
         private SortedList<DateTime, List<int>> recordDateOfBirthOffset = new SortedList<DateTime, List<int>>();
+        private SortedList<short, List<int>> recordCabinetNumberOffset = new SortedList<short, List<int>>();
+        private SortedList<char, List<int>> recordCategoryOffset = new SortedList<char, List<int>>();
+        private SortedList<decimal, List<int>> recordSalaryOffset = new SortedList<decimal, List<int>>();
 
         private int count;
         private int deleted;
@@ -80,7 +84,7 @@ namespace FileCabinetApp.Helpers
             this.count++;
             this.idlist.Add(record.Id);
             this.WriteRecord(record, (this.count - 1) * RecordSize);
-            this.UpdateOffsets(record, (this.count - 1) * RecordSize);
+            this.AddOffsets(record, (this.count - 1) * RecordSize);
 
             return record.Id;
         }
@@ -105,14 +109,14 @@ namespace FileCabinetApp.Helpers
                 FileCabinetRecord prevRecord = this.ReadRecord(recordOffset);
                 this.DeleteOffsets(prevRecord, recordOffset);
                 this.WriteRecord(record, recordOffset);
-                this.UpdateOffsets(record, recordOffset);
+                this.AddOffsets(record, recordOffset);
             }
             else
             {
                 this.idlist.Add(record.Id);
                 this.count++;
                 this.WriteRecord(record, (this.count - 1) * RecordSize);
-                this.UpdateOffsets(record, (this.count - 1) * RecordSize);
+                this.AddOffsets(record, (this.count - 1) * RecordSize);
             }
 
             return record.Id;
@@ -139,7 +143,7 @@ namespace FileCabinetApp.Helpers
             FileCabinetRecord prevRecord = this.ReadRecord(recordOffset);
             this.WriteRecord(record, recordOffset);
             this.DeleteOffsets(prevRecord, recordOffset);
-            this.UpdateOffsets(record, recordOffset);
+            this.AddOffsets(record, recordOffset);
 
             return record.Id;
         }
@@ -243,6 +247,20 @@ namespace FileCabinetApp.Helpers
             }
         }
 
+        /// <summary>
+        /// Searches the records by id.
+        /// </summary>
+        /// <param name="id">Given id.</param>
+        /// <returns>The array of records.</returns>
+        public IEnumerable<FileCabinetRecord> FindById(string id)
+        {
+            if (id == null || !int.TryParse(id, out int parsedId))
+            {
+                return null;
+            }
+
+            return new FileSystemRecordEnumeratorCollection(this, new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>() { this.GetRecord(parsedId) }));
+        }
 
         /// <summary>
         /// Searches the records by first name.
@@ -251,24 +269,12 @@ namespace FileCabinetApp.Helpers
         /// <returns>The array of records.</returns>
         public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
         {
-            List<FileCabinetRecord> storedRecords = new List<FileCabinetRecord>();
-
-            if (this.recordFirstNameOffset.ContainsKey(firstName))
+            if (firstName == null)
             {
-                List<int> offsets = this.recordFirstNameOffset[firstName];
-
-                foreach (int offset in offsets)
-                {
-                    if (this.IsDeleted(offset))
-                    {
-                        continue;
-                    }
-
-                    storedRecords.Add(this.ReadRecord(offset));
-                }
+                return null;
             }
 
-            return new FileSystemRecordEnumerator(this, new ReadOnlyCollection<FileCabinetRecord>(storedRecords));
+            return this.FindByKey(this.recordFirstNameOffset, firstName);
         }
 
         /// <summary>
@@ -278,24 +284,12 @@ namespace FileCabinetApp.Helpers
         /// <returns>The array of records.</returns>
         public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
         {
-            List<FileCabinetRecord> storedRecords = new List<FileCabinetRecord>();
-
-            if (this.recordLastNameOffset.ContainsKey(lastName))
+            if (lastName == null)
             {
-                List<int> offsets = this.recordLastNameOffset[lastName];
-
-                foreach (int offset in offsets)
-                {
-                    if (this.IsDeleted(offset))
-                    {
-                        continue;
-                    }
-
-                    storedRecords.Add(this.ReadRecord(offset));
-                }
+                return null;
             }
 
-            return new FileSystemRecordEnumerator(this, new ReadOnlyCollection<FileCabinetRecord>(storedRecords));
+            return this.FindByKey(this.recordLastNameOffset, lastName);
         }
 
         /// <summary>
@@ -305,26 +299,84 @@ namespace FileCabinetApp.Helpers
         /// <returns>The array of records.</returns>
         public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {
-            List<FileCabinetRecord> storedRecords = new List<FileCabinetRecord>();
-
-            DateTime parsedDateOfBirth = DateTime.ParseExact(dateOfBirth, "yyyy-MMM-d", CultureInfo.InvariantCulture);
-
-            if (this.recordDateOfBirthOffset.ContainsKey(parsedDateOfBirth))
+            if (dateOfBirth == null)
             {
-                List<int> offsets = this.recordDateOfBirthOffset[parsedDateOfBirth];
-
-                foreach (int offset in offsets)
-                {
-                    if (this.IsDeleted(offset))
-                    {
-                        continue;
-                    }
-
-                    storedRecords.Add(this.ReadRecord(offset));
-                }
+                return null;
             }
 
-            return new FileSystemRecordEnumerator(this, new ReadOnlyCollection<FileCabinetRecord>(storedRecords));
+            if (!DateTime.TryParseExact(dateOfBirth, "yyyy-MMM-d", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDateOfBirth))
+            {
+                return null;
+            }
+
+            return this.FindByKey(this.recordDateOfBirthOffset, parsedDateOfBirth);
+        }
+
+        /// <summary>
+        /// Searches the records by cabinet number.
+        /// </summary>
+        /// <param name="cabinetNumber">Given cabinet number.</param>
+        /// <returns>The array of records.</returns>
+        public IEnumerable<FileCabinetRecord> FindByCabinetNumber(string cabinetNumber)
+        {
+            if (cabinetNumber == null)
+            {
+                return null;
+            }
+
+            if (!short.TryParse(cabinetNumber, out short parsedFavNumver))
+            {
+                return null;
+            }
+
+            return this.FindByKey(this.recordCabinetNumberOffset, parsedFavNumver);
+        }
+
+        /// <summary>
+        /// Searches the records by category.
+        /// </summary>
+        /// <param name="category">category.</param>
+        /// <returns>The array of records.</returns>
+        public IEnumerable<FileCabinetRecord> FindByCategory(string category)
+        {
+            if (category == null)
+            {
+                throw new ArgumentNullException(nameof(category));
+            }
+
+            var categoryToChar = category.ToCharArray();
+
+            if (category == null)
+            {
+                return null;
+            }
+
+            if (string.IsNullOrEmpty(category) || category.Length > 1)
+            {
+                return null;
+            }
+
+            return this.FindByKey<char>(this.recordCategoryOffset, categoryToChar.First());
+        }
+
+        /// <summary>
+        /// Searches the records by salary.
+        /// </summary>
+        /// <param name="salary">Given salary.</param>
+        /// <returns>The array of records.</returns>
+        public IEnumerable<FileCabinetRecord> FindBySalary(string salary)
+        {
+            if (salary == null)
+            {
+                return null;
+            }
+
+            if (!decimal.TryParse(salary, out decimal parsedSalary))
+            {
+                return null;
+            }
+
+            return this.FindByKey(this.recordSalaryOffset, parsedSalary);
         }
 
         /// <summary>
@@ -348,18 +400,6 @@ namespace FileCabinetApp.Helpers
             ReadOnlyCollection<FileCabinetRecord> records = new ReadOnlyCollection<FileCabinetRecord>(storedRecords);
 
             return records;
-        }
-
-        public FileCabinetRecord GetRecord(int id)
-        {
-            if (this.IsDeleted(this.recordIdOffset[id]))
-            {
-                return null;
-            }
-            else
-            {
-                return this.ReadRecord(this.recordIdOffset[id]);
-            }
         }
 
         /// <summary>
@@ -437,7 +477,6 @@ namespace FileCabinetApp.Helpers
                     this.AddRecord(record);
                     recordsImported++;
                 }
-
             }
 
             return recordsImported;
@@ -447,7 +486,7 @@ namespace FileCabinetApp.Helpers
         /// Reads the record from the file.
         /// </summary>
         /// <param name="offset">Offset to read from.</param>
-        /// <returns></returns>
+        /// <returns>Record.</returns>
         public FileCabinetRecord ReadRecord(int offset)
         {
             this.fileStream.Seek(offset, SeekOrigin.Begin);
@@ -535,6 +574,57 @@ namespace FileCabinetApp.Helpers
             }
         }
 
+        private FileSystemRecordEnumeratorCollection FindByKey<T>(SortedList<T, List<int>> offsetDictionary, T key)
+        {
+            List<FileCabinetRecord> storedRecords = new List<FileCabinetRecord>();
+
+            if (offsetDictionary.ContainsKey(key))
+            {
+                List<int> offsets = offsetDictionary[key];
+
+                foreach (int offset in offsets)
+                {
+                    if (this.IsDeleted(offset))
+                    {
+                        continue;
+                    }
+
+                    storedRecords.Add(this.ReadRecord(offset));
+                }
+            }
+
+            if (storedRecords.Count == 0)
+            {
+                return null;
+            }
+
+            return new FileSystemRecordEnumeratorCollection(this, new ReadOnlyCollection<FileCabinetRecord>(storedRecords));
+        }
+
+        /// <summary>
+        /// Gets a single method from the list of records.
+        /// </summary>
+        /// <param name="id">Id to get record by.</param>
+        /// <returns>The record found, null otherwise.</returns>
+        private FileCabinetRecord GetRecord(int id)
+        {
+            try
+            {
+                if (this.IsDeleted(this.recordIdOffset[id]))
+                {
+                    return null;
+                }
+                else
+                {
+                    return this.ReadRecord(this.recordIdOffset[id]);
+                }
+            }
+            catch (KeyNotFoundException)
+            {
+                return null;
+            }
+        }
+
         /// <summary>
         /// Updates a single dictionary containing offset.
         /// </summary>
@@ -542,7 +632,7 @@ namespace FileCabinetApp.Helpers
         /// <param name="dictionary">Dictionary to update.</param>
         /// <param name="value">Key to add or find by.</param>
         /// <param name="offset">Offset to add.</param>
-        private void UpdateDictionary<T>(SortedList<T, List<int>> dictionary, T value, int offset)
+        private void AddToDictionary<T>(SortedList<T, List<int>> dictionary, T value, int offset)
         {
             if (!dictionary.ContainsKey(value))
             {
@@ -564,12 +654,21 @@ namespace FileCabinetApp.Helpers
         /// </summary>
         /// <param name="record">Record to add properties from.</param>
         /// <param name="recordOffset">Record's offset in the file.</param>
-        private void UpdateOffsets(FileCabinetRecord record, int recordOffset)
+        private void AddOffsets(FileCabinetRecord record, int recordOffset)
         {
             this.recordIdOffset.Add(record.Id, recordOffset);
-            this.UpdateDictionary(this.recordFirstNameOffset, record.FirstName, recordOffset);
-            this.UpdateDictionary(this.recordLastNameOffset, record.LastName, recordOffset);
-            this.UpdateDictionary(this.recordDateOfBirthOffset, record.DateOfBirth, recordOffset);
+
+            this.AddToDictionary(this.recordFirstNameOffset, record.FirstName, recordOffset);
+
+            this.AddToDictionary(this.recordLastNameOffset, record.LastName, recordOffset);
+
+            this.AddToDictionary(this.recordDateOfBirthOffset, record.DateOfBirth, recordOffset);
+
+            this.AddToDictionary(this.recordCabinetNumberOffset, record.CabinetNumber, recordOffset);
+
+            this.AddToDictionary(this.recordCategoryOffset, record.Category, recordOffset);
+
+            this.AddToDictionary(this.recordSalaryOffset, record.Salary, recordOffset);
         }
 
         /// <summary>
@@ -580,9 +679,18 @@ namespace FileCabinetApp.Helpers
         private void DeleteOffsets(FileCabinetRecord record, int recordOffset)
         {
             this.recordIdOffset.Remove(record.Id);
+
             this.recordFirstNameOffset[record.FirstName].Remove(recordOffset);
+
             this.recordLastNameOffset[record.LastName].Remove(recordOffset);
+
             this.recordDateOfBirthOffset[record.DateOfBirth].Remove(recordOffset);
+
+            this.recordCabinetNumberOffset[record.CabinetNumber].Remove(recordOffset);
+
+            this.recordCategoryOffset[record.Category].Remove(recordOffset);
+
+            this.recordSalaryOffset[record.Salary].Remove(recordOffset);
         }
     }
 }
